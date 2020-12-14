@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/144015__satanicupsman__bone-flesh-crush-punch.wav-95e5f9837135dcf061372cd77f59eb13.sample"
+
+[deps]
+
+source_file="res://RawAudio/144015__satanicupsman__bone-flesh-crush-punch.wav"
+dest_files=[ "res://.import/144015__satanicupsman__bone-flesh-crush-punch.wav-95e5f9837135dcf061372cd77f59eb13.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

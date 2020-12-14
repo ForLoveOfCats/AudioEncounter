@@ -1,0 +1,31 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="FallCrunch_data" version="1.3.0" audacityversion="2.4.1" sel0="0.0000000000" sel1="0.0000000000" vpos="0" h="0.0000000000" zoom="22050.0000000000" rate="44100.0" snapto="off" selectionformat="hh:mm:ss + milliseconds" frequencyformat="Hz" bandwidthformat="octaves">
+	<tags>
+		<tag name="Software" value="Sony Sound Forge 7.0 (libsndfile-1.0.18)"/>
+		<tag name="YEAR" value="2006-06-06"/>
+		<tag name="COMMENTS" value="samplearena.com - thousands of sound samples"/>
+		<tag name="ARTIST" value="samplearena.com"/>
+		<tag name="TITLE" value="samplearena.com online sample library"/>
+	</tags>
+	<wavetrack name="144015__satanicupsman__bone-flesh-crush-punch" isSelected="1" height="150" minimized="0" channel="0" linked="1" mute="0" solo="0" rate="44100" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="32894">
+				<waveblock start="0">
+					<simpleblockfile filename="eff1fda5.au" len="32894" min="-0.967359" max="0.844772" rms="0.163595"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="144015__satanicupsman__bone-flesh-crush-punch" isSelected="1" height="150" minimized="0" channel="1" linked="0" mute="0" solo="0" rate="44100" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="32894">
+				<waveblock start="0">
+					<simpleblockfile filename="eff1f124.au" len="32894" min="-0.958113" max="0.849243" rms="0.164967"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+</project>

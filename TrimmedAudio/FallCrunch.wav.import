@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/FallCrunch.wav-00f3a5a89f2512a6bfa5585294dafb74.sample"
+
+[deps]
+
+source_file="res://TrimmedAudio/FallCrunch.wav"
+dest_files=[ "res://.import/FallCrunch.wav-00f3a5a89f2512a6bfa5585294dafb74.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

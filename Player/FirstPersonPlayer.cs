@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Godot;
 using static Godot.Mathf;
 using static SteelMath;
@@ -6,26 +7,52 @@ using static SteelMath;
 
 public class FirstPersonPlayer : Character {
 	public const float MouseSens = 0.2f;
-	public const float MaxFallSpeed = 70f;
-	public const float Gravity = MaxFallSpeed / 0.9f;
+	public const float MaxFallSpeed = 120f;
+	public const float Gravity = MaxFallSpeed / 0.65f;
 	public const float BaseSpeed = 12f;
 	public const float SprintSpeed = 22f;
 	public const float Acceleration = BaseSpeed / 0.04f;
 	public const float Friction = Acceleration / 2f;
 
+	public const float CrunchSpeed = -40f;
 
+	public Spatial CamJoint;
 	public Camera Cam;
+
+	public AudioStreamPlayer FallCrunch;
 
 
 	public int BackwardForwardDirection = 0;
 	public int RightLeftDirection = 0;
 	public Vector3 Momentum = new Vector3();
+	public List<CamAnimation> CamAnimations = new List<CamAnimation>();
+
+
+	public class CamAnimation {
+		public const float MaxTime = 0.45f;
+		public const float MaxValue = 18f;
+
+		public float CurrentTime = MaxTime;
+
+		public float Tick(float Delta) {
+			CurrentTime = Clamp(CurrentTime - Delta, 0, MaxValue);
+			float Squared = CurrentTime * CurrentTime;
+			return ((Sin(CurrentTime / MaxTime * Pi) * Squared) / (0.4f * MaxTime)) * (1 / MaxTime) * MaxValue;
+		}
+
+		public bool ReachedEnd() {
+			return CurrentTime <= 0;
+		}
+	}
 
 
 	public override void _Ready() {
 		base._Ready();
 
-		Cam = GetNode<Camera>("Cam");
+		CamJoint = GetNode<Spatial>("CamJoint");
+		Cam = CamJoint.GetNode<Camera>("Cam");
+
+		FallCrunch = GetNode<AudioStreamPlayer>("FallCrunch");
 
 		Input.SetMouseMode(Input.MouseMode.Captured);
 	}
@@ -84,7 +111,8 @@ public class FirstPersonPlayer : Character {
 
 		if(OnFloor) {
 			Momentum.y = 0;
-		} else {
+		}
+		else {
 			Momentum.y = Clamp(Momentum.y - Gravity * Delta, -MaxFallSpeed, MaxFallSpeed);
 		}
 
@@ -99,8 +127,27 @@ public class FirstPersonPlayer : Character {
 
 	public override void _PhysicsProcess(float Delta) {
 		HandleMovementInput(Delta);
+
+		bool WasOnFloor = OnFloor;
+		float OldMomentumY = Momentum.y;
 		Momentum = Move(Momentum, Delta, 5, 40, 0.42f);
-		GD.Print(Translation.y);
+		if(!WasOnFloor && OnFloor && OldMomentumY < CrunchSpeed) {
+			FallCrunch.Play();
+			CamAnimations.Add(new CamAnimation());
+		}
+
+		int Index = 0;
+		float Combined = 0;
+		while(Index < CamAnimations.Count) {
+			Combined -= CamAnimations[Index].Tick(Delta);
+			if(CamAnimations[Index].ReachedEnd()) {
+				CamAnimations.RemoveAt(Index);
+			} else {
+				Index += 1;
+			}
+		}
+
+		CamJoint.RotationDegrees = new Vector3(Combined, 0, 0);
 
 		base._PhysicsProcess(Delta);
 	}

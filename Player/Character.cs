@@ -25,7 +25,7 @@ public class Character : KinematicBody {
 				if(TargetHLength != 0 && NewHLength != 0) //Protect against division by zero
 					Movement *= TargetHLength / Movement.Flattened().Length();
 
-				if(Momentum.Flattened().Length() <= 0.5f) {
+				if(Momentum.Length() <= 0.5f) {
 					Translation = OriginalTranslation;
 					Momentum.y = 0; //On floor so "zero" out vertical momentum
 					MoveAndSlide(new Vector3());
