@@ -21,6 +21,8 @@ public class FirstPersonPlayer : Character {
 	public Spatial CamJoint;
 	public Camera Cam;
 
+	public RayCast FloorCast;
+
 	public AudioStreamPlayer FallCrunch;
 	public Footstep2D ConcreteFootsteps;
 
@@ -56,6 +58,8 @@ public class FirstPersonPlayer : Character {
 		CamJoint = GetNode<Spatial>("CamJoint");
 		Cam = CamJoint.GetNode<Camera>("Cam");
 
+		FloorCast = GetNode<RayCast>("FloorCast");
+
 		FallCrunch = GetNode<AudioStreamPlayer>("FallCrunch");
 		ConcreteFootsteps = GetNode<Footstep2D>("ConcreteFootsteps");
 
@@ -74,6 +78,28 @@ public class FirstPersonPlayer : Character {
 		}
 
 		base._Input(Event);
+	}
+
+
+	public void HandleFootsteps(float Delta) {
+		if(BackwardForwardDirection != 0 || RightLeftDirection != 0) {
+			float Decrement = Delta;
+			if(Input.IsActionPressed("Sprint")) {
+				Decrement *= SprintingFootstepAcceleration;
+			}
+
+			FootstepCountdown -= Decrement;
+			if(FootstepCountdown <= 0) {
+				FootstepCountdown = FootstepBaseTime;
+
+				if(OnFloor && FloorCast.GetCollider() is Node Floor) {
+					GD.Print(Floor);
+					if(Floor.IsInGroup("concrete")) {
+						ConcreteFootsteps.Play();
+					}
+				}
+			}
+		}
 	}
 
 
@@ -112,17 +138,6 @@ public class FirstPersonPlayer : Character {
 		if(BackwardForwardDirection == 0 && RightLeftDirection == 0) {
 			float FrictionModifiedSpeed = Clamp(Momentum.Flattened().Length() - (Friction * Delta), 0, MaxSpeed);
 			Momentum = Momentum.Inflated(Momentum.Flattened().Normalized() * FrictionModifiedSpeed);
-		} else {
-			float Decrement = Delta;
-			if(Input.IsActionPressed("Sprint")) {
-				Decrement *= SprintingFootstepAcceleration;
-			}
-
-			FootstepCountdown -= Decrement;
-			if(FootstepCountdown <= 0) {
-				ConcreteFootsteps.Play();
-				FootstepCountdown = FootstepBaseTime;
-			}
 		}
 
 		if(OnFloor) {
@@ -143,6 +158,7 @@ public class FirstPersonPlayer : Character {
 
 	public override void _PhysicsProcess(float Delta) {
 		HandleMovementInput(Delta);
+		HandleFootsteps(Delta);
 
 		bool WasOnFloor = OnFloor;
 		float OldMomentumY = Momentum.y;
