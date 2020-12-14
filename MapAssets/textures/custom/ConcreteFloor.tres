@@ -1,0 +1,7 @@
+[gd_resource type="SpatialMaterial" load_steps=2 format=2]
+
+[ext_resource path="res://RawTextures/Concrete/Asphalt007_2K_Color.jpg" type="Texture" id=2]
+
+[resource]
+albedo_texture = ExtResource( 2 )
+metallic_specular = 0.0
