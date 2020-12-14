@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/1.wav-b20f4de3b19d4b22607ec7a19a1f16d0.sample"
+
+[deps]
+
+source_file="res://TrimmedAudio/ConcreteFootsteps/1.wav"
+dest_files=[ "res://.import/1.wav-b20f4de3b19d4b22607ec7a19a1f16d0.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

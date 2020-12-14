@@ -14,18 +14,22 @@ public class FirstPersonPlayer : Character {
 	public const float Acceleration = BaseSpeed / 0.04f;
 	public const float Friction = Acceleration / 2f;
 
+	public const float FootstepBaseTime = 0.78f;
+	public const float SprintingFootstepAcceleration = 2.15f;
 	public const float CrunchSpeed = -40f;
 
 	public Spatial CamJoint;
 	public Camera Cam;
 
 	public AudioStreamPlayer FallCrunch;
+	public Footstep2D ConcreteFootsteps;
 
 
 	public int BackwardForwardDirection = 0;
 	public int RightLeftDirection = 0;
 	public Vector3 Momentum = new Vector3();
 	public List<CamAnimation> CamAnimations = new List<CamAnimation>();
+	public float FootstepCountdown = FootstepBaseTime;
 
 
 	public class CamAnimation {
@@ -53,6 +57,7 @@ public class FirstPersonPlayer : Character {
 		Cam = CamJoint.GetNode<Camera>("Cam");
 
 		FallCrunch = GetNode<AudioStreamPlayer>("FallCrunch");
+		ConcreteFootsteps = GetNode<Footstep2D>("ConcreteFootsteps");
 
 		Input.SetMouseMode(Input.MouseMode.Captured);
 	}
@@ -107,6 +112,17 @@ public class FirstPersonPlayer : Character {
 		if(BackwardForwardDirection == 0 && RightLeftDirection == 0) {
 			float FrictionModifiedSpeed = Clamp(Momentum.Flattened().Length() - (Friction * Delta), 0, MaxSpeed);
 			Momentum = Momentum.Inflated(Momentum.Flattened().Normalized() * FrictionModifiedSpeed);
+		} else {
+			float Decrement = Delta;
+			if(Input.IsActionPressed("Sprint")) {
+				Decrement *= SprintingFootstepAcceleration;
+			}
+
+			FootstepCountdown -= Decrement;
+			if(FootstepCountdown <= 0) {
+				ConcreteFootsteps.Play();
+				FootstepCountdown = FootstepBaseTime;
+			}
 		}
 
 		if(OnFloor) {
