@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/367670__bobv2__crunching-01.wav-bd8df65de836872b5f3201b0e35beec2.sample"
+
+[deps]
+
+source_file="res://RawAudio/367670__bobv2__crunching-01.wav"
+dest_files=[ "res://.import/367670__bobv2__crunching-01.wav-bd8df65de836872b5f3201b0e35beec2.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

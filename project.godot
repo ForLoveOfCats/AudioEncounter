@@ -204,6 +204,10 @@ config/name="AudioEncounter"
 run/main_scene="res://RuntimeRoot.tscn"
 config/icon="res://icon.png"
 
+[debug]
+
+settings/fps/force_fps=100
+
 [display]
 
 window/vsync/use_vsync=false

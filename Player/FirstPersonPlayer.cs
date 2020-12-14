@@ -9,12 +9,12 @@ public class FirstPersonPlayer : Character {
 	public const float MouseSens = 0.2f;
 	public const float MaxFallSpeed = 120f;
 	public const float Gravity = MaxFallSpeed / 0.65f;
-	public const float BaseSpeed = 12f;
+	public const float BaseSpeed = 10f;
 	public const float SprintSpeed = 22f;
 	public const float Acceleration = BaseSpeed / 0.04f;
 	public const float Friction = Acceleration / 2f;
 
-	public const float FootstepBaseTime = 0.78f;
+	public const float FootstepBaseTime = 0.75f;
 	public const float SprintingFootstepAcceleration = 2.15f;
 	public const float CrunchSpeed = -40f;
 
@@ -25,6 +25,7 @@ public class FirstPersonPlayer : Character {
 
 	public AudioStreamPlayer FallCrunch;
 	public Footstep2D ConcreteFootsteps;
+	public Footstep2D LeavesFootsteps;
 
 
 	public int BackwardForwardDirection = 0;
@@ -62,6 +63,7 @@ public class FirstPersonPlayer : Character {
 
 		FallCrunch = GetNode<AudioStreamPlayer>("FallCrunch");
 		ConcreteFootsteps = GetNode<Footstep2D>("ConcreteFootsteps");
+		LeavesFootsteps = GetNode<Footstep2D>("LeavesFootsteps");
 
 		Input.SetMouseMode(Input.MouseMode.Captured);
 	}
@@ -82,7 +84,7 @@ public class FirstPersonPlayer : Character {
 
 
 	public void HandleFootsteps(float Delta) {
-		if(BackwardForwardDirection != 0 || RightLeftDirection != 0) {
+		if(OnFloor && (BackwardForwardDirection != 0 || RightLeftDirection != 0)) {
 			float Decrement = Delta;
 			if(Input.IsActionPressed("Sprint")) {
 				Decrement *= SprintingFootstepAcceleration;
@@ -92,9 +94,12 @@ public class FirstPersonPlayer : Character {
 			if(FootstepCountdown <= 0) {
 				FootstepCountdown = FootstepBaseTime;
 
-				if(OnFloor && FloorCast.GetCollider() is Node Floor) {
-					GD.Print(Floor);
+				if(FloorCast.GetCollider() is Node Floor) {
 					if(Floor.IsInGroup("concrete")) {
+						ConcreteFootsteps.Play();
+					} else if(Floor.IsInGroup("leaves")) {
+						LeavesFootsteps.Play();
+					} else {
 						ConcreteFootsteps.Play();
 					}
 				}
@@ -158,7 +163,6 @@ public class FirstPersonPlayer : Character {
 
 	public override void _PhysicsProcess(float Delta) {
 		HandleMovementInput(Delta);
-		HandleFootsteps(Delta);
 
 		bool WasOnFloor = OnFloor;
 		float OldMomentumY = Momentum.y;
@@ -167,6 +171,8 @@ public class FirstPersonPlayer : Character {
 			FallCrunch.Play();
 			CamAnimations.Add(new CamAnimation());
 		}
+
+		HandleFootsteps(Delta);
 
 		int Index = 0;
 		float Combined = 0;
