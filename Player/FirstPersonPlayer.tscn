@@ -10,6 +10,7 @@ script = ExtResource( 1 )
 
 [node name="Cam" type="Camera" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0 )
+fov = 90.0
 
 [node name="Hull" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )

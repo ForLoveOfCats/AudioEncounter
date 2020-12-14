@@ -6,7 +6,9 @@ using static SteelMath;
 
 public class FirstPersonPlayer : Character {
 	public const float MouseSens = 0.2f;
-	public const float BaseSpeed = 10f;
+	public const float MaxFallSpeed = 70f;
+	public const float Gravity = MaxFallSpeed / 0.9f;
+	public const float BaseSpeed = 12f;
 	public const float SprintSpeed = 22f;
 	public const float Acceleration = BaseSpeed / 0.04f;
 	public const float Friction = Acceleration / 2f;
@@ -80,19 +82,25 @@ public class FirstPersonPlayer : Character {
 			Momentum = Momentum.Inflated(Momentum.Flattened().Normalized() * FrictionModifiedSpeed);
 		}
 
+		if(OnFloor) {
+			Momentum.y = 0;
+		} else {
+			Momentum.y = Clamp(Momentum.y - Gravity * Delta, -MaxFallSpeed, MaxFallSpeed);
+		}
+
 		var Push = new Vector3(
 			RightLeftDirection * Acceleration * Delta,
 			0,
 			BackwardForwardDirection * Acceleration * Delta
 		).Rotated(new Vector3(0, 1, 0), Rotation.y);
-		Momentum = ClampVec3(Momentum + Push, 0, MaxSpeed);
-		GD.Print(Momentum.Length());
+		Momentum = Momentum.Inflated(ClampVec3(Momentum.Flattened() + Push, 0, MaxSpeed));
 	}
 
 
 	public override void _PhysicsProcess(float Delta) {
 		HandleMovementInput(Delta);
 		Momentum = Move(Momentum, Delta, 5, 40, 0.42f);
+		GD.Print(Translation.y);
 
 		base._PhysicsProcess(Delta);
 	}

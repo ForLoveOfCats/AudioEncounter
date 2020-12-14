@@ -1,0 +1,43 @@
+// Game: Qodot
+// Format: Standard
+// entity 0
+{
+"classname" "worldspawn"
+"_tb_textures" "textures/custom"
+// brush 0
+{
+( -64 336 0 ) ( -64 -64 0 ) ( -64 -64 -16 ) custom/ConcreteFloor 0 0 0 1 1
+( -64 -64 0 ) ( 448 -64 0 ) ( 448 -64 -16 ) custom/ConcreteFloor 0 0 0 1 1
+( 448 -64 -16 ) ( 448 336 -16 ) ( -64 336 -16 ) custom/ConcreteFloor 0 0 0 1 1
+( -64 336 0 ) ( 448 336 0 ) ( 448 -64 0 ) custom/ConcreteFloor 0 0 0 1 1
+( 448 336 -16 ) ( 448 336 0 ) ( -64 336 0 ) custom/ConcreteFloor 0 0 0 1 1
+( 448 -64 0 ) ( 448 336 0 ) ( 448 336 -16 ) custom/ConcreteFloor 0 0 0 1 1
+}
+// brush 1
+{
+( -64 -256 -16 ) ( -64 -255 -16 ) ( -64 -256 -15 ) custom/ConcreteFloor 0 0 0 1 1
+( -64 -256 -16 ) ( -64 -256 -15 ) ( -63 -256 -16 ) custom/ConcreteFloor 0 0 0 1 1
+( -64 -256 -16 ) ( -63 -256 -16 ) ( -64 -255 -16 ) custom/ConcreteFloor 0 0 0 1 1
+( 176 -64 0 ) ( 176 -63 0 ) ( 177 -64 0 ) custom/ConcreteFloor 0 0 0 1 1
+( 176 -64 0 ) ( 177 -64 0 ) ( 176 -64 1 ) custom/ConcreteFloor 0 0 0 1 1
+( 176 -64 0 ) ( 176 -64 1 ) ( 176 -63 0 ) custom/ConcreteFloor 0 0 0 1 1
+}
+// brush 2
+{
+( 176 -64 0 ) ( 176 -256 0 ) ( 176 -256 -16 ) custom/ConcreteFloor 0 0 0 1 1
+( 176 -64 0 ) ( 448 -64 144 ) ( 448 -256 144 ) custom/ConcreteFloor 0 0 0 1 1
+( 176 -256 0 ) ( 448 -256 144 ) ( 448 -256 128 ) custom/ConcreteFloor 0 0 0 1 1
+( 448 -64 128 ) ( 448 -64 144 ) ( 176 -64 0 ) custom/ConcreteFloor 0 0 0 1 1
+( 448 -256 128 ) ( 448 -64 128 ) ( 176 -64 -16 ) custom/ConcreteFloor 0 0 0 1 1
+( 448 -256 144 ) ( 448 -64 144 ) ( 448 -64 128 ) custom/ConcreteFloor 0 0 0 1 1
+}
+// brush 3
+{
+( 448 -256 128 ) ( 448 -255 128 ) ( 448 -256 129 ) custom/ConcreteFloor 0 0 0 1 1
+( 448 -256 128 ) ( 448 -256 129 ) ( 449 -256 128 ) custom/ConcreteFloor 0 0 0 1 1
+( 448 -256 128 ) ( 449 -256 128 ) ( 448 -255 128 ) custom/ConcreteFloor 0 0 0 1 1
+( 688 320 144 ) ( 688 321 144 ) ( 689 320 144 ) custom/ConcreteFloor 0 0 0 1 1
+( 688 320 144 ) ( 689 320 144 ) ( 688 320 145 ) custom/ConcreteFloor 0 0 0 1 1
+( 688 320 144 ) ( 688 320 145 ) ( 688 321 144 ) custom/ConcreteFloor 0 0 0 1 1
+}
+}
