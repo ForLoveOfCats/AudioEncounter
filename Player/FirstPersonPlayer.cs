@@ -10,8 +10,8 @@ using static SteelMath;
 
 public class FirstPersonPlayer : Character {
 	public const float MouseSens = 0.2f;
-	public const float MaxFallSpeed = 120f;
-	public const float Gravity = MaxFallSpeed / 0.65f;
+	public const float MaxFallSpeed = 75f;
+	public const float Gravity = MaxFallSpeed / 0.6f;
 	public const float BaseSpeed = 8f;
 	public const float SprintSpeed = 24f;
 	public const float Acceleration = BaseSpeed / 0.04f;
@@ -19,7 +19,8 @@ public class FirstPersonPlayer : Character {
 
 	public const float FootstepBaseTime = 0.65f;
 	public const float SprintingFootstepAcceleration = 2.2f;
-	public const float CrunchSpeed = -40f;
+	public const float CrunchSpeed = -35f;
+	public const float BaseCrunchDmg = 20f;
 
 	public Spatial CamJoint;
 	public Camera Cam;
@@ -33,6 +34,9 @@ public class FirstPersonPlayer : Character {
 	public int BackwardForwardDirection = 0;
 	public int RightLeftDirection = 0;
 	public Vector3 Momentum = new Vector3();
+
+	public float Health = 100f;
+
 	public List<CamAnimation> CamAnimations = new List<CamAnimation>();
 	public float FootstepCountdown = 0;
 	public int NextBobDirection = 1;
@@ -192,6 +196,12 @@ public class FirstPersonPlayer : Character {
 		if(!WasOnFloor && OnFloor && OldMomentumY < CrunchSpeed) {
 			Sfx.PlaySfx(SfxCatagory.FALL_CRUNCH, 0, GlobalTransform.origin);
 			CamAnimations.Add(new CrunchCamDip());
+
+			float Overkill = -(OldMomentumY - CrunchSpeed);
+			float Percent = Overkill / (MaxFallSpeed + CrunchSpeed);
+			float Damage = BaseCrunchDmg + (100f * Percent);
+			Health -= Damage;
+			GD.Print("Overkill: ", Overkill, " Percent: ", Percent, " Damage: ", Damage);
 		}
 
 		HandleFootsteps(Delta);

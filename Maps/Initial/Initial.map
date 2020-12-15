@@ -24,12 +24,30 @@
 }
 // brush 2
 {
-( 448 -256 128 ) ( 448 -255 128 ) ( 448 -256 129 ) custom/ConcreteFloor 0 0 0 1 1
-( 448 -256 128 ) ( 448 -256 129 ) ( 449 -256 128 ) custom/ConcreteFloor 0 0 0 1 1
-( 448 -256 128 ) ( 449 -256 128 ) ( 448 -255 128 ) custom/ConcreteFloor 0 0 0 1 1
-( 688 320 144 ) ( 688 321 144 ) ( 689 320 144 ) custom/ConcreteFloor 0 0 0 1 1
-( 688 320 144 ) ( 689 320 144 ) ( 688 320 145 ) custom/ConcreteFloor 0 0 0 1 1
-( 688 320 144 ) ( 688 320 145 ) ( 688 321 144 ) custom/ConcreteFloor 0 0 0 1 1
+( 448 512 144 ) ( 448 -256 144 ) ( 448 -256 128 ) custom/ConcreteFloor 0 0 0 1 1
+( 448 -256 144 ) ( 688 -256 144 ) ( 688 -256 128 ) custom/ConcreteFloor 0 0 0 1 1
+( 688 -256 128 ) ( 688 512 128 ) ( 448 512 128 ) custom/ConcreteFloor 0 0 0 1 1
+( 448 512 144 ) ( 688 512 144 ) ( 688 -256 144 ) custom/ConcreteFloor 0 0 0 1 1
+( 688 512 128 ) ( 688 512 144 ) ( 448 512 144 ) custom/ConcreteFloor 0 0 0 1 1
+( 688 -256 144 ) ( 688 512 144 ) ( 688 512 128 ) custom/ConcreteFloor 0 0 0 1 1
+}
+// brush 3
+{
+( -304 512 304 ) ( -304 336 304 ) ( -304 336 288 ) custom/ConcreteFloor 0 0 0 1 1
+( 448 336 128 ) ( 448 512 128 ) ( -304 512 288 ) custom/ConcreteFloor 0 0 0 1 1
+( -304 336 304 ) ( 448 336 144 ) ( 448 336 128 ) custom/ConcreteFloor 0 0 0 1 1
+( 448 512 128 ) ( 448 512 144 ) ( -304 512 304 ) custom/ConcreteFloor 0 0 0 1 1
+( -304 512 304 ) ( 448 512 144 ) ( 448 336 144 ) custom/ConcreteFloor 0 0 0 1 1
+( 448 336 144 ) ( 448 512 144 ) ( 448 512 128 ) custom/ConcreteFloor 0 0 0 1 1
+}
+// brush 4
+{
+( -528 -176 288 ) ( -528 -175 288 ) ( -528 -176 289 ) custom/ConcreteFloor 0 0 0 1 1
+( -528 -176 288 ) ( -528 -176 289 ) ( -527 -176 288 ) custom/ConcreteFloor 0 0 0 1 1
+( -528 -176 288 ) ( -527 -176 288 ) ( -528 -175 288 ) custom/ConcreteFloor 0 0 0 1 1
+( -304 512 304 ) ( -304 513 304 ) ( -303 512 304 ) custom/ConcreteFloor 0 0 0 1 1
+( -304 512 304 ) ( -303 512 304 ) ( -304 512 305 ) custom/ConcreteFloor 0 0 0 1 1
+( -304 512 304 ) ( -304 512 305 ) ( -304 513 304 ) custom/ConcreteFloor 0 0 0 1 1
 }
 }
 // entity 1
