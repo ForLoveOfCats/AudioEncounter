@@ -55,6 +55,21 @@ public class FirstPersonPlayer : Character {
 	}
 
 
+	[Remote]
+	public void NetDamage(int Damage) {
+		Health -= Damage;
+		CheckDie();
+	}
+
+
+	public void CheckDie() {
+		if(Health <= 0) {
+			Rpc(nameof(ThirdPersonPlayer.NetDie));
+			QueueFree();
+		}
+	}
+
+
 	public override void _Input(InputEvent Event) {
 		if(Event is InputEventMouseMotion Motion) {
 			RotateY(Deg2Rad(-Motion.Relative.x * MouseSens));
@@ -104,9 +119,6 @@ public class FirstPersonPlayer : Character {
 			}
 		}
 	}
-
-
-
 
 
 	public void HandleMovementInput(float Delta) {
@@ -202,11 +214,7 @@ public class FirstPersonPlayer : Character {
 			float Damage = BaseCrunchDmg + (100f * Percent);
 			Health -= (int)Damage;
 			GD.Print("Overkill: ", Overkill, " Percent: ", Percent, " Damage: ", Damage);
-
-			if(Health <= 0) {
-				Rpc(nameof(ThirdPersonPlayer.Die));
-				QueueFree();
-			}
+			CheckDie();
 		}
 
 		HandleFootsteps(Delta);

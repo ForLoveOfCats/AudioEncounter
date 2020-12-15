@@ -64,7 +64,8 @@ public class Game : Node {
 	public void PlayerConnected(int Id) {
 		GD.Print($"Player {Id} connected");
 
-		Node Player = ThirdPersonPlayerScene.Instance();
+		ThirdPersonPlayer Player = (ThirdPersonPlayer)ThirdPersonPlayerScene.Instance();
+		Player.Id = Id;
 		Player.Name = Id.ToString();
 		RuntimeRoot.AddChild(Player);
 	}

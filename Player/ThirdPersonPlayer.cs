@@ -2,7 +2,9 @@ using Godot;
 
 
 
-public class ThirdPersonPlayer : StaticBody {
+public class ThirdPersonPlayer : Spatial {
+	public int Id = -1;
+
 	public bool ValidTargetTransform = false;
 	public Transform TargetTransform = new Transform();
 
@@ -15,7 +17,7 @@ public class ThirdPersonPlayer : StaticBody {
 
 
 	[Remote]
-	public void Die() {
+	public void NetDie() {
 		QueueFree();
 	}
 
