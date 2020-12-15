@@ -35,7 +35,7 @@ public class FirstPersonPlayer : Character {
 	public int RightLeftDirection = 0;
 	public Vector3 Momentum = new Vector3();
 
-	public float Health = 100f;
+	public int Health = 100;
 
 	public List<CamAnimation> CamAnimations = new List<CamAnimation>();
 	public float FootstepCountdown = 0;
@@ -200,8 +200,13 @@ public class FirstPersonPlayer : Character {
 			float Overkill = -(OldMomentumY - CrunchSpeed);
 			float Percent = Overkill / (MaxFallSpeed + CrunchSpeed);
 			float Damage = BaseCrunchDmg + (100f * Percent);
-			Health -= Damage;
+			Health -= (int)Damage;
 			GD.Print("Overkill: ", Overkill, " Percent: ", Percent, " Damage: ", Damage);
+
+			if(Health <= 0) {
+				Rpc(nameof(ThirdPersonPlayer.Die));
+				QueueFree();
+			}
 		}
 
 		HandleFootsteps(Delta);

@@ -73,7 +73,10 @@ public class Game : Node {
 	public void PlayerDisconnected(int Id) {
 		GD.Print($"Player {Id} disconnected");
 
-		RuntimeRoot.GetNode($"{Id}").QueueFree();
+		Node ThirdPerson = RuntimeRoot.GetNodeOrNull(Id.ToString());
+		if(ThirdPerson != null) {
+			ThirdPerson.QueueFree();
+		}
 	}
 
 

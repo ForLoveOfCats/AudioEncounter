@@ -14,6 +14,12 @@ public class ThirdPersonPlayer : StaticBody {
 	}
 
 
+	[Remote]
+	public void Die() {
+		QueueFree();
+	}
+
+
 	public override void _Process(float Delta) {
 		if(ValidTargetTransform) {
 			Transform = Transform.InterpolateWith(TargetTransform, Delta / 0.1f);
