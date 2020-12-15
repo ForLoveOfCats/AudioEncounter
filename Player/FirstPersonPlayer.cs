@@ -187,6 +187,8 @@ public class FirstPersonPlayer : Character {
 
 		CamJoint.RotationDegrees = new Vector3(Combined, 0, 0);
 
+		Rpc(nameof(ThirdPersonPlayer.NetUpdateTransform), Transform);
+
 		base._PhysicsProcess(Delta);
 	}
 }

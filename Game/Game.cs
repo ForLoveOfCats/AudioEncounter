@@ -14,6 +14,7 @@ public class Game : Node {
 
 	public static PackedScene WorldScene = GD.Load<PackedScene>("res://Maps/Initial/Initial.tscn");
 	public static PackedScene FirstPersonPlayerScene = GD.Load<PackedScene>("res://Player/FirstPersonPlayer.tscn");
+	public static PackedScene ThirdPersonPlayerScene = GD.Load<PackedScene>("res://Player/ThirdPersonPlayer.tscn");
 
 	public Node RuntimeRoot = null;
 
@@ -60,11 +61,17 @@ public class Game : Node {
 
 	public void PlayerConnected(int Id) {
 		GD.Print($"Player {Id} connected");
+
+		Node Player = ThirdPersonPlayerScene.Instance();
+		Player.Name = Id.ToString();
+		RuntimeRoot.AddChild(Player);
 	}
 
 
 	public void PlayerDisconnected(int Id) {
 		GD.Print($"Player {Id} disconnected");
+
+		RuntimeRoot.GetNode($"{Id}").QueueFree();
 	}
 
 
