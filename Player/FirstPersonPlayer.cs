@@ -9,13 +9,13 @@ public class FirstPersonPlayer : Character {
 	public const float MouseSens = 0.2f;
 	public const float MaxFallSpeed = 120f;
 	public const float Gravity = MaxFallSpeed / 0.65f;
-	public const float BaseSpeed = 10f;
-	public const float SprintSpeed = 22f;
+	public const float BaseSpeed = 8f;
+	public const float SprintSpeed = 24f;
 	public const float Acceleration = BaseSpeed / 0.04f;
 	public const float Friction = Acceleration / 2f;
 
-	public const float FootstepBaseTime = 0.75f;
-	public const float SprintingFootstepAcceleration = 2.15f;
+	public const float FootstepBaseTime = 0.65f;
+	public const float SprintingFootstepAcceleration = 2.2f;
 	public const float CrunchSpeed = -40f;
 
 	public Spatial CamJoint;
@@ -32,7 +32,7 @@ public class FirstPersonPlayer : Character {
 	public int RightLeftDirection = 0;
 	public Vector3 Momentum = new Vector3();
 	public List<CamAnimation> CamAnimations = new List<CamAnimation>();
-	public float FootstepCountdown = FootstepBaseTime;
+	public float FootstepCountdown = 0;
 
 
 	public class CamAnimation {
@@ -84,13 +84,13 @@ public class FirstPersonPlayer : Character {
 
 
 	public void HandleFootsteps(float Delta) {
-		if(OnFloor && (BackwardForwardDirection != 0 || RightLeftDirection != 0)) {
-			float Decrement = Delta;
-			if(Input.IsActionPressed("Sprint")) {
-				Decrement *= SprintingFootstepAcceleration;
-			}
+		float Decrement = Delta;
+		if(Input.IsActionPressed("Sprint")) {
+			Decrement *= SprintingFootstepAcceleration;
+		}
+		FootstepCountdown -= Decrement;
 
-			FootstepCountdown -= Decrement;
+		if(OnFloor && (BackwardForwardDirection != 0 || RightLeftDirection != 0)) {
 			if(FootstepCountdown <= 0) {
 				FootstepCountdown = FootstepBaseTime;
 
