@@ -1,20 +1,6 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://Player/FirstPersonPlayer.cs" type="Script" id=1]
-[ext_resource path="res://TrimmedAudio/FallCrunch.wav" type="AudioStream" id=2]
-[ext_resource path="res://TrimmedAudio/ConcreteFootsteps/5.wav" type="AudioStream" id=3]
-[ext_resource path="res://TrimmedAudio/ConcreteFootsteps/1.wav" type="AudioStream" id=4]
-[ext_resource path="res://TrimmedAudio/ConcreteFootsteps/4.wav" type="AudioStream" id=5]
-[ext_resource path="res://TrimmedAudio/ConcreteFootsteps/2.wav" type="AudioStream" id=6]
-[ext_resource path="res://TrimmedAudio/ConcreteFootsteps/3.wav" type="AudioStream" id=7]
-[ext_resource path="res://Player/Footstep2D.tscn" type="PackedScene" id=8]
-[ext_resource path="res://TrimmedAudio/ConcreteFootsteps/6.wav" type="AudioStream" id=9]
-[ext_resource path="res://TrimmedAudio/LeavesFootsteps/2.wav" type="AudioStream" id=10]
-[ext_resource path="res://TrimmedAudio/LeavesFootsteps/1.wav" type="AudioStream" id=11]
-[ext_resource path="res://TrimmedAudio/LeavesFootsteps/3.wav" type="AudioStream" id=12]
-[ext_resource path="res://TrimmedAudio/LeavesFootsteps/4.wav" type="AudioStream" id=13]
-[ext_resource path="res://TrimmedAudio/LeavesFootsteps/5.wav" type="AudioStream" id=14]
-[ext_resource path="res://TrimmedAudio/LeavesFootsteps/6.wav" type="AudioStream" id=15]
 
 [sub_resource type="CapsuleShape" id=1]
 height = 2.0
@@ -35,58 +21,3 @@ shape = SubResource( 1 )
 [node name="FloorCast" type="RayCast" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.8, 0 )
 enabled = true
-
-[node name="ConcreteFootsteps" parent="." instance=ExtResource( 8 )]
-
-[node name="1" type="AudioStreamPlayer" parent="ConcreteFootsteps"]
-stream = ExtResource( 4 )
-volume_db = 4.0
-
-[node name="2" type="AudioStreamPlayer" parent="ConcreteFootsteps"]
-stream = ExtResource( 6 )
-volume_db = 4.0
-
-[node name="3" type="AudioStreamPlayer" parent="ConcreteFootsteps"]
-stream = ExtResource( 7 )
-volume_db = 4.0
-
-[node name="4" type="AudioStreamPlayer" parent="ConcreteFootsteps"]
-stream = ExtResource( 5 )
-volume_db = 4.0
-
-[node name="5" type="AudioStreamPlayer" parent="ConcreteFootsteps"]
-stream = ExtResource( 3 )
-volume_db = 4.0
-
-[node name="6" type="AudioStreamPlayer" parent="ConcreteFootsteps"]
-stream = ExtResource( 9 )
-volume_db = 4.0
-
-[node name="LeavesFootsteps" parent="." instance=ExtResource( 8 )]
-
-[node name="1" type="AudioStreamPlayer" parent="LeavesFootsteps"]
-stream = ExtResource( 11 )
-volume_db = -4.0
-
-[node name="2" type="AudioStreamPlayer" parent="LeavesFootsteps"]
-stream = ExtResource( 10 )
-volume_db = -4.0
-
-[node name="3" type="AudioStreamPlayer" parent="LeavesFootsteps"]
-stream = ExtResource( 12 )
-volume_db = -4.0
-
-[node name="4" type="AudioStreamPlayer" parent="LeavesFootsteps"]
-stream = ExtResource( 13 )
-volume_db = -4.0
-
-[node name="5" type="AudioStreamPlayer" parent="LeavesFootsteps"]
-stream = ExtResource( 14 )
-volume_db = -4.0
-
-[node name="6" type="AudioStreamPlayer" parent="LeavesFootsteps"]
-stream = ExtResource( 15 )
-volume_db = -4.0
-
-[node name="FallCrunch" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 2 )

@@ -26,10 +26,8 @@ public class FirstPersonPlayer : Character {
 
 	public RayCast FloorCast;
 
-	public AudioStreamPlayer FallCrunch;
-	public Footstep2D ConcreteFootsteps;
-	public Footstep2D LeavesFootsteps;
-
+	FootstepChooser ConcreteChooser = new FootstepChooser(6);
+	FootstepChooser LeavesChooser = new FootstepChooser(6);
 
 	public int BackwardForwardDirection = 0;
 	public int RightLeftDirection = 0;
@@ -64,10 +62,6 @@ public class FirstPersonPlayer : Character {
 
 		FloorCast = GetNode<RayCast>("FloorCast");
 
-		FallCrunch = GetNode<AudioStreamPlayer>("FallCrunch");
-		ConcreteFootsteps = GetNode<Footstep2D>("ConcreteFootsteps");
-		LeavesFootsteps = GetNode<Footstep2D>("LeavesFootsteps");
-
 		Input.SetMouseMode(Input.MouseMode.Captured);
 	}
 
@@ -98,27 +92,30 @@ public class FirstPersonPlayer : Character {
 				FootstepCountdown = FootstepBaseTime;
 
 				int Index = -1;
-				var Kind = (FootstepKind)(-1);
+				var Catagory = (SfxCatagory)(-1);
 				if(FloorCast.GetCollider() is Node Floor) {
 					if(Floor.IsInGroup("concrete")) {
-						Index = ConcreteFootsteps.Play();
-						Kind = FootstepKind.CONCRETE;
+						Index = ConcreteChooser.Choose();
+						Catagory = SfxCatagory.CONCRETE;
 					} else if(Floor.IsInGroup("leaves")) {
-						Index = LeavesFootsteps.Play();
-						Kind = FootstepKind.LEAVES;
+						Index = LeavesChooser.Choose();
+						Catagory = SfxCatagory.LEAVES;
 					} else {
-						Index = ConcreteFootsteps.Play();
-						Kind = FootstepKind.CONCRETE;
+						Index = ConcreteChooser.Choose();
+						Catagory = SfxCatagory.CONCRETE;
 					}
 				}
 
 				if(Index != -1) {
-					ActualAssert(Kind != (FootstepKind)(-1));
-					Footstep3D.SendFootstep(Kind, Index, GlobalTransform.origin);
+					ActualAssert(Catagory != (SfxCatagory)(-1));
+					Sfx.PlaySfx(Catagory, Index, GlobalTransform.origin);
 				}
 			}
 		}
 	}
+
+
+
 
 
 	public void HandleMovementInput(float Delta) {
@@ -181,7 +178,7 @@ public class FirstPersonPlayer : Character {
 		float OldMomentumY = Momentum.y;
 		Momentum = Move(Momentum, Delta, 5, 40, 0.42f);
 		if(!WasOnFloor && OnFloor && OldMomentumY < CrunchSpeed) {
-			FallCrunch.Play();
+			Sfx.PlaySfx(SfxCatagory.FALL_CRUNCH, 0, GlobalTransform.origin);
 			CamAnimations.Add(new CamAnimation());
 		}
 
