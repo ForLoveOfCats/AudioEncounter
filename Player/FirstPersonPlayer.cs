@@ -23,6 +23,7 @@ public class FirstPersonPlayer : Character {
 
 	public Spatial CamJoint;
 	public Camera Cam;
+	public Vector3 InitialCamJointPos;
 
 	public RayCast FloorCast;
 
@@ -34,24 +35,7 @@ public class FirstPersonPlayer : Character {
 	public Vector3 Momentum = new Vector3();
 	public List<CamAnimation> CamAnimations = new List<CamAnimation>();
 	public float FootstepCountdown = 0;
-
-
-	public class CamAnimation {
-		public const float MaxTime = 0.45f;
-		public const float MaxValue = 18f;
-
-		public float CurrentTime = MaxTime;
-
-		public float Tick(float Delta) {
-			CurrentTime = Clamp(CurrentTime - Delta, 0, MaxValue);
-			float Squared = CurrentTime * CurrentTime;
-			return ((Sin(CurrentTime / MaxTime * Pi) * Squared) / (0.4f * MaxTime)) * (1 / MaxTime) * MaxValue;
-		}
-
-		public bool ReachedEnd() {
-			return CurrentTime <= 0;
-		}
-	}
+	public int NextBobDirection = 1;
 
 
 	public override void _Ready() {
@@ -59,6 +43,7 @@ public class FirstPersonPlayer : Character {
 
 		CamJoint = GetNode<Spatial>("CamJoint");
 		Cam = CamJoint.GetNode<Camera>("Cam");
+		InitialCamJointPos = CamJoint.Translation;
 
 		FloorCast = GetNode<RayCast>("FloorCast");
 
@@ -97,10 +82,12 @@ public class FirstPersonPlayer : Character {
 					if(Floor.IsInGroup("concrete")) {
 						Index = ConcreteChooser.Choose();
 						Catagory = SfxCatagory.CONCRETE;
-					} else if(Floor.IsInGroup("leaves")) {
+					}
+					else if(Floor.IsInGroup("leaves")) {
 						Index = LeavesChooser.Choose();
 						Catagory = SfxCatagory.LEAVES;
-					} else {
+					}
+					else {
 						Index = ConcreteChooser.Choose();
 						Catagory = SfxCatagory.CONCRETE;
 					}
@@ -148,6 +135,21 @@ public class FirstPersonPlayer : Character {
 		float MaxSpeed = BaseSpeed;
 		if(Input.IsActionPressed("Sprint")) {
 			MaxSpeed = SprintSpeed;
+
+			if(OnFloor && (BackwardForwardDirection != 0 || RightLeftDirection != 0)) {
+				bool BobInProgress = false;
+				foreach(CamAnimation Animation in CamAnimations) {
+					if(Animation is SprintCamBob) {
+						BobInProgress = true;
+						break;
+					}
+				}
+
+				if(!BobInProgress) {
+					CamAnimations.Add(new SprintCamBob(NextBobDirection));
+					NextBobDirection *= -1;
+				}
+			}
 		}
 
 		if(BackwardForwardDirection == 0 && RightLeftDirection == 0) {
@@ -162,10 +164,20 @@ public class FirstPersonPlayer : Character {
 			Momentum.y = Clamp(Momentum.y - Gravity * Delta, -MaxFallSpeed, MaxFallSpeed);
 		}
 
+		int SprintModifiedBackwardForwardDirection = BackwardForwardDirection;
+		int SprintModifiedRightLeftDirection = RightLeftDirection;
+
+		if(Input.IsActionPressed("Sprint")) {
+			if(BackwardForwardDirection != -1) {
+				SprintModifiedBackwardForwardDirection = 0;
+			}
+			SprintModifiedRightLeftDirection = 0;
+		}
+
 		var Push = new Vector3(
-			RightLeftDirection * Acceleration * Delta,
+			SprintModifiedRightLeftDirection * Acceleration * Delta,
 			0,
-			BackwardForwardDirection * Acceleration * Delta
+			SprintModifiedBackwardForwardDirection * Acceleration * Delta
 		).Rotated(new Vector3(0, 1, 0), Rotation.y);
 		Momentum = Momentum.Inflated(ClampVec3(Momentum.Flattened() + Push, 0, MaxSpeed));
 	}
@@ -179,23 +191,25 @@ public class FirstPersonPlayer : Character {
 		Momentum = Move(Momentum, Delta, 5, 40, 0.42f);
 		if(!WasOnFloor && OnFloor && OldMomentumY < CrunchSpeed) {
 			Sfx.PlaySfx(SfxCatagory.FALL_CRUNCH, 0, GlobalTransform.origin);
-			CamAnimations.Add(new CamAnimation());
+			CamAnimations.Add(new CrunchCamDip());
 		}
 
 		HandleFootsteps(Delta);
 
+		CamJoint.Translation = InitialCamJointPos;
+		CamJoint.RotationDegrees = new Vector3();
+
 		int Index = 0;
-		float Combined = 0;
 		while(Index < CamAnimations.Count) {
-			Combined -= CamAnimations[Index].Tick(Delta);
+			CamAnimations[Index].Tick(CamJoint, Delta);
+
 			if(CamAnimations[Index].ReachedEnd()) {
 				CamAnimations.RemoveAt(Index);
-			} else {
+			}
+			else {
 				Index += 1;
 			}
 		}
-
-		CamJoint.RotationDegrees = new Vector3(Combined, 0, 0);
 
 		Rpc(nameof(ThirdPersonPlayer.NetUpdateTransform), Transform);
 

@@ -9,9 +9,9 @@ height = 2.0
 script = ExtResource( 1 )
 
 [node name="CamJoint" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0 )
 
 [node name="Cam" type="Camera" parent="CamJoint"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0 )
 fov = 90.0
 
 [node name="Hull" type="CollisionShape" parent="."]
