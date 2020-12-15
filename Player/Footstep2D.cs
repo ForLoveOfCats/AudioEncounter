@@ -5,7 +5,7 @@ using Godot;
 public class Footstep2D : Node {
 	int LastIndex = -1;
 
-	public void Play() {
+	public int Play() {
 		Godot.Collections.Array Children = GetChildren();
 
 		int Index = LastIndex;
@@ -14,7 +14,11 @@ public class Footstep2D : Node {
 		}
 		LastIndex = Index;
 
+#if false
 		var Child = (AudioStreamPlayer)Children[Index];
 		Child.Play();
+#endif
+
+		return Index;
 	}
 }

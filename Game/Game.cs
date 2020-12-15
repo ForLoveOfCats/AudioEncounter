@@ -16,14 +16,16 @@ public class Game : Node {
 	public static PackedScene FirstPersonPlayerScene = GD.Load<PackedScene>("res://Player/FirstPersonPlayer.tscn");
 	public static PackedScene ThirdPersonPlayerScene = GD.Load<PackedScene>("res://Player/ThirdPersonPlayer.tscn");
 
-	public Node RuntimeRoot = null;
+	public static Game Self = null;
+	public static Node RuntimeRoot = null;
 
 	public override void _Ready() {
+		Self = this;
+		RuntimeRoot = GetTree().Root.GetNode("RuntimeRoot");
+
 		GetTree().Connect("network_peer_connected", this, nameof(PlayerConnected));
 		GetTree().Connect("network_peer_disconnected", this, nameof(PlayerDisconnected));
 		GetTree().Connect("server_disconnected", this, nameof(ServerDisconnected), flags: (uint)ConnectFlags.Deferred);
-
-		RuntimeRoot = GetTree().Root.GetNode("RuntimeRoot");
 
 		base._Ready();
 	}

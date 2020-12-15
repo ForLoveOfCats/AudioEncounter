@@ -1,6 +1,9 @@
 using System.Collections.Generic;
+
 using Godot;
 using static Godot.Mathf;
+
+using static Assert;
 using static SteelMath;
 
 
@@ -94,14 +97,24 @@ public class FirstPersonPlayer : Character {
 			if(FootstepCountdown <= 0) {
 				FootstepCountdown = FootstepBaseTime;
 
+				int Index = -1;
+				var Kind = (FootstepKind)(-1);
 				if(FloorCast.GetCollider() is Node Floor) {
 					if(Floor.IsInGroup("concrete")) {
-						ConcreteFootsteps.Play();
+						Index = ConcreteFootsteps.Play();
+						Kind = FootstepKind.CONCRETE;
 					} else if(Floor.IsInGroup("leaves")) {
-						LeavesFootsteps.Play();
+						Index = LeavesFootsteps.Play();
+						Kind = FootstepKind.LEAVES;
 					} else {
-						ConcreteFootsteps.Play();
+						Index = ConcreteFootsteps.Play();
+						Kind = FootstepKind.CONCRETE;
 					}
+				}
+
+				if(Index != -1) {
+					ActualAssert(Kind != (FootstepKind)(-1));
+					Footstep3D.SendFootstep(Kind, Index, GlobalTransform.origin);
 				}
 			}
 		}

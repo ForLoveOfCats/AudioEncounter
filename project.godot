@@ -207,10 +207,12 @@ config/icon="res://icon.png"
 [autoload]
 
 Game="*res://Game/Game.cs"
+Footstep3d="*res://Player/Footstep3D.cs"
 
 [debug]
 
 settings/fps/force_fps=100
+gdscript/warnings/enable=false
 
 [display]
 
