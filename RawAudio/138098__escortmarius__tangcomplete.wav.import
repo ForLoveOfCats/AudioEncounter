@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/138098__escortmarius__tangcomplete.wav-01a8b529a9d4bdf2872d274608c92080.sample"
+
+[deps]
+
+source_file="res://RawAudio/138098__escortmarius__tangcomplete.wav"
+dest_files=[ "res://.import/138098__escortmarius__tangcomplete.wav-01a8b529a9d4bdf2872d274608c92080.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

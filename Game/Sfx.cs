@@ -6,7 +6,7 @@ using static Assert;
 
 
 
-public enum SfxCatagory { FALL_CRUNCH, CONCRETE, LEAVES };
+public enum SfxCatagory { FALL_CRUNCH, EMPTY_CHAMBER_FIRE_CLICK, CONCRETE, LEAVES };
 
 
 
@@ -47,6 +47,9 @@ public class Sfx : Node {
 	static Sfx() {
 		Clips.Add(SfxCatagory.FALL_CRUNCH, new List<AudioStream> {
 			GD.Load<AudioStream>("res://TrimmedAudio/FallCrunch.wav")
+		});
+		Clips.Add(SfxCatagory.EMPTY_CHAMBER_FIRE_CLICK, new List<AudioStream> {
+			GD.Load<AudioStream>("res://TrimmedAudio/EmptyChamberFireClick.wav")
 		});
 
 		List<AudioStream> Concrete = LoadAllStreamsInFolder("res://TrimmedAudio/ConcreteFootsteps");
@@ -89,7 +92,7 @@ public class Sfx : Node {
 
 
 	public static void PlaySfx(SfxCatagory Catagory, int Index, Vector3 Pos) {
-		PlaySfxLocally(Catagory, Index);
+		// PlaySfxLocally(Catagory, Index);
 		Self.Rpc(nameof(PlaySfxAt), Catagory, Index, Pos);
 	}
 
@@ -99,6 +102,11 @@ public class Sfx : Node {
 		StreamPlayer.Stream = Clips[Catagory][Index];
 
 		switch(Catagory) {
+			case SfxCatagory.EMPTY_CHAMBER_FIRE_CLICK: {
+				StreamPlayer.VolumeDb = -8;
+				break;
+			}
+
 			case SfxCatagory.CONCRETE: {
 				StreamPlayer.VolumeDb = 4;
 				break;
@@ -124,6 +132,13 @@ public class Sfx : Node {
 			case SfxCatagory.FALL_CRUNCH: {
 				StreamPlayer.UnitDb = 1;
 				StreamPlayer.UnitSize = 18;
+				break;
+			}
+
+			case SfxCatagory.EMPTY_CHAMBER_FIRE_CLICK: {
+				StreamPlayer.UnitDb = -10;
+				StreamPlayer.UnitSize = 28;
+				StreamPlayer.MaxDb = -10;
 				break;
 			}
 

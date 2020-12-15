@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/EmptyChamberFireClick.wav-4a920592ac40bd162336e57ae53cc488.sample"
+
+[deps]
+
+source_file="res://TrimmedAudio/EmptyChamberFireClick.wav"
+dest_files=[ "res://.import/EmptyChamberFireClick.wav-4a920592ac40bd162336e57ae53cc488.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0
