@@ -204,6 +204,10 @@ config/name="AudioEncounter"
 run/main_scene="res://RuntimeRoot.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+Game="*res://Game/Game.cs"
+
 [debug]
 
 settings/fps/force_fps=100
