@@ -17,13 +17,13 @@ public class FirstPersonPlayer : Character {
 	public const float Gravity = MaxFallSpeed / 0.6f;
 	public const float BaseSpeed = 8f;
 	public const float SneakSpeed = 4f;
-	public const float SprintSpeed = 20f;
-	public const float AccelerationTime = 0.055f;
+	public const float SprintSpeed = 24f;
+	public const float AccelerationTime = 0.07f;
 	public const float Acceleration = BaseSpeed / AccelerationTime;
 	public const float Friction = Acceleration / 2f;
 
 	public const float FootstepBaseTime = 0.6f;
-	public const float SprintingFootstepAcceleration = 2.1f;
+	public const float SprintingFootstepAcceleration = 2.2f;
 	public const float CrunchSpeed = -35f;
 	public const float BaseCrunchDmg = 20f;
 
