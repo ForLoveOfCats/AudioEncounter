@@ -14,7 +14,7 @@ public class FirstPersonPlayer : Character {
 	public const float Gravity = MaxFallSpeed / 0.6f;
 	public const float BaseSpeed = 8f;
 	public const float SprintSpeed = 24f;
-	public const float Acceleration = BaseSpeed / 0.04f;
+	public const float Acceleration = BaseSpeed / 0.055f;
 	public const float Friction = Acceleration / 2f;
 
 	public const float FootstepBaseTime = 0.65f;

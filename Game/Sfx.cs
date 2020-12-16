@@ -144,13 +144,15 @@ public class Sfx : Node {
 
 			case SfxCatagory.CONCRETE: {
 				StreamPlayer.UnitDb = 10;
-				StreamPlayer.UnitSize = 10;
+				StreamPlayer.MaxDb = 10;
+				StreamPlayer.UnitSize = 25;
 				break;
 			}
 
 			case SfxCatagory.LEAVES: {
-				StreamPlayer.UnitDb = 5;
-				StreamPlayer.UnitSize = 5;
+				StreamPlayer.UnitDb = 4;
+				StreamPlayer.MaxDb = 4;
+				StreamPlayer.UnitSize = 25;
 				break;
 			}
 		}
