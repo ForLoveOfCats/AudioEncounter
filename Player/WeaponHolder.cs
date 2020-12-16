@@ -86,7 +86,11 @@ public class WeaponHolder : Spatial {
 	public override void _Process(float Delta) {
 		TickFireTime(Pistol, Delta);
 
-		if(Input.IsActionJustPressed("Fire") && CurrentWeapon.FireTimer <= 0) {
+		float PlayerSpeed = Round(ParentPlayer.Momentum.Flattened().Length());
+		if(Input.IsActionJustPressed("Fire")
+			&& CurrentWeapon.FireTimer <= 0
+			&& PlayerSpeed <= FirstPersonPlayer.BaseSpeed
+			&& SprintTime <= 0) {
 			CurrentWeapon.FireTimer = CurrentWeapon.MaxFireTime;
 
 			if(CurrentWeapon.CurrentAmmo > 0) {
