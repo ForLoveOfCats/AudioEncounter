@@ -34,8 +34,8 @@ public class WeaponHolder : Spatial {
 	public WeaponStats Pistol = new WeaponStats() {
 		MaxAmmo = 8,
 		CurrentAmmo = 8,
-		MaxFireTime = 0.22f,
-		MaxReloadTime = 5f,
+		MaxFireTime = 0.1f,
+		MaxReloadTime = 4f,
 		HeadDamage = 35,
 		BodyDamage = 15,
 	};
@@ -83,9 +83,10 @@ public class WeaponHolder : Spatial {
 	}
 
 
-	public void PlayFireSfx() {
+	public void RunFireEffects() {
 		if(CurrentWeapon == Pistol) {
 			Sfx.PlaySfx(SfxCatagory.PISTOL_FIRE, 0, GlobalTransform.origin);
+			ParentPlayer.CamAnimations.Add(new PistolRecoil());
 		}
 	}
 
@@ -103,7 +104,7 @@ public class WeaponHolder : Spatial {
 			if(CurrentWeapon.CurrentAmmo > 0) {
 				CurrentWeapon.CurrentAmmo -= 1;
 				PerformHitscan();
-				PlayFireSfx();
+				RunFireEffects();
 			} else {
 				Sfx.PlaySfx(SfxCatagory.EMPTY_CHAMBER_FIRE_CLICK, 0, GlobalTransform.origin);
 			}

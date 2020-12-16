@@ -33,3 +33,28 @@ public class CrunchCamDip : CamAnimation {
 		return CurrentTime <= 0;
 	}
 }
+
+
+
+public class PistolRecoil : CamAnimation {
+	public const float MaxTime = 0.35f;
+	public const float MaxValue = 7f;
+
+	public float CurrentTime = MaxTime;
+
+	public void Tick(Spatial CamJoint, float Delta) {
+		CurrentTime = Clamp(CurrentTime - Delta, 0, MaxTime);
+		float Squared = CurrentTime * CurrentTime;
+		float RotX = ((Sin(CurrentTime / MaxTime * Pi) * Squared) / (0.4f * MaxTime)) * (1 / MaxTime) * MaxValue;
+
+		CamJoint.RotationDegrees = new Vector3(
+			CamJoint.RotationDegrees.x + RotX,
+			CamJoint.RotationDegrees.y,
+			CamJoint.RotationDegrees.z
+		);
+	}
+
+	public bool ReachedEnd() {
+		return CurrentTime <= 0;
+	}
+}
