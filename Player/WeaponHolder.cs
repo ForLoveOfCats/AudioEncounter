@@ -19,9 +19,13 @@ public class WeaponStats {
 
 public class WeaponHolder : Spatial {
 	public const float Range = 500f;
+	public const float SprintChangeStateTime = 0.2f;
 
 	public bool Reloading = false;
 	public float ReloadHidePercent = 0f;
+	public float SprintTime = 0f;
+
+	FirstPersonPlayer ParentPlayer = null;
 
 	public WeaponStats Pistol = new WeaponStats() {
 		MaxAmmo = 8,
@@ -37,6 +41,9 @@ public class WeaponHolder : Spatial {
 
 	public override void _Ready() {
 		CurrentWeapon = Pistol;
+
+		ParentPlayer = (FirstPersonPlayer)GetParent().GetParent().GetParent();
+
 		base._Ready();
 	}
 
@@ -47,18 +54,16 @@ public class WeaponHolder : Spatial {
 
 
 	public void PerformHitscan() {
-		FirstPersonPlayer Plr = (FirstPersonPlayer)GetParent().GetParent().GetParent();
-
 		float VerticalDeviation = 0;
 		float HorizontalDeviation = 0;
 
-		Vector3 Origin = Plr.Cam.GlobalTransform.origin;
+		Vector3 Origin = ParentPlayer.Cam.GlobalTransform.origin;
 		Vector3 Endpoint = Origin + new Vector3(0, 0, -Range)
-			.Rotated(new Vector3(1, 0, 0), Deg2Rad(Plr.Cam.RotationDegrees.x + VerticalDeviation))
-			.Rotated(new Vector3(0, 1, 0), Deg2Rad(Plr.RotationDegrees.y + HorizontalDeviation));
+			.Rotated(new Vector3(1, 0, 0), Deg2Rad(ParentPlayer.Cam.RotationDegrees.x + VerticalDeviation))
+			.Rotated(new Vector3(0, 1, 0), Deg2Rad(ParentPlayer.RotationDegrees.y + HorizontalDeviation));
 		GD.Print(Origin, " ", Endpoint);
 
-		var Exclude = new Godot.Collections.Array() { Plr };
+		var Exclude = new Godot.Collections.Array() { ParentPlayer };
 		PhysicsDirectSpaceState State = GetWorld().DirectSpaceState;
 		Godot.Collections.Dictionary Results = State.IntersectRay(Origin, Endpoint, Exclude, 1 | 2);
 
@@ -105,8 +110,17 @@ public class WeaponHolder : Spatial {
 		} else if(CurrentWeapon.ReloadTimer <= OneTenth) {
 			ReloadHidePercent = CurrentWeapon.ReloadTimer / OneTenth;
 		}
+		float ReloadDisplay = Sin((ReloadHidePercent / 2f) * Pi);
 
-		RotationDegrees = new Vector3(-120 * ReloadHidePercent, 0, 0);
+		if(ParentPlayer.Sprinting) {
+			SprintTime = Clamp(SprintTime + Delta, 0, SprintChangeStateTime);
+		} else {
+			SprintTime = Clamp(SprintTime - Delta, 0, SprintChangeStateTime);
+		}
+
+		float SprintPercent = SprintTime / SprintChangeStateTime;
+		float SprintDisplay = Sin((SprintPercent / 2f) * Pi);
+		RotationDegrees = new Vector3(-140 * ReloadDisplay, 75f * SprintDisplay, 0);
 
 		base._Process(Delta);
 	}

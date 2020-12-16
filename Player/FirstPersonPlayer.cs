@@ -34,6 +34,7 @@ public class FirstPersonPlayer : Character {
 	public int BackwardForwardDirection = 0;
 	public int RightLeftDirection = 0;
 	public Vector3 Momentum = new Vector3();
+	public bool Sprinting = false;
 
 	public int Health = 100;
 
@@ -151,6 +152,9 @@ public class FirstPersonPlayer : Character {
 		float MaxSpeed = BaseSpeed;
 		if(Input.IsActionPressed("Sprint")) {
 			MaxSpeed = SprintSpeed;
+			Sprinting = OnFloor;
+		} else {
+			Sprinting = false;
 		}
 
 		if(BackwardForwardDirection == 0 && RightLeftDirection == 0) {
