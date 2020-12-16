@@ -8,18 +8,22 @@ using static SteelMath;
 
 
 
+public enum MovementMode { WALKING, SNEAKING, SPRINTING };
+
+
 public class FirstPersonPlayer : Character {
 	public const float MouseSens = 0.2f;
 	public const float MaxFallSpeed = 75f;
 	public const float Gravity = MaxFallSpeed / 0.6f;
 	public const float BaseSpeed = 8f;
-	public const float SprintSpeed = 24f;
+	public const float SneakSpeed = 4f;
+	public const float SprintSpeed = 20f;
 	public const float AccelerationTime = 0.055f;
 	public const float Acceleration = BaseSpeed / AccelerationTime;
 	public const float Friction = Acceleration / 2f;
 
-	public const float FootstepBaseTime = 0.65f;
-	public const float SprintingFootstepAcceleration = 2.2f;
+	public const float FootstepBaseTime = 0.6f;
+	public const float SprintingFootstepAcceleration = 2.1f;
 	public const float CrunchSpeed = -35f;
 	public const float BaseCrunchDmg = 20f;
 
@@ -35,7 +39,7 @@ public class FirstPersonPlayer : Character {
 	public int BackwardForwardDirection = 0;
 	public int RightLeftDirection = 0;
 	public Vector3 Momentum = new Vector3();
-	public bool Sprinting = false;
+	public MovementMode Mode = MovementMode.WALKING;
 
 	public int Health = 100;
 
@@ -93,7 +97,7 @@ public class FirstPersonPlayer : Character {
 		}
 		FootstepCountdown -= Decrement;
 
-		if(OnFloor && (BackwardForwardDirection != 0 || RightLeftDirection != 0)) {
+		if(OnFloor && Mode != MovementMode.SNEAKING && (BackwardForwardDirection != 0 || RightLeftDirection != 0)) {
 			if(FootstepCountdown <= 0) {
 				FootstepCountdown = FootstepBaseTime;
 
@@ -151,11 +155,18 @@ public class FirstPersonPlayer : Character {
 		}
 
 		float MaxSpeed = BaseSpeed;
-		if(Input.IsActionPressed("Sprint") && !Input.IsActionPressed("ADS")) {
+		if(Input.IsActionPressed("Sneak")) {
+			MaxSpeed = SneakSpeed;
+			Mode = MovementMode.SNEAKING;
+		} else if(Input.IsActionPressed("Sprint") && !Input.IsActionPressed("ADS")) {
 			MaxSpeed = SprintSpeed;
-			Sprinting = OnFloor && (BackwardForwardDirection != 0 || RightLeftDirection != 0);
+			if(OnFloor && (BackwardForwardDirection != 0 || RightLeftDirection != 0)) {
+				Mode = MovementMode.SPRINTING;
+			} else {
+				Mode = MovementMode.WALKING;
+			}
 		} else {
-			Sprinting = false;
+			Mode = MovementMode.WALKING;
 		}
 
 		if(BackwardForwardDirection == 0 && RightLeftDirection == 0) {

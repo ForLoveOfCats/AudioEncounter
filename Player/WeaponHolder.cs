@@ -136,7 +136,7 @@ public class WeaponHolder : Spatial {
 		}
 		float ReloadDisplay = Sin((ReloadHidePercent / 2f) * Pi);
 
-		if(ParentPlayer.Sprinting) {
+		if(ParentPlayer.Mode == MovementMode.SPRINTING) {
 			SprintTime = Clamp(SprintTime + Delta, 0, SprintChangeStateTime);
 		} else {
 			SprintTime = Clamp(SprintTime - Delta, 0, SprintChangeStateTime);
@@ -146,7 +146,7 @@ public class WeaponHolder : Spatial {
 		float SprintDisplay = Sin((SprintPercent / 2f) * Pi);
 		RotationDegrees = new Vector3(-140 * ReloadDisplay, 75f * SprintDisplay, 0);
 
-		if(!ParentPlayer.Sprinting && Input.IsActionPressed("ADS")) {
+		if(ParentPlayer.Mode != MovementMode.SPRINTING && Input.IsActionPressed("ADS")) {
 			AdsTime = Clamp(AdsTime + Delta, 0, AdsChangeStateTime);
 		} else {
 			AdsTime = Clamp(AdsTime - Delta, 0, AdsChangeStateTime);
