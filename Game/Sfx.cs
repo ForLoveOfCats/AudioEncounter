@@ -9,6 +9,7 @@ using static Assert;
 public enum SfxCatagory {
 	FALL_CRUNCH,
 	EMPTY_CHAMBER_FIRE_CLICK,
+	RELOAD,
 	PISTOL_FIRE,
 	CONCRETE,
 	LEAVES
@@ -56,6 +57,10 @@ public class Sfx : Node {
 		});
 		Clips.Add(SfxCatagory.EMPTY_CHAMBER_FIRE_CLICK, new List<AudioStream> {
 			GD.Load<AudioStream>("res://TrimmedAudio/EmptyChamberFireClick.wav")
+		});
+		Clips.Add(SfxCatagory.RELOAD, new List<AudioStream> {
+			GD.Load<AudioStream>("res://TrimmedAudio/ReloadStart.wav"),
+			GD.Load<AudioStream>("res://TrimmedAudio/ReloadEnd.wav")
 		});
 		Clips.Add(SfxCatagory.PISTOL_FIRE, new List<AudioStream> {
 			GD.Load<AudioStream>("res://TrimmedAudio/PistolFire.wav")
@@ -148,6 +153,13 @@ public class Sfx : Node {
 				StreamPlayer.UnitDb = -10;
 				StreamPlayer.UnitSize = 28;
 				StreamPlayer.MaxDb = -10;
+				break;
+			}
+
+			case SfxCatagory.RELOAD: {
+				StreamPlayer.UnitDb = -2;
+				StreamPlayer.UnitSize = 40;
+				StreamPlayer.MaxDb = -2;
 				break;
 			}
 

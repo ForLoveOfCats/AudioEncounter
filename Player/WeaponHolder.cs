@@ -98,7 +98,8 @@ public class WeaponHolder : Spatial {
 		if(Input.IsActionJustPressed("Fire")
 			&& CurrentWeapon.FireTimer <= 0
 			&& PlayerSpeed <= FirstPersonPlayer.BaseSpeed
-			&& SprintTime <= 0) {
+			&& SprintTime <= 0
+			&& Reloading == false) {
 			CurrentWeapon.FireTimer = CurrentWeapon.MaxFireTime;
 
 			if(CurrentWeapon.CurrentAmmo > 0) {
@@ -116,10 +117,12 @@ public class WeaponHolder : Spatial {
 			&& CurrentWeapon.CurrentAmmo < CurrentWeapon.MaxAmmo) {
 			CurrentWeapon.ReloadTimer = CurrentWeapon.MaxReloadTime;
 			Reloading = true;
+			Sfx.PlaySfx(SfxCatagory.RELOAD, 0, GlobalTransform.origin);
 		} else if(Reloading && CurrentWeapon.ReloadTimer > 0) {
 			CurrentWeapon.ReloadTimer = Clamp(CurrentWeapon.ReloadTimer - Delta, 0, CurrentWeapon.MaxReloadTime);
 			if(CurrentWeapon.ReloadTimer <= 0) {
 				CurrentWeapon.CurrentAmmo = CurrentWeapon.MaxAmmo;
+				Sfx.PlaySfx(SfxCatagory.RELOAD, 1, GlobalTransform.origin);
 			}
 		} else {
 			Reloading = false;
