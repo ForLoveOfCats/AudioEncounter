@@ -20,6 +20,7 @@ public class WeaponStats {
 public class WeaponHolder : Spatial {
 	public const float Range = 500f;
 
+	public bool Reloading = false;
 	public float ReloadHidePercent = 0f;
 
 	public WeaponStats Pistol = new WeaponStats() {
@@ -81,10 +82,6 @@ public class WeaponHolder : Spatial {
 			if(CurrentWeapon.CurrentAmmo > 0) {
 				CurrentWeapon.CurrentAmmo -= 1;
 				PerformHitscan();
-
-				if(CurrentWeapon.CurrentAmmo == 0) {
-					CurrentWeapon.CurrentAmmo = -1;
-				}
 			} else {
 				Sfx.PlaySfx(SfxCatagory.EMPTY_CHAMBER_FIRE_CLICK, 0, GlobalTransform.origin);
 			}
@@ -92,11 +89,14 @@ public class WeaponHolder : Spatial {
 
 		if(Input.IsActionJustPressed("Reload") && CurrentWeapon.FireTimer <= 0 && CurrentWeapon.ReloadTimer <= 0) {
 			CurrentWeapon.ReloadTimer = CurrentWeapon.MaxReloadTime;
-		} else if(CurrentWeapon.ReloadTimer > 0 && CurrentWeapon.CurrentAmmo == -1) {
+			Reloading = true;
+		} else if(Reloading && CurrentWeapon.ReloadTimer > 0) {
 			CurrentWeapon.ReloadTimer = Clamp(CurrentWeapon.ReloadTimer - Delta, 0, CurrentWeapon.MaxReloadTime);
 			if(CurrentWeapon.ReloadTimer <= 0) {
 				CurrentWeapon.CurrentAmmo = CurrentWeapon.MaxAmmo;
 			}
+		} else {
+			Reloading = false;
 		}
 
 		float OneTenth = CurrentWeapon.MaxReloadTime / 10;
