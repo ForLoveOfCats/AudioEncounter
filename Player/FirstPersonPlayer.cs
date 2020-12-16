@@ -151,21 +151,6 @@ public class FirstPersonPlayer : Character {
 		float MaxSpeed = BaseSpeed;
 		if(Input.IsActionPressed("Sprint")) {
 			MaxSpeed = SprintSpeed;
-
-			if(OnFloor && (BackwardForwardDirection != 0 || RightLeftDirection != 0)) {
-				bool BobInProgress = false;
-				foreach(CamAnimation Animation in CamAnimations) {
-					if(Animation is SprintCamBob) {
-						BobInProgress = true;
-						break;
-					}
-				}
-
-				if(!BobInProgress) {
-					CamAnimations.Add(new SprintCamBob(NextBobDirection));
-					NextBobDirection *= -1;
-				}
-			}
 		}
 
 		if(BackwardForwardDirection == 0 && RightLeftDirection == 0) {
@@ -180,20 +165,10 @@ public class FirstPersonPlayer : Character {
 			Momentum.y = Clamp(Momentum.y - Gravity * Delta, -MaxFallSpeed, MaxFallSpeed);
 		}
 
-		int SprintModifiedBackwardForwardDirection = BackwardForwardDirection;
-		int SprintModifiedRightLeftDirection = RightLeftDirection;
-
-		if(Input.IsActionPressed("Sprint")) {
-			if(BackwardForwardDirection != -1) {
-				SprintModifiedBackwardForwardDirection = 0;
-			}
-			SprintModifiedRightLeftDirection = 0;
-		}
-
 		var Push = new Vector3(
-			SprintModifiedRightLeftDirection * Acceleration * Delta,
+			RightLeftDirection * Acceleration * Delta,
 			0,
-			SprintModifiedBackwardForwardDirection * Acceleration * Delta
+			BackwardForwardDirection * Acceleration * Delta
 		).Rotated(new Vector3(0, 1, 0), Rotation.y);
 		Momentum = Momentum.Inflated(ClampVec3(Momentum.Flattened() + Push, 0, MaxSpeed));
 	}

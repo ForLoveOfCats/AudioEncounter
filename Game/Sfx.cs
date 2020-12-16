@@ -92,7 +92,7 @@ public class Sfx : Node {
 
 
 	public static void PlaySfx(SfxCatagory Catagory, int Index, Vector3 Pos) {
-		// PlaySfxLocally(Catagory, Index);
+		PlaySfxLocally(Catagory, Index);
 		Self.Rpc(nameof(PlaySfxAt), Catagory, Index, Pos);
 	}
 
