@@ -3,4 +3,6 @@
 [ext_resource path="res://Player/Hitbox.cs" type="Script" id=1]
 
 [node name="Hitbox" type="StaticBody"]
+collision_layer = 2
+collision_mask = 2
 script = ExtResource( 1 )
