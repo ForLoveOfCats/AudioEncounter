@@ -153,7 +153,7 @@ public class FirstPersonPlayer : Character {
 		float MaxSpeed = BaseSpeed;
 		if(Input.IsActionPressed("Sprint") && !Input.IsActionPressed("ADS")) {
 			MaxSpeed = SprintSpeed;
-			Sprinting = OnFloor;
+			Sprinting = OnFloor && (BackwardForwardDirection != 0 || RightLeftDirection != 0);
 		} else {
 			Sprinting = false;
 		}
