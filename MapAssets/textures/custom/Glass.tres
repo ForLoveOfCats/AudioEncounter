@@ -3,6 +3,5 @@
 [resource]
 flags_transparent = true
 params_specular_mode = 3
-albedo_color = Color( 1, 1, 1, 0.27451 )
-metallic = 0.7
-roughness = 0.14
+albedo_color = Color( 0.431373, 0.545098, 1, 0.607843 )
+metallic = 1.0

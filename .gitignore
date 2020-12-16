@@ -7,3 +7,4 @@ packages
 Export
 .idea
 *.DotSettings*
+**/autosave/*
