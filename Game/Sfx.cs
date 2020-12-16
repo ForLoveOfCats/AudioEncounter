@@ -6,7 +6,13 @@ using static Assert;
 
 
 
-public enum SfxCatagory { FALL_CRUNCH, EMPTY_CHAMBER_FIRE_CLICK, CONCRETE, LEAVES };
+public enum SfxCatagory {
+	FALL_CRUNCH,
+	EMPTY_CHAMBER_FIRE_CLICK,
+	PISTOL_FIRE,
+	CONCRETE,
+	LEAVES
+};
 
 
 
@@ -50,6 +56,9 @@ public class Sfx : Node {
 		});
 		Clips.Add(SfxCatagory.EMPTY_CHAMBER_FIRE_CLICK, new List<AudioStream> {
 			GD.Load<AudioStream>("res://TrimmedAudio/EmptyChamberFireClick.wav")
+		});
+		Clips.Add(SfxCatagory.PISTOL_FIRE, new List<AudioStream> {
+			GD.Load<AudioStream>("res://TrimmedAudio/PistolFire.wav")
 		});
 
 		List<AudioStream> Concrete = LoadAllStreamsInFolder("res://TrimmedAudio/ConcreteFootsteps");

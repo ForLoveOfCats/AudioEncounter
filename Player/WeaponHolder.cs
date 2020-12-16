@@ -83,6 +83,13 @@ public class WeaponHolder : Spatial {
 	}
 
 
+	public void PlayFireSfx() {
+		if(CurrentWeapon == Pistol) {
+			Sfx.PlaySfx(SfxCatagory.PISTOL_FIRE, 0, GlobalTransform.origin);
+		}
+	}
+
+
 	public override void _Process(float Delta) {
 		TickFireTime(Pistol, Delta);
 
@@ -96,6 +103,7 @@ public class WeaponHolder : Spatial {
 			if(CurrentWeapon.CurrentAmmo > 0) {
 				CurrentWeapon.CurrentAmmo -= 1;
 				PerformHitscan();
+				PlayFireSfx();
 			} else {
 				Sfx.PlaySfx(SfxCatagory.EMPTY_CHAMBER_FIRE_CLICK, 0, GlobalTransform.origin);
 			}
