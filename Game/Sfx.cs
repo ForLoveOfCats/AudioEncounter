@@ -151,6 +151,13 @@ public class Sfx : Node {
 				break;
 			}
 
+			case SfxCatagory.PISTOL_FIRE: {
+				StreamPlayer.UnitDb = 1;
+				StreamPlayer.UnitSize = 60;
+				StreamPlayer.MaxDb = 1;
+				break;
+			}
+
 			case SfxCatagory.CONCRETE: {
 				StreamPlayer.UnitDb = 10;
 				StreamPlayer.MaxDb = 10;
