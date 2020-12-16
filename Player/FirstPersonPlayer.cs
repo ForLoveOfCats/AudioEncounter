@@ -14,7 +14,8 @@ public class FirstPersonPlayer : Character {
 	public const float Gravity = MaxFallSpeed / 0.6f;
 	public const float BaseSpeed = 8f;
 	public const float SprintSpeed = 24f;
-	public const float Acceleration = BaseSpeed / 0.055f;
+	public const float AccelerationTime = 0.055f;
+	public const float Acceleration = BaseSpeed / AccelerationTime;
 	public const float Friction = Acceleration / 2f;
 
 	public const float FootstepBaseTime = 0.65f;
@@ -150,7 +151,7 @@ public class FirstPersonPlayer : Character {
 		}
 
 		float MaxSpeed = BaseSpeed;
-		if(Input.IsActionPressed("Sprint")) {
+		if(Input.IsActionPressed("Sprint") && !Input.IsActionPressed("ADS")) {
 			MaxSpeed = SprintSpeed;
 			Sprinting = OnFloor;
 		} else {

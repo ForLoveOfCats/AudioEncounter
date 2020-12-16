@@ -8,3 +8,5 @@ Export
 .idea
 *.DotSettings*
 **/autosave/*
+*.blend1
+*.mtl

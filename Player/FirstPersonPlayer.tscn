@@ -17,7 +17,7 @@ fov = 90.0
 far = 5000.0
 
 [node name="WeaponHolder" parent="CamJoint/Cam" instance=ExtResource( 2 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.131535, -0.0992677, -0.120993 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.132, -0.1, -0.085 )
 
 [node name="Hull" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, -1.62921e-07, -1, 0, 1, -1.62921e-07, 0, 0, 0 )

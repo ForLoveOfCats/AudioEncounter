@@ -20,10 +20,14 @@ public class WeaponStats {
 public class WeaponHolder : Spatial {
 	public const float Range = 500f;
 	public const float SprintChangeStateTime = 0.2f;
+	public const float AdsChangeStateTime = FirstPersonPlayer.SprintSpeed / FirstPersonPlayer.BaseSpeed * FirstPersonPlayer.AccelerationTime;
+
+	public Vector3 OgTranslation = new Vector3();
 
 	public bool Reloading = false;
 	public float ReloadHidePercent = 0f;
 	public float SprintTime = 0f;
+	public float AdsTime = 0f;
 
 	FirstPersonPlayer ParentPlayer = null;
 
@@ -42,6 +46,7 @@ public class WeaponHolder : Spatial {
 	public override void _Ready() {
 		CurrentWeapon = Pistol;
 
+		OgTranslation = Translation;
 		ParentPlayer = (FirstPersonPlayer)GetParent().GetParent().GetParent();
 
 		base._Ready();
@@ -121,6 +126,20 @@ public class WeaponHolder : Spatial {
 		float SprintPercent = SprintTime / SprintChangeStateTime;
 		float SprintDisplay = Sin((SprintPercent / 2f) * Pi);
 		RotationDegrees = new Vector3(-140 * ReloadDisplay, 75f * SprintDisplay, 0);
+
+		if(!ParentPlayer.Sprinting && Input.IsActionPressed("ADS")) {
+			AdsTime = Clamp(AdsTime + Delta, 0, AdsChangeStateTime);
+		} else {
+			AdsTime = Clamp(AdsTime - Delta, 0, AdsChangeStateTime);
+		}
+
+		float AdsPercent = 1 - AdsTime / AdsChangeStateTime;
+		float AdsDisplay = Sin((AdsPercent / 2f) * Pi);
+		Translation = new Vector3(
+			OgTranslation.x * AdsDisplay,
+			OgTranslation.y * AdsDisplay,
+			OgTranslation.z
+		);
 
 		base._Process(Delta);
 	}

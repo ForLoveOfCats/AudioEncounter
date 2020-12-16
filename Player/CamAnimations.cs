@@ -1,8 +1,6 @@
 using Godot;
 using static Godot.Mathf;
 
-using static Assert;
-
 
 
 public interface CamAnimation {
