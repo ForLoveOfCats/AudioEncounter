@@ -1,8 +1,6 @@
 using Godot;
 using static Godot.Mathf;
 
-using static Assert;
-
 
 
 public class WeaponStats {
@@ -21,6 +19,8 @@ public class WeaponStats {
 
 public class WeaponHolder : Spatial {
 	public const float Range = 500f;
+
+	public float ReloadHidePercent = 0f;
 
 	public WeaponStats Pistol = new WeaponStats() {
 		MaxAmmo = 8,
@@ -59,7 +59,7 @@ public class WeaponHolder : Spatial {
 
 		var Exclude = new Godot.Collections.Array() { Plr };
 		PhysicsDirectSpaceState State = GetWorld().DirectSpaceState;
-		Godot.Collections.Dictionary Results = State.IntersectRay(Origin, Endpoint, Exclude, 1);
+		Godot.Collections.Dictionary Results = State.IntersectRay(Origin, Endpoint, Exclude, 1 | 2);
 
 		if(Results.Count > 0 && Results["collider"] is Hitbox Box) {
 			int Damage = CurrentWeapon.BodyDamage;
@@ -98,6 +98,15 @@ public class WeaponHolder : Spatial {
 				CurrentWeapon.CurrentAmmo = CurrentWeapon.MaxAmmo;
 			}
 		}
+
+		float OneTenth = CurrentWeapon.MaxReloadTime / 10;
+		if(CurrentWeapon.ReloadTimer >= OneTenth * 9f) {
+			ReloadHidePercent = 1 - (CurrentWeapon.ReloadTimer - OneTenth * 9f) / OneTenth;
+		} else if(CurrentWeapon.ReloadTimer <= OneTenth) {
+			ReloadHidePercent = CurrentWeapon.ReloadTimer / OneTenth;
+		}
+
+		RotationDegrees = new Vector3(-120 * ReloadHidePercent, 0, 0);
 
 		base._Process(Delta);
 	}
