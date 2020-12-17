@@ -113,7 +113,7 @@ public class FirstPersonPlayer : Character {
 
 	public void HandleFootsteps(float Delta) {
 		float Decrement = Delta;
-		if(Input.IsActionPressed("Sprint")) {
+		if(Round(Momentum.Flattened().Length()) > BaseSpeed) {
 			Decrement *= SprintingFootstepAcceleration;
 		}
 		FootstepCountdown -= Decrement;
