@@ -1,6 +1,8 @@
 using Godot;
 using static Godot.Mathf;
 
+using static SteelMath;
+
 
 
 public class WeaponStats {
@@ -19,11 +21,16 @@ public class WeaponStats {
 
 public class WeaponHolder : Spatial {
 	public const float Range = 500f;
+	public const float MomentumFriction = 3f;
+	public const float MaxRotation = 8f;
 	public const float SprintChangeStateTime = 0.2f;
 	public const float AdsChangeStateTime = FirstPersonPlayer.SprintSpeed / FirstPersonPlayer.BaseSpeed * FirstPersonPlayer.AccelerationTime;
 
+	public Spatial MeshJoint;
+
 	public Vector3 OgTranslation = new Vector3();
 
+	public Vector2 Momentum = new Vector2();
 	public bool Reloading = false;
 	public float ReloadHidePercent = 0f;
 	public float SprintTime = 0f;
@@ -44,6 +51,8 @@ public class WeaponHolder : Spatial {
 
 
 	public override void _Ready() {
+		MeshJoint = GetNode<Spatial>("MeshJoint");
+
 		CurrentWeapon = Pistol;
 
 		OgTranslation = Translation;
@@ -88,6 +97,35 @@ public class WeaponHolder : Spatial {
 			Sfx.PlaySfx(SfxCatagory.PISTOL_FIRE, 0, GlobalTransform.origin);
 			ParentPlayer.CamAnimations.Add(new PistolRecoil());
 		}
+	}
+
+
+	public float CalcAdsDisplay() {
+		float AdsPercent = 1 - AdsTime / AdsChangeStateTime;
+		float AdsDisplay = Sin((AdsPercent / 2f) * Pi);
+		return AdsDisplay;
+	}
+
+
+	public float CalcSprintDisplay() {
+		float SprintPercent = SprintTime / SprintChangeStateTime;
+		float SprintDisplay = Sin((SprintPercent / 2f) * Pi);
+		return SprintDisplay;
+	}
+
+
+	public void TickMomentum(float Delta) {
+		float Length = Clamp(Momentum.Length() - Delta * MomentumFriction, 0, 1);
+		Momentum = Momentum.Normalized() * Length;
+
+		float AdsPercent = CalcAdsDisplay();
+		float SprintPercent = 1 - CalcSprintDisplay();
+
+		MeshJoint.RotationDegrees = new Vector3(
+			Momentum.y * MaxRotation * AdsPercent * SprintPercent,
+			Momentum.x * MaxRotation * AdsPercent * SprintPercent,
+			0
+		);
 	}
 
 
@@ -142,8 +180,7 @@ public class WeaponHolder : Spatial {
 			SprintTime = Clamp(SprintTime - Delta, 0, SprintChangeStateTime);
 		}
 
-		float SprintPercent = SprintTime / SprintChangeStateTime;
-		float SprintDisplay = Sin((SprintPercent / 2f) * Pi);
+		float SprintDisplay = CalcSprintDisplay();
 		RotationDegrees = new Vector3(-140 * ReloadDisplay, 75f * SprintDisplay, 0);
 
 		if(ParentPlayer.Mode != MovementMode.SPRINTING && Input.IsActionPressed("ADS")) {
@@ -152,13 +189,15 @@ public class WeaponHolder : Spatial {
 			AdsTime = Clamp(AdsTime - Delta, 0, AdsChangeStateTime);
 		}
 
-		float AdsPercent = 1 - AdsTime / AdsChangeStateTime;
-		float AdsDisplay = Sin((AdsPercent / 2f) * Pi);
+		float AdsDisplay = CalcAdsDisplay();
+
 		Translation = new Vector3(
 			OgTranslation.x * AdsDisplay,
 			OgTranslation.y * AdsDisplay,
 			OgTranslation.z
 		);
+
+		TickMomentum(Delta);
 
 		base._Process(Delta);
 	}

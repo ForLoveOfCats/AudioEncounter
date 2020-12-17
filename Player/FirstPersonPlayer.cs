@@ -30,6 +30,7 @@ public class FirstPersonPlayer : Character {
 	public Spatial CamJoint;
 	public Camera Cam;
 	public Vector3 InitialCamJointPos;
+	public WeaponHolder Holder;
 
 	public RayCast FloorCast;
 
@@ -54,6 +55,7 @@ public class FirstPersonPlayer : Character {
 		CamJoint = GetNode<Spatial>("CamJoint");
 		Cam = CamJoint.GetNode<Camera>("Cam");
 		InitialCamJointPos = CamJoint.Translation;
+		Holder = Cam.GetNode<WeaponHolder>("WeaponHolder");
 
 		FloorCast = GetNode<RayCast>("FloorCast");
 
@@ -83,6 +85,14 @@ public class FirstPersonPlayer : Character {
 				Clamp(Cam.RotationDegrees.x - (Motion.Relative.y * MouseSens), -90, 90),
 				Cam.RotationDegrees.y,
 				Cam.RotationDegrees.z
+			);
+
+			float AdsMultiplyer = Holder.CalcAdsDisplay();
+			float SensMultiplyer = MouseSens * 0.035f;
+
+			Holder.Momentum = new Vector2(
+				Clamp(Holder.Momentum.x + Motion.Relative.x * SensMultiplyer * AdsMultiplyer, -1, 1),
+				Clamp(Holder.Momentum.y + Motion.Relative.y * SensMultiplyer * AdsMultiplyer, -1, 1)
 			);
 		}
 
