@@ -12,7 +12,9 @@ public enum MovementMode { WALKING, SNEAKING, SPRINTING };
 
 
 public class FirstPersonPlayer : Character {
-	public const float MouseSens = 0.2f;
+	public const float BaseMouseSens = 0.2f;
+	public const float AdsMouseSens = 0.1f;
+
 	public const float MaxFallSpeed = 75f;
 	public const float Gravity = MaxFallSpeed / 0.6f;
 	public const float BaseSpeed = 8f;
@@ -21,6 +23,9 @@ public class FirstPersonPlayer : Character {
 	public const float AccelerationTime = 0.07f;
 	public const float Acceleration = BaseSpeed / AccelerationTime;
 	public const float Friction = Acceleration / 2f;
+
+	public const float BaseFov = 90f;
+	public const float AdsFov = 70f;
 
 	public const float FootstepBaseTime = 0.6f;
 	public const float SprintingFootstepAcceleration = 2.2f;
@@ -36,6 +41,8 @@ public class FirstPersonPlayer : Character {
 
 	FootstepChooser ConcreteChooser = new FootstepChooser(6);
 	FootstepChooser LeavesChooser = new FootstepChooser(6);
+
+	public float CurrentSens = BaseMouseSens;
 
 	public int BackwardForwardDirection = 0;
 	public int RightLeftDirection = 0;
@@ -80,15 +87,19 @@ public class FirstPersonPlayer : Character {
 
 	public override void _Input(InputEvent Event) {
 		if(Event is InputEventMouseMotion Motion) {
-			RotateY(Deg2Rad(-Motion.Relative.x * MouseSens));
+			float AdsPercent = 1 - Holder.CalcAdsDisplay();
+			float AdsAdjustment = (BaseMouseSens - AdsMouseSens) * AdsPercent;
+			float Sens = CurrentSens - AdsAdjustment;
+
+			RotateY(Deg2Rad(-Motion.Relative.x * Sens));
 			Cam.RotationDegrees = new Vector3(
-				Clamp(Cam.RotationDegrees.x - (Motion.Relative.y * MouseSens), -90, 90),
+				Clamp(Cam.RotationDegrees.x - (Motion.Relative.y * Sens), -90, 90),
 				Cam.RotationDegrees.y,
 				Cam.RotationDegrees.z
 			);
 
 			float AdsMultiplyer = Holder.CalcAdsDisplay();
-			float SensMultiplyer = MouseSens * 0.035f;
+			float SensMultiplyer = Sens * 0.035f;
 
 			Holder.Momentum = new Vector2(
 				Clamp(Holder.Momentum.x + Motion.Relative.x * SensMultiplyer * AdsMultiplyer, -1, 1),
@@ -134,6 +145,13 @@ public class FirstPersonPlayer : Character {
 				}
 			}
 		}
+	}
+
+
+	public void HandleAdsSprintEffects() {
+		float AdsPercent = 1 - Holder.CalcAdsDisplay();
+		float AdsAdjustment = (BaseFov - AdsFov) * AdsPercent;
+		Cam.Fov = 90f - AdsAdjustment;
 	}
 
 
@@ -219,6 +237,7 @@ public class FirstPersonPlayer : Character {
 		}
 
 		HandleFootsteps(Delta);
+		HandleAdsSprintEffects();
 
 		CamJoint.Translation = InitialCamJointPos;
 		CamJoint.RotationDegrees = new Vector3();
