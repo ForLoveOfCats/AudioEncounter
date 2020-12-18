@@ -39,12 +39,14 @@ public class CrunchCamDip : CamAnimation {
 public class WeaponRecoil : CamAnimation {
 	public float MaxTime = 0.35f;
 	public float MaxValue = 7f;
+	public float CrouchPercent = 0f;
 
 	public float CurrentTime = 0;
 
-	public WeaponRecoil(float MaxTimeArg, float MaxValueArg) {
+	public WeaponRecoil(float MaxTimeArg, float MaxValueArg, float CrouchPercentArg) {
 		MaxTime = MaxTimeArg;
 		MaxValue = MaxValueArg;
+		CrouchPercent = CrouchPercentArg;
 		CurrentTime = MaxTime;
 	}
 
@@ -52,6 +54,8 @@ public class WeaponRecoil : CamAnimation {
 		CurrentTime = Clamp(CurrentTime - Delta, 0, MaxTime);
 		float Squared = CurrentTime * CurrentTime;
 		float RotX = ((Sin(CurrentTime / MaxTime * Pi) * Squared) / (0.4f * MaxTime)) * (1 / MaxTime) * MaxValue;
+
+		RotX *= 1 - (CrouchPercent / 4f);
 
 		CamJoint.RotationDegrees = new Vector3(
 			CamJoint.RotationDegrees.x + RotX,
