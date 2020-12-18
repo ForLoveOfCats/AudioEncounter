@@ -111,6 +111,10 @@ public class Sfx : Node {
 
 
 	public override void _Ready() {
+		if(Engine.EditorHint) {
+			return;
+		}
+
 		Self = this;
 		base._Ready();
 	}

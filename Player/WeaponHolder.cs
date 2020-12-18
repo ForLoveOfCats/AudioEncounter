@@ -79,6 +79,9 @@ public class WeaponHolder : Spatial {
 		Godot.Collections.Dictionary Results = State.IntersectRay(Origin, Endpoint, Exclude, 1 | 2);
 
 		if(Results.Count > 0) {
+			var Position = (Vector3)Results["position"];
+			var Normal = (Vector3)Results["normal"];
+
 			if(Results["collider"] is Hitbox Box) {
 				int Damage = CurrentWeapon.BodyDamage;
 				if(Box.Kind == HitboxKind.HEAD) {
@@ -87,12 +90,12 @@ public class WeaponHolder : Spatial {
 
 				Box.Damage(Damage);
 
-				var Position = (Vector3)Results["position"];
 				Sfx.PlaySfxSpatially(SfxCatagory.FLESH_HIT, 0, Position);
 			} else {
-				var Position = (Vector3)Results["position"];
 				Sfx.PlaySfxSpatially(SfxCatagory.BULLET_HIT, 0, Position);
 			}
+
+			Particles.Spawn(Particle.PISTOL_IMPACT, Position, Normal);
 		}
 	}
 

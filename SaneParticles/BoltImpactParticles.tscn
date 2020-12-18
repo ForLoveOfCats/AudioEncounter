@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://SaneParticles/SaneParticles.tscn" type="PackedScene" id=1]
+[ext_resource path="res://SaneParticles/BoltImpactParticle.cs" type="Script" id=2]
+
+[sub_resource type="CubeMesh" id=1]
+size = Vector3( 0.1, 0.1, 0.6 )
+
+[sub_resource type="SpatialMaterial" id=2]
+flags_unshaded = true
+albedo_color = Color( 1, 0.960784, 0.0235294, 1 )
+
+[node name="BoltImpactParticles" instance=ExtResource( 1 )]
+MeshField = SubResource( 1 )
+MaterialField = SubResource( 2 )
+ScriptField = ExtResource( 2 )
+BaseLife = 0.32
+OneShot = true
+OneShotAutoplay = true
+Looping = false

@@ -20,6 +20,10 @@ public class Game : Node {
 	public static Node RuntimeRoot = null;
 
 	public override void _Ready() {
+		if(Engine.EditorHint) {
+			return;
+		}
+
 		Self = this;
 		RuntimeRoot = GetTree().Root.GetNode("RuntimeRoot");
 

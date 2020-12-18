@@ -208,6 +208,7 @@ config/icon="res://icon.png"
 
 Game="*res://Game/Game.cs"
 Sfx="*res://Game/Sfx.cs"
+GlobalParticles="*res://SaneParticles/Particles.cs"
 
 [debug]
 
