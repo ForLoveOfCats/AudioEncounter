@@ -194,7 +194,7 @@ public class FirstPersonPlayer : Character {
 		if(Input.IsActionPressed("Sneak")) {
 			MaxSpeed = SneakSpeed;
 			Mode = MovementMode.SNEAKING;
-		} else if(Input.IsActionPressed("Sprint") && !Input.IsActionPressed("ADS")) {
+		} else if(Input.IsActionPressed("Sprint") && !Input.IsActionPressed("ADS") && !Holder.Reloading) {
 			MaxSpeed = SprintSpeed;
 			if(OnFloor && (BackwardForwardDirection != 0 || RightLeftDirection != 0)) {
 				Mode = MovementMode.SPRINTING;

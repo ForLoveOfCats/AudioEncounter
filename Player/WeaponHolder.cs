@@ -191,7 +191,7 @@ public class WeaponHolder : Spatial {
 		float SprintDisplay = CalcSprintDisplay();
 		RotationDegrees = new Vector3(-140 * ReloadDisplay, 75f * SprintDisplay, 0);
 
-		if(ParentPlayer.Mode != MovementMode.SPRINTING && Input.IsActionPressed("ADS")) {
+		if(ParentPlayer.Mode != MovementMode.SPRINTING && Input.IsActionPressed("ADS") && !Reloading) {
 			AdsTime = Clamp(AdsTime + Delta, 0, AdsChangeStateTime);
 		} else {
 			AdsTime = Clamp(AdsTime - Delta, 0, AdsChangeStateTime);
