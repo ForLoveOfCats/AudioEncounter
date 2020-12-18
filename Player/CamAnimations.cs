@@ -36,11 +36,17 @@ public class CrunchCamDip : CamAnimation {
 
 
 
-public class PistolRecoil : CamAnimation {
-	public const float MaxTime = 0.35f;
-	public const float MaxValue = 7f;
+public class WeaponRecoil : CamAnimation {
+	public float MaxTime = 0.35f;
+	public float MaxValue = 7f;
 
-	public float CurrentTime = MaxTime;
+	public float CurrentTime = 0;
+
+	public WeaponRecoil(float MaxTimeArg, float MaxValueArg) {
+		MaxTime = MaxTimeArg;
+		MaxValue = MaxValueArg;
+		CurrentTime = MaxTime;
+	}
 
 	public void Tick(Spatial CamJoint, float Delta) {
 		CurrentTime = Clamp(CurrentTime - Delta, 0, MaxTime);

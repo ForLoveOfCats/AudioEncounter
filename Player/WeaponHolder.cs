@@ -7,6 +7,7 @@ public class WeaponStats {
 	public int MaxAmmo = 0;
 	public float MaxFireTime = 0f;
 	public float MaxReloadTime = 0f;
+	public bool FullAuto = false;
 
 	public int HeadDamage = 0;
 	public int BodyDamage = 0;
@@ -40,10 +41,20 @@ public class WeaponHolder : Spatial {
 	public WeaponStats Pistol = new WeaponStats() {
 		MaxAmmo = 8,
 		CurrentAmmo = 8,
-		MaxFireTime = 0.1f,
-		MaxReloadTime = 4f,
+		MaxFireTime = 0.16f,
+		MaxReloadTime = 2f,
+		FullAuto = false,
 		HeadDamage = 35,
 		BodyDamage = 15,
+	};
+	public WeaponStats Ak = new WeaponStats() {
+		MaxAmmo = 30,
+		CurrentAmmo = 30,
+		MaxFireTime = 0.09f,
+		MaxReloadTime = 4f,
+		FullAuto = true,
+		HeadDamage = 15,
+		BodyDamage = 8,
 	};
 
 	public WeaponStats CurrentWeapon = null;
@@ -52,7 +63,7 @@ public class WeaponHolder : Spatial {
 	public override void _Ready() {
 		MeshJoint = GetNode<Spatial>("MeshJoint");
 
-		CurrentWeapon = Pistol;
+		CurrentWeapon = Ak;
 
 		OgTranslation = Translation;
 		ParentPlayer = (FirstPersonPlayer)GetParent().GetParent().GetParent();
@@ -72,7 +83,7 @@ public class WeaponHolder : Spatial {
 
 		Vector3 Origin = ParentPlayer.Cam.GlobalTransform.origin;
 		Vector3 Endpoint = Origin + new Vector3(0, 0, -Range)
-			.Rotated(new Vector3(1, 0, 0), Deg2Rad(ParentPlayer.Cam.RotationDegrees.x + VerticalDeviation))
+			.Rotated(new Vector3(1, 0, 0), Deg2Rad(ParentPlayer.CamJoint.RotationDegrees.x + ParentPlayer.Cam.RotationDegrees.x + VerticalDeviation))
 			.Rotated(new Vector3(0, 1, 0), Deg2Rad(ParentPlayer.RotationDegrees.y + HorizontalDeviation));
 
 		var Exclude = new Godot.Collections.Array() { ParentPlayer };
@@ -104,7 +115,11 @@ public class WeaponHolder : Spatial {
 	public void RunFireEffects() {
 		if(CurrentWeapon == Pistol) {
 			Sfx.PlaySfx(SfxCatagory.PISTOL_FIRE, 0, GlobalTransform.origin);
-			ParentPlayer.CamAnimations.Add(new PistolRecoil());
+			ParentPlayer.CamAnimations.Add(new WeaponRecoil(0.35f, 4f));
+		}
+		if(CurrentWeapon == Ak) {
+			Sfx.PlaySfx(SfxCatagory.PISTOL_FIRE, 0, GlobalTransform.origin);
+			ParentPlayer.CamAnimations.Add(new WeaponRecoil(0.45f, 6f));
 		}
 
 		int Index = TinkChooser.Choose();
@@ -142,10 +157,11 @@ public class WeaponHolder : Spatial {
 
 
 	public override void _Process(float Delta) {
-		TickFireTime(Pistol, Delta);
+		TickFireTime(CurrentWeapon, Delta);
 
 		float PlayerSpeed = Round(ParentPlayer.Momentum.Flattened().Length());
-		if(Input.IsActionJustPressed("Fire")
+		if(((!CurrentWeapon.FullAuto && Input.IsActionJustPressed("Fire"))
+				|| (CurrentWeapon.FullAuto && Input.IsActionPressed("Fire")))
 			&& CurrentWeapon.FireTimer <= 0
 			&& PlayerSpeed <= FirstPersonPlayer.BaseSpeed
 			&& SprintTime <= 0
@@ -206,7 +222,7 @@ public class WeaponHolder : Spatial {
 		Translation = new Vector3(
 			OgTranslation.x * AdsDisplay,
 			OgTranslation.y * AdsDisplay,
-			OgTranslation.z + (-0.15f * (1 - AdsDisplay))
+			OgTranslation.z
 		);
 
 		TickMomentum(Delta);
