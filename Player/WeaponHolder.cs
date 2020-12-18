@@ -202,7 +202,7 @@ public class WeaponHolder : Spatial {
 		Translation = new Vector3(
 			OgTranslation.x * AdsDisplay,
 			OgTranslation.y * AdsDisplay,
-			OgTranslation.z
+			OgTranslation.z + (-0.15f * (1 - AdsDisplay))
 		);
 
 		TickMomentum(Delta);
