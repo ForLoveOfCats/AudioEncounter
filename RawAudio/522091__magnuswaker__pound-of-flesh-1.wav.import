@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/522091__magnuswaker__pound-of-flesh-1.wav-a83e96f29fc96c022e518a1925e3adf6.sample"
+
+[deps]
+
+source_file="res://RawAudio/522091__magnuswaker__pound-of-flesh-1.wav"
+dest_files=[ "res://.import/522091__magnuswaker__pound-of-flesh-1.wav-a83e96f29fc96c022e518a1925e3adf6.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

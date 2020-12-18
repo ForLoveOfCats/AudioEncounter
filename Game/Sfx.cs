@@ -10,6 +10,8 @@ public enum SfxCatagory {
 	FALL_CRUNCH,
 	EMPTY_CHAMBER_FIRE_CLICK,
 	RELOAD,
+	BULLET_HIT,
+	FLESH_HIT,
 	PISTOL_FIRE,
 	CONCRETE,
 	LEAVES
@@ -46,6 +48,9 @@ public class Sfx3DCleanup : AudioStreamPlayer3D {
 
 
 public class Sfx : Node {
+	public const bool PlayLocally = true;
+	public const bool PlayRemote = true;
+
 	public static Sfx Self;
 
 	public static Dictionary<SfxCatagory, List<AudioStream>> Clips = new Dictionary<SfxCatagory, List<AudioStream>>();
@@ -61,6 +66,12 @@ public class Sfx : Node {
 		Clips.Add(SfxCatagory.RELOAD, new List<AudioStream> {
 			GD.Load<AudioStream>("res://TrimmedAudio/ReloadStart.wav"),
 			GD.Load<AudioStream>("res://TrimmedAudio/ReloadEnd.wav")
+		});
+		Clips.Add(SfxCatagory.BULLET_HIT, new List<AudioStream> {
+			GD.Load<AudioStream>("res://TrimmedAudio/BulletHit.wav")
+		});
+		Clips.Add(SfxCatagory.FLESH_HIT, new List<AudioStream> {
+			GD.Load<AudioStream>("res://TrimmedAudio/FleshHit.wav")
 		});
 		Clips.Add(SfxCatagory.PISTOL_FIRE, new List<AudioStream> {
 			GD.Load<AudioStream>("res://TrimmedAudio/PistolFire.wav")
@@ -106,14 +117,31 @@ public class Sfx : Node {
 
 
 	public static void PlaySfx(SfxCatagory Catagory, int Index, Vector3 Pos) {
-		PlaySfxLocally(Catagory, Index);
-		Self.Rpc(nameof(PlaySfxAt), Catagory, Index, Pos);
+		if(PlayLocally) {
+			PlaySfxLocally(Catagory, Index);
+		}
+
+		if(PlayRemote) {
+			Self.Rpc(nameof(PlaySfxAt), Catagory, Index, Pos);
+		}
+	}
+
+
+	public static void PlaySfxSpatially(SfxCatagory Catagory, int Index, Vector3 Pos) {
+		if(PlayLocally) {
+			Self.PlaySfxAt(Catagory, Index, Pos);
+		}
+
+		if(PlayRemote) {
+			Self.Rpc(nameof(PlaySfxAt), Catagory, Index, Pos);
+		}
 	}
 
 
 	private static void PlaySfxLocally(SfxCatagory Catagory, int Index) {
 		Sfx2DCleanup StreamPlayer = new Sfx2DCleanup();
 		StreamPlayer.Stream = Clips[Catagory][Index];
+		StreamPlayer.Bus = "Reverb";
 
 		switch(Catagory) {
 			case SfxCatagory.EMPTY_CHAMBER_FIRE_CLICK: {
@@ -130,6 +158,11 @@ public class Sfx : Node {
 				StreamPlayer.VolumeDb = -5;
 				break;
 			}
+
+			case SfxCatagory.PISTOL_FIRE: {
+				StreamPlayer.VolumeDb = -6;
+				break;
+			}
 		}
 
 		Game.RuntimeRoot.AddChild(StreamPlayer);
@@ -141,6 +174,7 @@ public class Sfx : Node {
 	private void PlaySfxAt(SfxCatagory Catagory, int Index, Vector3 Pos) {
 		Sfx3DCleanup StreamPlayer = new Sfx3DCleanup();
 		StreamPlayer.Stream = Clips[Catagory][Index];
+		StreamPlayer.Bus = "Reverb";
 
 		switch(Catagory) {
 			case SfxCatagory.FALL_CRUNCH: {
@@ -160,6 +194,21 @@ public class Sfx : Node {
 				StreamPlayer.UnitDb = -2;
 				StreamPlayer.UnitSize = 40;
 				StreamPlayer.MaxDb = -2;
+				break;
+			}
+
+			case SfxCatagory.BULLET_HIT: {
+				StreamPlayer.UnitDb = -1;
+				StreamPlayer.UnitSize = 50;
+				StreamPlayer.MaxDb = -1;
+				break;
+			}
+
+			case SfxCatagory.FLESH_HIT: {
+				StreamPlayer.UnitDb = 6;
+				StreamPlayer.UnitSize = 30;
+				StreamPlayer.MaxDb = 6;
+				StreamPlayer.Bus = "Master";
 				break;
 			}
 

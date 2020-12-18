@@ -1,8 +1,6 @@
 using Godot;
 using static Godot.Mathf;
 
-using static SteelMath;
-
 
 
 public class WeaponStats {
@@ -75,19 +73,26 @@ public class WeaponHolder : Spatial {
 		Vector3 Endpoint = Origin + new Vector3(0, 0, -Range)
 			.Rotated(new Vector3(1, 0, 0), Deg2Rad(ParentPlayer.Cam.RotationDegrees.x + VerticalDeviation))
 			.Rotated(new Vector3(0, 1, 0), Deg2Rad(ParentPlayer.RotationDegrees.y + HorizontalDeviation));
-		GD.Print(Origin, " ", Endpoint);
 
 		var Exclude = new Godot.Collections.Array() { ParentPlayer };
 		PhysicsDirectSpaceState State = GetWorld().DirectSpaceState;
 		Godot.Collections.Dictionary Results = State.IntersectRay(Origin, Endpoint, Exclude, 1 | 2);
 
-		if(Results.Count > 0 && Results["collider"] is Hitbox Box) {
-			int Damage = CurrentWeapon.BodyDamage;
-			if(Box.Kind == HitboxKind.HEAD) {
-				Damage = CurrentWeapon.HeadDamage;
-			}
+		if(Results.Count > 0) {
+			if(Results["collider"] is Hitbox Box) {
+				int Damage = CurrentWeapon.BodyDamage;
+				if(Box.Kind == HitboxKind.HEAD) {
+					Damage = CurrentWeapon.HeadDamage;
+				}
 
-			Box.Damage(Damage);
+				Box.Damage(Damage);
+
+				var Position = (Vector3)Results["position"];
+				Sfx.PlaySfxSpatially(SfxCatagory.FLESH_HIT, 0, Position);
+			} else {
+				var Position = (Vector3)Results["position"];
+				Sfx.PlaySfxSpatially(SfxCatagory.BULLET_HIT, 0, Position);
+			}
 		}
 	}
 
