@@ -118,7 +118,7 @@ public class WeaponHolder : Spatial {
 			ParentPlayer.CamAnimations.Add(new WeaponRecoil(0.35f, 4f));
 		}
 		if(CurrentWeapon == Ak) {
-			Sfx.PlaySfx(SfxCatagory.PISTOL_FIRE, 0, GlobalTransform.origin);
+			Sfx.PlaySfx(SfxCatagory.AK_FIRE, 0, GlobalTransform.origin);
 			ParentPlayer.CamAnimations.Add(new WeaponRecoil(0.45f, 6f));
 		}
 

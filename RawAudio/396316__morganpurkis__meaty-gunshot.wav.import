@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/396316__morganpurkis__meaty-gunshot.wav-cd7f5c490a077f3d395f4b98e9fcc443.sample"
+
+[deps]
+
+source_file="res://RawAudio/396316__morganpurkis__meaty-gunshot.wav"
+dest_files=[ "res://.import/396316__morganpurkis__meaty-gunshot.wav-cd7f5c490a077f3d395f4b98e9fcc443.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0
