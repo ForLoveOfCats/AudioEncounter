@@ -23,6 +23,11 @@ public class FirstPersonPlayer : Character {
 	public const float AccelerationTime = 0.07f;
 	public const float Acceleration = BaseSpeed / AccelerationTime;
 	public const float Friction = Acceleration / 2f;
+	public const float MaxCrouchTime = 0.2f;
+
+	public const float HullRadius = 1f;
+	public const float HullHeight = 2f;
+	public const float CrouchedHullHeight = 0f;
 
 	public const float BaseFov = 90f;
 	public const float AdsFov = 70f;
@@ -38,6 +43,7 @@ public class FirstPersonPlayer : Character {
 	public WeaponHolder Holder;
 
 	public RayCast FloorCast;
+	public CollisionShape Hull;
 
 	FootstepChooser ConcreteChooser = new FootstepChooser(6);
 	FootstepChooser LeavesChooser = new FootstepChooser(6);
@@ -50,6 +56,7 @@ public class FirstPersonPlayer : Character {
 	public MovementMode Mode = MovementMode.WALKING;
 
 	public int Health = 100;
+	public float CrouchPercent = 0f;
 
 	public List<CamAnimation> CamAnimations = new List<CamAnimation>();
 	public float FootstepCountdown = 0;
@@ -65,6 +72,7 @@ public class FirstPersonPlayer : Character {
 		Holder = Cam.GetNode<WeaponHolder>("WeaponHolder");
 
 		FloorCast = GetNode<RayCast>("FloorCast");
+		Hull = GetNode<CollisionShape>("Hull");
 
 		Input.SetMouseMode(Input.MouseMode.Captured);
 	}
@@ -218,8 +226,24 @@ public class FirstPersonPlayer : Character {
 	}
 
 
+	public void HandleCrouchInput(float Delta) {
+		float OldCrouchPercentage = CrouchPercent;
+
+		if(Input.IsActionPressed("Sneak")) {
+			CrouchPercent = Clamp(CrouchPercent + (Delta / MaxCrouchTime), 0, 1);
+		} else {
+			CrouchPercent = Clamp(CrouchPercent - (Delta / MaxCrouchTime), 0, 1);
+		}
+
+		float Shrink = (HullHeight - CrouchedHullHeight) * CrouchPercent;
+		((CapsuleShape)Hull.Shape).Height = HullHeight - Shrink;
+		Hull.Translation = new Vector3(0, 0 + (Shrink / 2f), 0);
+	}
+
+
 	public override void _PhysicsProcess(float Delta) {
 		HandleMovementInput(Delta);
+		HandleCrouchInput(Delta);
 
 		bool WasOnFloor = OnFloor;
 		float OldMomentumY = Momentum.y;
@@ -254,7 +278,7 @@ public class FirstPersonPlayer : Character {
 			}
 		}
 
-		Rpc(nameof(ThirdPersonPlayer.NetUpdateTransform), Transform);
+		Rpc(nameof(ThirdPersonPlayer.NetUpdateTransform), Transform, CrouchPercent);
 
 		base._PhysicsProcess(Delta);
 	}

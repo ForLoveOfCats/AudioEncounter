@@ -14,7 +14,7 @@ public class Hitbox : StaticBody {
 
 
 	public override void _Ready() {
-		ParentPlayer = (ThirdPersonPlayer)GetParent();
+		ParentPlayer = (ThirdPersonPlayer)GetParent().GetParent();
 		base._Ready();
 	}
 
