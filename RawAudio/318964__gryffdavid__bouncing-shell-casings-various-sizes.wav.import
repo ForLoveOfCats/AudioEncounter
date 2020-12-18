@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/318964__gryffdavid__bouncing-shell-casings-various-sizes.wav-7784a79c4e673a01b414d075455b187c.sample"
+
+[deps]
+
+source_file="res://RawAudio/318964__gryffdavid__bouncing-shell-casings-various-sizes.wav"
+dest_files=[ "res://.import/318964__gryffdavid__bouncing-shell-casings-various-sizes.wav-7784a79c4e673a01b414d075455b187c.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

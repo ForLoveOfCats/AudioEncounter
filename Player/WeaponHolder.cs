@@ -35,6 +35,7 @@ public class WeaponHolder : Spatial {
 	public float AdsTime = 0f;
 
 	FirstPersonPlayer ParentPlayer = null;
+	ClipChooser TinkChooser = new ClipChooser(4);
 
 	public WeaponStats Pistol = new WeaponStats() {
 		MaxAmmo = 8,
@@ -105,6 +106,9 @@ public class WeaponHolder : Spatial {
 			Sfx.PlaySfx(SfxCatagory.PISTOL_FIRE, 0, GlobalTransform.origin);
 			ParentPlayer.CamAnimations.Add(new PistolRecoil());
 		}
+
+		int Index = TinkChooser.Choose();
+		Sfx.PlaySfxSpatially(SfxCatagory.CASING_TINK, Index, GlobalTransform.origin + new Vector3(0, -2, 0));
 	}
 
 

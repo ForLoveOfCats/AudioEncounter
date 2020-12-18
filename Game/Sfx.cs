@@ -13,6 +13,7 @@ public enum SfxCatagory {
 	BULLET_HIT,
 	FLESH_HIT,
 	PISTOL_FIRE,
+	CASING_TINK,
 	CONCRETE,
 	LEAVES
 };
@@ -76,6 +77,9 @@ public class Sfx : Node {
 		Clips.Add(SfxCatagory.PISTOL_FIRE, new List<AudioStream> {
 			GD.Load<AudioStream>("res://TrimmedAudio/PistolFire.wav")
 		});
+
+		List<AudioStream> CasingTink = LoadAllStreamsInFolder("res://TrimmedAudio/CasingTinks");
+		Clips.Add(SfxCatagory.CASING_TINK, CasingTink);
 
 		List<AudioStream> Concrete = LoadAllStreamsInFolder("res://TrimmedAudio/ConcreteFootsteps");
 		Clips.Add(SfxCatagory.CONCRETE, Concrete);
@@ -220,6 +224,13 @@ public class Sfx : Node {
 				StreamPlayer.UnitDb = 1;
 				StreamPlayer.UnitSize = 60;
 				StreamPlayer.MaxDb = 1;
+				break;
+			}
+
+			case SfxCatagory.CASING_TINK: {
+				StreamPlayer.UnitDb = -4;
+				StreamPlayer.UnitSize = 20;
+				StreamPlayer.MaxDb = -4;
 				break;
 			}
 

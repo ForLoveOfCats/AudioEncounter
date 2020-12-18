@@ -45,8 +45,8 @@ public class FirstPersonPlayer : Character {
 	public RayCast FloorCast;
 	public CollisionShape Hull;
 
-	FootstepChooser ConcreteChooser = new FootstepChooser(6);
-	FootstepChooser LeavesChooser = new FootstepChooser(6);
+	ClipChooser ConcreteChooser = new ClipChooser(6);
+	ClipChooser LeavesChooser = new ClipChooser(6);
 
 	public float CurrentSens = BaseMouseSens;
 

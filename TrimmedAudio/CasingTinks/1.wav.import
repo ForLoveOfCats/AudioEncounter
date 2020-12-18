@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/1.wav-7be9bcfc45968f55f74e2202c4f739a0.sample"
+
+[deps]
+
+source_file="res://TrimmedAudio/CasingTinks/1.wav"
+dest_files=[ "res://.import/1.wav-7be9bcfc45968f55f74e2202c4f739a0.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0
