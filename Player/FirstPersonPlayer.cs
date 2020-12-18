@@ -236,8 +236,16 @@ public class FirstPersonPlayer : Character {
 		}
 
 		float Shrink = (HullHeight - CrouchedHullHeight) * CrouchPercent;
-		((CapsuleShape)Hull.Shape).Height = HullHeight - Shrink;
+		var Shape = ((CapsuleShape)Hull.Shape);
+		float OriginalHeight = Shape.Height;
+		Shape.Height = HullHeight - Shrink;
 		Hull.Translation = new Vector3(0, 0 + (Shrink / 2f), 0);
+
+		Translation = new Vector3(
+			Translation.x,
+			Translation.y + (Shape.Height - OriginalHeight),
+			Translation.z
+		);
 	}
 
 
