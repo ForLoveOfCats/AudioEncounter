@@ -42,9 +42,10 @@ public class Game : Node {
 
 		RuntimeRoot.AddChild(WorldScene.Instance());
 
-		Node Player = FirstPersonPlayerScene.Instance();
+		Spatial Player = (Spatial)FirstPersonPlayerScene.Instance();
 		Player.Name = Multiplayer.GetNetworkUniqueId().ToString();
 		RuntimeRoot.AddChild(Player);
+		Player.Translation = new Vector3(-200, 0, 0);
 	}
 
 
