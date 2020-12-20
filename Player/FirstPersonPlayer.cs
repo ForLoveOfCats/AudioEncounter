@@ -32,8 +32,8 @@ public class FirstPersonPlayer : Character {
 	public const float BaseFov = 90f;
 	public const float AdsFov = 70f;
 
-	public const float FootstepBaseTime = 0.6f;
-	public const float SprintingFootstepAcceleration = 2.2f;
+	public const float FootstepBaseTime = 0.7f;
+	public const float SprintingFootstepAcceleration = 2.35f;
 	public const float CrunchSpeed = -35f;
 	public const float BaseCrunchDmg = 20f;
 
@@ -121,9 +121,12 @@ public class FirstPersonPlayer : Character {
 
 	public void HandleFootsteps(float Delta) {
 		float Decrement = Delta;
+		float Muffle = 16;
 		if(Round(Momentum.Flattened().Length()) > BaseSpeed) {
 			Decrement *= SprintingFootstepAcceleration;
+			Muffle = 0;
 		}
+
 		FootstepCountdown -= Decrement;
 
 		if(OnFloor && Mode != MovementMode.SNEAKING && (BackwardForwardDirection != 0 || RightLeftDirection != 0)) {
@@ -149,7 +152,7 @@ public class FirstPersonPlayer : Character {
 
 				if(Index != -1) {
 					ActualAssert(Catagory != (SfxCatagory)(-1));
-					Sfx.PlaySfx(Catagory, Index, GlobalTransform.origin);
+					Sfx.PlaySfx(Catagory, Index, GlobalTransform.origin, Muffle);
 				}
 			}
 		}
@@ -257,7 +260,7 @@ public class FirstPersonPlayer : Character {
 		float OldMomentumY = Momentum.y;
 		Momentum = Move(Momentum, Delta, 5, 40, 0.42f);
 		if(!WasOnFloor && OnFloor && OldMomentumY < CrunchSpeed) {
-			Sfx.PlaySfx(SfxCatagory.FALL_CRUNCH, 0, GlobalTransform.origin);
+			Sfx.PlaySfx(SfxCatagory.FALL_CRUNCH, 0, GlobalTransform.origin, 0);
 			CamAnimations.Add(new CrunchCamDip());
 
 			float Overkill = -(OldMomentumY - CrunchSpeed);

@@ -102,9 +102,9 @@ public class WeaponHolder : Spatial {
 
 				Box.Damage(Damage);
 
-				Sfx.PlaySfxSpatially(SfxCatagory.FLESH_HIT, 0, Position);
+				Sfx.PlaySfxSpatially(SfxCatagory.FLESH_HIT, 0, Position, 0);
 			} else {
-				Sfx.PlaySfxSpatially(SfxCatagory.BULLET_HIT, 0, Position);
+				Sfx.PlaySfxSpatially(SfxCatagory.BULLET_HIT, 0, Position, 0);
 			}
 
 			Particles.Spawn(Particle.PISTOL_IMPACT, Position, Normal);
@@ -114,16 +114,16 @@ public class WeaponHolder : Spatial {
 
 	public void RunFireEffects() {
 		if(CurrentWeapon == Pistol) {
-			Sfx.PlaySfx(SfxCatagory.PISTOL_FIRE, 0, GlobalTransform.origin);
+			Sfx.PlaySfx(SfxCatagory.PISTOL_FIRE, 0, GlobalTransform.origin, 0);
 			ParentPlayer.CamAnimations.Add(new WeaponRecoil(0.35f, 4f, ParentPlayer.CrouchPercent));
 		}
 		if(CurrentWeapon == Ak) {
-			Sfx.PlaySfx(SfxCatagory.AK_FIRE, 0, GlobalTransform.origin);
+			Sfx.PlaySfx(SfxCatagory.AK_FIRE, 0, GlobalTransform.origin, 0);
 			ParentPlayer.CamAnimations.Add(new WeaponRecoil(0.45f, 6f, ParentPlayer.CrouchPercent));
 		}
 
 		int Index = TinkChooser.Choose();
-		Sfx.PlaySfxSpatially(SfxCatagory.CASING_TINK, Index, GlobalTransform.origin + new Vector3(0, -2, 0));
+		Sfx.PlaySfxSpatially(SfxCatagory.CASING_TINK, Index, GlobalTransform.origin + new Vector3(0, -2, 0), 0);
 	}
 
 
@@ -173,7 +173,7 @@ public class WeaponHolder : Spatial {
 				PerformHitscan();
 				RunFireEffects();
 			} else {
-				Sfx.PlaySfx(SfxCatagory.EMPTY_CHAMBER_FIRE_CLICK, 0, GlobalTransform.origin);
+				Sfx.PlaySfx(SfxCatagory.EMPTY_CHAMBER_FIRE_CLICK, 0, GlobalTransform.origin, 0);
 			}
 		}
 
@@ -183,12 +183,12 @@ public class WeaponHolder : Spatial {
 			&& CurrentWeapon.CurrentAmmo < CurrentWeapon.MaxAmmo) {
 			CurrentWeapon.ReloadTimer = CurrentWeapon.MaxReloadTime;
 			Reloading = true;
-			Sfx.PlaySfx(SfxCatagory.RELOAD, 0, GlobalTransform.origin);
+			Sfx.PlaySfx(SfxCatagory.RELOAD, 0, GlobalTransform.origin, 0);
 		} else if(Reloading && CurrentWeapon.ReloadTimer > 0) {
 			CurrentWeapon.ReloadTimer = Clamp(CurrentWeapon.ReloadTimer - Delta, 0, CurrentWeapon.MaxReloadTime);
 			if(CurrentWeapon.ReloadTimer <= 0) {
 				CurrentWeapon.CurrentAmmo = CurrentWeapon.MaxAmmo;
-				Sfx.PlaySfx(SfxCatagory.RELOAD, 1, GlobalTransform.origin);
+				Sfx.PlaySfx(SfxCatagory.RELOAD, 1, GlobalTransform.origin, 0);
 			}
 		} else {
 			Reloading = false;

@@ -129,29 +129,29 @@ public class Sfx : Node {
 	}
 
 
-	public static void PlaySfx(SfxCatagory Catagory, int Index, Vector3 Pos) {
+	public static void PlaySfx(SfxCatagory Catagory, int Index, Vector3 Pos, float Muffle) {
 		if(PlayLocally) {
-			PlaySfxLocally(Catagory, Index);
+			PlaySfxLocally(Catagory, Index, Muffle);
 		}
 
 		if(PlayRemote) {
-			Self.Rpc(nameof(PlaySfxAt), Catagory, Index, Pos);
+			Self.Rpc(nameof(PlaySfxAt), Catagory, Index, Pos, Muffle);
 		}
 	}
 
 
-	public static void PlaySfxSpatially(SfxCatagory Catagory, int Index, Vector3 Pos) {
+	public static void PlaySfxSpatially(SfxCatagory Catagory, int Index, Vector3 Pos, float Muffle) {
 		if(PlayLocally) {
-			Self.PlaySfxAt(Catagory, Index, Pos);
+			Self.PlaySfxAt(Catagory, Index, Pos, Muffle);
 		}
 
 		if(PlayRemote) {
-			Self.Rpc(nameof(PlaySfxAt), Catagory, Index, Pos);
+			Self.Rpc(nameof(PlaySfxAt), Catagory, Index, Pos, Muffle);
 		}
 	}
 
 
-	private static void PlaySfxLocally(SfxCatagory Catagory, int Index) {
+	private static void PlaySfxLocally(SfxCatagory Catagory, int Index, float Muffle) {
 		Sfx2DCleanup StreamPlayer = new Sfx2DCleanup();
 		StreamPlayer.Stream = Clips[Catagory][Index];
 		StreamPlayer.Bus = "Reverb";
@@ -183,13 +183,15 @@ public class Sfx : Node {
 			}
 		}
 
+		StreamPlayer.VolumeDb -= Muffle;
+
 		Game.RuntimeRoot.AddChild(StreamPlayer);
 		StreamPlayer.Play();
 	}
 
 
 	[Remote]
-	private void PlaySfxAt(SfxCatagory Catagory, int Index, Vector3 Pos) {
+	private void PlaySfxAt(SfxCatagory Catagory, int Index, Vector3 Pos, float Muffle) {
 		Sfx3DCleanup StreamPlayer = new Sfx3DCleanup();
 		StreamPlayer.Stream = Clips[Catagory][Index];
 		StreamPlayer.Bus = "Reverb";
@@ -265,6 +267,9 @@ public class Sfx : Node {
 				break;
 			}
 		}
+
+		StreamPlayer.UnitDb -= Muffle;
+		StreamPlayer.MaxDb -= Muffle;
 
 		Game.RuntimeRoot.AddChild(StreamPlayer);
 		StreamPlayer.Translation = Pos;
