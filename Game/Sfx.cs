@@ -183,7 +183,7 @@ public class Sfx : Node {
 			}
 		}
 
-		StreamPlayer.VolumeDb -= Muffle;
+		StreamPlayer.VolumeDb -= Muffle / 1.5f;
 
 		Game.RuntimeRoot.AddChild(StreamPlayer);
 		StreamPlayer.Play();

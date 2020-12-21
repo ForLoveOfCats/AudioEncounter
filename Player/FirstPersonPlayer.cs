@@ -17,8 +17,8 @@ public class FirstPersonPlayer : Character {
 
 	public const float MaxFallSpeed = 75f;
 	public const float Gravity = MaxFallSpeed / 0.6f;
-	public const float BaseSpeed = 8f;
-	public const float SneakSpeed = 4f;
+	public const float BaseSpeed = 10f;
+	public const float SneakSpeed = 5f;
 	public const float SprintSpeed = 24f;
 	public const float AccelerationTime = 0.07f;
 	public const float Acceleration = BaseSpeed / AccelerationTime;
@@ -208,6 +208,8 @@ public class FirstPersonPlayer : Character {
 			Mode = MovementMode.WALKING;
 		}
 
+		MaxSpeed /= 1 + (1 - Holder.CalcAdsDisplay());
+
 		if(BackwardForwardDirection == 0 && RightLeftDirection == 0) {
 			float FrictionModifiedSpeed = Clamp(Momentum.Flattened().Length() - (Friction * Delta), 0, MaxSpeed);
 			Momentum = Momentum.Inflated(Momentum.Flattened().Normalized() * FrictionModifiedSpeed);
@@ -260,15 +262,22 @@ public class FirstPersonPlayer : Character {
 		float OldMomentumY = Momentum.y;
 		Momentum = Move(Momentum, Delta, 5, 40, 0.42f);
 		if(!WasOnFloor && OnFloor && OldMomentumY < CrunchSpeed) {
-			Sfx.PlaySfx(SfxCatagory.FALL_CRUNCH, 0, GlobalTransform.origin, 0);
-			CamAnimations.Add(new CrunchCamDip());
+			bool TakeFallDamage = true;
+			if(FloorCast.GetCollider() is Node Floor && Floor.IsInGroup("leaves")) {
+				TakeFallDamage = false;
+			}
 
-			float Overkill = -(OldMomentumY - CrunchSpeed);
-			float Percent = Overkill / (MaxFallSpeed + CrunchSpeed);
-			float Damage = BaseCrunchDmg + (100f * Percent);
-			Health -= (int)Damage;
-			GD.Print("Overkill: ", Overkill, " Percent: ", Percent, " Damage: ", Damage);
-			CheckDie();
+			if(TakeFallDamage) {
+				Sfx.PlaySfx(SfxCatagory.FALL_CRUNCH, 0, GlobalTransform.origin, 0);
+				CamAnimations.Add(new CrunchCamDip());
+
+				float Overkill = -(OldMomentumY - CrunchSpeed);
+				float Percent = Overkill / (MaxFallSpeed + CrunchSpeed);
+				float Damage = BaseCrunchDmg + (100f * Percent);
+				Health -= (int)Damage;
+				GD.Print("Overkill: ", Overkill, " Percent: ", Percent, " Damage: ", Damage);
+				CheckDie();
+			}
 		}
 
 		HandleFootsteps(Delta);

@@ -178,7 +178,6 @@ public class WeaponHolder : Spatial {
 		}
 
 		if(Input.IsActionJustPressed("Reload")
-			&& CurrentWeapon.FireTimer <= 0
 			&& CurrentWeapon.ReloadTimer <= 0
 			&& CurrentWeapon.CurrentAmmo < CurrentWeapon.MaxAmmo) {
 			CurrentWeapon.ReloadTimer = CurrentWeapon.MaxReloadTime;
