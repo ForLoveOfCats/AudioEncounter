@@ -3,7 +3,15 @@ using static Godot.Mathf;
 
 
 
+public enum WeaponKind {
+	AK,
+	PISTOL,
+}
+
+
 public class WeaponStats {
+	public WeaponKind Kind = WeaponKind.AK;
+
 	public int MaxAmmo = 0;
 	public float MaxFireTime = 0f;
 	public float MaxReloadTime = 0f;
@@ -26,6 +34,8 @@ public class WeaponHolder : Spatial {
 	public const float AdsChangeStateTime = FirstPersonPlayer.SprintSpeed / FirstPersonPlayer.BaseSpeed * FirstPersonPlayer.AccelerationTime;
 
 	public Spatial MeshJoint;
+	public MeshInstance AkMesh;
+	public MeshInstance PistolMesh;
 
 	public Vector3 OgTranslation = new Vector3();
 
@@ -38,37 +48,59 @@ public class WeaponHolder : Spatial {
 	FirstPersonPlayer ParentPlayer = null;
 	ClipChooser TinkChooser = new ClipChooser(4);
 
-	public WeaponStats Pistol = new WeaponStats() {
-		MaxAmmo = 8,
-		CurrentAmmo = 8,
-		MaxFireTime = 0.16f,
-		MaxReloadTime = 2f,
-		FullAuto = false,
-		HeadDamage = 35,
-		BodyDamage = 15,
-	};
-	public WeaponStats Ak = new WeaponStats() {
-		MaxAmmo = 30,
-		CurrentAmmo = 30,
-		MaxFireTime = 0.09f,
-		MaxReloadTime = 4f,
-		FullAuto = true,
-		HeadDamage = 15,
-		BodyDamage = 8,
-	};
-
 	public WeaponStats CurrentWeapon = null;
 
 
 	public override void _Ready() {
 		MeshJoint = GetNode<Spatial>("MeshJoint");
-
-		CurrentWeapon = Ak;
+		AkMesh = MeshJoint.GetNode<MeshInstance>("AkMesh");
+		PistolMesh = MeshJoint.GetNode<MeshInstance>("PistolMesh");
 
 		OgTranslation = Translation;
 		ParentPlayer = (FirstPersonPlayer)GetParent().GetParent().GetParent();
 
+		int Choice = Game.Rng.Next(2);
+		if(Choice == 0) {
+			EquipAk();
+		} else if(Choice == 1) {
+			EquipPistol();
+		}
+
 		base._Ready();
+	}
+
+
+	public void EquipAk() {
+		AkMesh.Visible = true;
+		PistolMesh.Visible = false;
+
+		CurrentWeapon = new WeaponStats() {
+			Kind = WeaponKind.AK,
+			MaxAmmo = 30,
+			CurrentAmmo = 30,
+			MaxFireTime = 0.09f,
+			MaxReloadTime = 4f,
+			FullAuto = true,
+			HeadDamage = 30,
+			BodyDamage = 25,
+		};
+	}
+
+
+	public void EquipPistol() {
+		AkMesh.Visible = false;
+		PistolMesh.Visible = true;
+
+		CurrentWeapon = new WeaponStats() {
+			Kind = WeaponKind.PISTOL,
+			MaxAmmo = 8,
+			CurrentAmmo = 8,
+			MaxFireTime = 0.1f,
+			MaxReloadTime = 2f,
+			FullAuto = false,
+			HeadDamage = 40,
+			BodyDamage = 20,
+		};
 	}
 
 
@@ -113,11 +145,11 @@ public class WeaponHolder : Spatial {
 
 
 	public void RunFireEffects() {
-		if(CurrentWeapon == Pistol) {
+		if(CurrentWeapon.Kind == WeaponKind.PISTOL) {
 			Sfx.PlaySfx(SfxCatagory.PISTOL_FIRE, 0, GlobalTransform.origin, 0);
 			ParentPlayer.CamAnimations.Add(new WeaponRecoil(0.35f, 4f, ParentPlayer.CrouchPercent));
 		}
-		if(CurrentWeapon == Ak) {
+		if(CurrentWeapon.Kind == WeaponKind.AK) {
 			Sfx.PlaySfx(SfxCatagory.AK_FIRE, 0, GlobalTransform.origin, 0);
 			ParentPlayer.CamAnimations.Add(new WeaponRecoil(0.45f, 6f, ParentPlayer.CrouchPercent));
 		}
