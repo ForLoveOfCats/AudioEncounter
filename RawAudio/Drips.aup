@@ -1,0 +1,61 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="Drips_data" version="1.3.0" audacityversion="2.4.1" sel0="0.0000000000" sel1="0.4871250000" vpos="0" h="0.0000000000" zoom="133.4343029958" rate="48000.0" snapto="off" selectionformat="hh:mm:ss + milliseconds" frequencyformat="Hz" bandwidthformat="octaves">
+	<tags/>
+	<wavetrack name="489747__shadowsilhouette__faucet-drip-01" isSelected="0" height="150" minimized="0" channel="2" linked="0" mute="1" solo="0" rate="48000" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="621969">
+				<waveblock start="0">
+					<simpleblockfile filename="eff1f027.au" len="262144" min="-0.174652" max="0.186371" rms="0.004438"/>
+				</waveblock>
+				<waveblock start="262144">
+					<simpleblockfile filename="eff1fdb3.au" len="262144" min="-0.218445" max="0.22229" rms="0.004581"/>
+				</waveblock>
+				<waveblock start="524288">
+					<simpleblockfile filename="eff1f213.au" len="97681" min="-0.067444" max="0.066223" rms="0.002125"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="1" isSelected="0" height="150" minimized="0" channel="2" linked="0" mute="1" solo="0" rate="48000" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="17267">
+				<waveblock start="0">
+					<simpleblockfile filename="eff1fb15.au" len="17267" min="-0.121704" max="0.123199" rms="0.006456"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="489747__shadowsilhouette__faucet-drip-01" isSelected="0" height="150" minimized="0" channel="2" linked="0" mute="1" solo="0" rate="48000" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="34894">
+				<waveblock start="0">
+					<simpleblockfile filename="eff1feef.au" len="34894" min="-0.084473" max="0.086395" rms="0.004491"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="489747__shadowsilhouette__faucet-drip-01" isSelected="0" height="150" minimized="0" channel="2" linked="0" mute="1" solo="0" rate="48000" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="33454">
+				<waveblock start="0">
+					<simpleblockfile filename="eff1fad1.au" len="33454" min="-0.174652" max="0.186371" rms="0.008825"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="489747__shadowsilhouette__faucet-drip-01" isSelected="1" height="150" minimized="0" channel="2" linked="0" mute="0" solo="1" rate="48000" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="23382">
+				<waveblock start="0">
+					<simpleblockfile filename="eff1fbbf.au" len="23382" min="-0.177734" max="0.162659" rms="0.008431"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+</project>

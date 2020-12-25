@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Maps/Initial/DripPlayer.cs" type="Script" id=1]
+
+[node name="DripPlayer" type="Position3D"]
+script = ExtResource( 1 )

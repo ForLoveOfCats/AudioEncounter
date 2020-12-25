@@ -15,6 +15,7 @@ public enum SfxCatagory {
 	PISTOL_FIRE,
 	AK_FIRE,
 	CASING_TINK,
+	DRIP,
 	CONCRETE,
 	LEAVES
 };
@@ -59,6 +60,10 @@ public class Sfx : Node {
 
 
 	static Sfx() {
+		if(Engine.EditorHint) {
+			return;
+		}
+
 		Clips.Add(SfxCatagory.FALL_CRUNCH, new List<AudioStream> {
 			GD.Load<AudioStream>("res://TrimmedAudio/FallCrunch.wav")
 		});
@@ -83,8 +88,11 @@ public class Sfx : Node {
 			GD.Load<AudioStream>("res://TrimmedAudio/AkFire.wav")
 		});
 
-		List<AudioStream> CasingTink = LoadAllStreamsInFolder("res://TrimmedAudio/CasingTinks");
-		Clips.Add(SfxCatagory.CASING_TINK, CasingTink);
+		List<AudioStream> CasingTinks = LoadAllStreamsInFolder("res://TrimmedAudio/CasingTinks");
+		Clips.Add(SfxCatagory.CASING_TINK, CasingTinks);
+
+		List<AudioStream> Drips = LoadAllStreamsInFolder("res://TrimmedAudio/Drips");
+		Clips.Add(SfxCatagory.DRIP, Drips);
 
 		List<AudioStream> Concrete = LoadAllStreamsInFolder("res://TrimmedAudio/ConcreteFootsteps");
 		Clips.Add(SfxCatagory.CONCRETE, Concrete);
@@ -250,6 +258,12 @@ public class Sfx : Node {
 				StreamPlayer.UnitDb = -4;
 				StreamPlayer.UnitSize = 20;
 				StreamPlayer.MaxDb = -4;
+				break;
+			}
+
+			case SfxCatagory.DRIP: {
+				StreamPlayer.UnitDb = -15;
+				StreamPlayer.UnitSize = 25;
 				break;
 			}
 
