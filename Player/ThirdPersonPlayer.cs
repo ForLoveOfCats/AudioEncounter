@@ -35,6 +35,10 @@ public class ThirdPersonPlayer : Spatial {
 
 	[Remote]
 	public void NetDie() {
+		if(Multiplayer.IsNetworkServer()) {
+			Game.Alive.Remove(Id);
+		}
+
 		QueueFree();
 	}
 

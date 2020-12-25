@@ -17,7 +17,8 @@ script/source = "extends Button
 
 func _on_ConnectButton_pressed() -> void:
 	var ip_string = get_parent().get_node(\"IpEdit\").text
-	Game.Connect(ip_string)
+	var nick_string = get_parent().get_node(\"NickEdit\").text
+	Game.Connect(ip_string, nick_string)
 	Game.RuntimeRoot.get_node(\"Menu\").queue_free()
 "
 
@@ -33,33 +34,41 @@ __meta__ = {
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Menu/CenterContainer"]
-margin_left = 328.0
+margin_left = 176.0
 margin_top = 276.0
-margin_right = 696.0
+margin_right = 848.0
 margin_bottom = 324.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="HostButton" type="Button" parent="Menu/CenterContainer/VBoxContainer"]
-margin_right = 368.0
+margin_right = 672.0
 margin_bottom = 20.0
 text = "Host"
 script = SubResource( 1 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Menu/CenterContainer/VBoxContainer"]
 margin_top = 24.0
-margin_right = 368.0
+margin_right = 672.0
 margin_bottom = 48.0
 
 [node name="IpEdit" type="LineEdit" parent="Menu/CenterContainer/VBoxContainer/HBoxContainer"]
 margin_right = 300.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 300, 0 )
+placeholder_text = "IP Address"
+
+[node name="NickEdit" type="LineEdit" parent="Menu/CenterContainer/VBoxContainer/HBoxContainer"]
+margin_left = 304.0
+margin_right = 604.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 300, 0 )
+placeholder_text = "Nickname"
 
 [node name="ConnectButton" type="Button" parent="Menu/CenterContainer/VBoxContainer/HBoxContainer"]
-margin_left = 304.0
-margin_right = 368.0
+margin_left = 608.0
+margin_right = 672.0
 margin_bottom = 24.0
 text = "Connect"
 script = SubResource( 2 )

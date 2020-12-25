@@ -197,14 +197,17 @@ public class FirstPersonPlayer : Character {
 		if(Input.IsActionPressed("Sneak")) {
 			MaxSpeed = SneakSpeed;
 			Mode = MovementMode.SNEAKING;
-		} else if(Input.IsActionPressed("Sprint") && !Input.IsActionPressed("ADS")) {
+		}
+		else if(Input.IsActionPressed("Sprint") && !Input.IsActionPressed("ADS")) {
 			MaxSpeed = SprintSpeed;
 			if(OnFloor && (BackwardForwardDirection != 0 || RightLeftDirection != 0)) {
 				Mode = MovementMode.SPRINTING;
-			} else {
+			}
+			else {
 				Mode = MovementMode.WALKING;
 			}
-		} else {
+		}
+		else {
 			Mode = MovementMode.WALKING;
 		}
 
@@ -236,7 +239,8 @@ public class FirstPersonPlayer : Character {
 
 		if(Input.IsActionPressed("Sneak")) {
 			CrouchPercent = Clamp(CrouchPercent + (Delta / MaxCrouchTime), 0, 1);
-		} else {
+		}
+		else {
 			CrouchPercent = Clamp(CrouchPercent - (Delta / MaxCrouchTime), 0, 1);
 		}
 

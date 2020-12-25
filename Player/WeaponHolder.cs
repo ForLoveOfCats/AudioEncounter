@@ -62,7 +62,8 @@ public class WeaponHolder : Spatial {
 		int Choice = Game.Rng.Next(2);
 		if(Choice == 0) {
 			EquipAk();
-		} else if(Choice == 1) {
+		}
+		else if(Choice == 1) {
 			EquipPistol();
 		}
 
@@ -135,7 +136,8 @@ public class WeaponHolder : Spatial {
 				Box.Damage(Damage);
 
 				Sfx.PlaySfxSpatially(SfxCatagory.FLESH_HIT, 0, Position, 0);
-			} else {
+			}
+			else {
 				Sfx.PlaySfxSpatially(SfxCatagory.BULLET_HIT, 0, Position, 0);
 			}
 
@@ -204,7 +206,8 @@ public class WeaponHolder : Spatial {
 				CurrentWeapon.CurrentAmmo -= 1;
 				PerformHitscan();
 				RunFireEffects();
-			} else {
+			}
+			else {
 				Sfx.PlaySfx(SfxCatagory.EMPTY_CHAMBER_FIRE_CLICK, 0, GlobalTransform.origin, 0);
 			}
 		}
@@ -215,27 +218,31 @@ public class WeaponHolder : Spatial {
 			CurrentWeapon.ReloadTimer = CurrentWeapon.MaxReloadTime;
 			Reloading = true;
 			Sfx.PlaySfx(SfxCatagory.RELOAD, 0, GlobalTransform.origin, 0);
-		} else if(Reloading && CurrentWeapon.ReloadTimer > 0) {
+		}
+		else if(Reloading && CurrentWeapon.ReloadTimer > 0) {
 			CurrentWeapon.ReloadTimer = Clamp(CurrentWeapon.ReloadTimer - Delta, 0, CurrentWeapon.MaxReloadTime);
 			if(CurrentWeapon.ReloadTimer <= 0) {
 				CurrentWeapon.CurrentAmmo = CurrentWeapon.MaxAmmo;
 				Sfx.PlaySfx(SfxCatagory.RELOAD, 1, GlobalTransform.origin, 0);
 			}
-		} else {
+		}
+		else {
 			Reloading = false;
 		}
 
 		float OneTenth = CurrentWeapon.MaxReloadTime / 10;
 		if(CurrentWeapon.ReloadTimer >= OneTenth * 9f) {
 			ReloadHidePercent = 1 - (CurrentWeapon.ReloadTimer - OneTenth * 9f) / OneTenth;
-		} else if(CurrentWeapon.ReloadTimer <= OneTenth) {
+		}
+		else if(CurrentWeapon.ReloadTimer <= OneTenth) {
 			ReloadHidePercent = CurrentWeapon.ReloadTimer / OneTenth;
 		}
 		float ReloadDisplay = Sin((ReloadHidePercent / 2f) * Pi);
 
 		if(ParentPlayer.Mode == MovementMode.SPRINTING) {
 			SprintTime = Clamp(SprintTime + Delta, 0, SprintChangeStateTime);
-		} else {
+		}
+		else {
 			SprintTime = Clamp(SprintTime - Delta, 0, SprintChangeStateTime);
 		}
 
@@ -244,7 +251,8 @@ public class WeaponHolder : Spatial {
 
 		if(ParentPlayer.Mode != MovementMode.SPRINTING && Input.IsActionPressed("ADS") && !Reloading) {
 			AdsTime = Clamp(AdsTime + Delta, 0, AdsChangeStateTime);
-		} else {
+		}
+		else {
 			AdsTime = Clamp(AdsTime - Delta, 0, AdsChangeStateTime);
 		}
 

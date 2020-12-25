@@ -20,6 +20,6 @@ public class Hitbox : StaticBody {
 
 
 	public void Damage(int Damage) {
-		ParentPlayer.Rpc(nameof(FirstPersonPlayer.NetDamage), Damage);
+		ParentPlayer.RpcId(ParentPlayer.Id, nameof(FirstPersonPlayer.NetDamage), Damage);
 	}
 }
