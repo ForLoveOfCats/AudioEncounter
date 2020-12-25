@@ -43,6 +43,7 @@ public class FirstPersonPlayer : Character {
 	public WeaponHolder Holder;
 
 	public RayCast FloorCast;
+	public RayCast CeilingCast;
 	public CollisionShape Hull;
 
 	ClipChooser ConcreteChooser = new ClipChooser(6);
@@ -72,6 +73,7 @@ public class FirstPersonPlayer : Character {
 		Holder = Cam.GetNode<WeaponHolder>("WeaponHolder");
 
 		FloorCast = GetNode<RayCast>("FloorCast");
+		CeilingCast = GetNode<RayCast>("CeilingCast");
 		Hull = GetNode<CollisionShape>("Hull");
 
 		Input.SetMouseMode(Input.MouseMode.Captured);
@@ -194,7 +196,7 @@ public class FirstPersonPlayer : Character {
 		}
 
 		float MaxSpeed = BaseSpeed;
-		if(Input.IsActionPressed("Sneak")) {
+		if(CrouchPercent > 0.05) {
 			MaxSpeed = SneakSpeed;
 			Mode = MovementMode.SNEAKING;
 		}
@@ -240,7 +242,7 @@ public class FirstPersonPlayer : Character {
 		if(Input.IsActionPressed("Sneak")) {
 			CrouchPercent = Clamp(CrouchPercent + (Delta / MaxCrouchTime), 0, 1);
 		}
-		else {
+		else if(!CeilingCast.IsColliding()) {
 			CrouchPercent = Clamp(CrouchPercent - (Delta / MaxCrouchTime), 0, 1);
 		}
 
