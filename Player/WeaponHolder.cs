@@ -147,13 +147,14 @@ public class WeaponHolder : Spatial {
 
 
 	public void RunFireEffects() {
+		float RecoilDampen = (1 - CalcAdsDisplay()) + ParentPlayer.CrouchPercent;
 		if(CurrentWeapon.Kind == WeaponKind.PISTOL) {
 			Sfx.PlaySfx(SfxCatagory.PISTOL_FIRE, 0, GlobalTransform.origin, 0);
-			ParentPlayer.CamAnimations.Add(new WeaponRecoil(0.35f, 4f, ParentPlayer.CrouchPercent));
+			ParentPlayer.CamAnimations.Add(new WeaponRecoil(0.35f, 4f, RecoilDampen));
 		}
 		if(CurrentWeapon.Kind == WeaponKind.AK) {
 			Sfx.PlaySfx(SfxCatagory.AK_FIRE, 0, GlobalTransform.origin, 0);
-			ParentPlayer.CamAnimations.Add(new WeaponRecoil(0.45f, 6f, ParentPlayer.CrouchPercent));
+			ParentPlayer.CamAnimations.Add(new WeaponRecoil(0.45f, 6f, RecoilDampen));
 		}
 
 		int Index = TinkChooser.Choose();
