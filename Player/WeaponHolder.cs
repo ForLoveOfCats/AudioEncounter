@@ -17,6 +17,9 @@ public class WeaponStats {
 	public float MaxReloadTime = 0f;
 	public bool FullAuto = false;
 
+	public float RecoilAmount = 0f;
+	public float RecoilTime = 0f;
+
 	public int HeadDamage = 0;
 	public int BodyDamage = 0;
 
@@ -84,6 +87,8 @@ public class WeaponHolder : Spatial {
 			FullAuto = true,
 			HeadDamage = 30,
 			BodyDamage = 25,
+			RecoilTime = 0.4f,
+			RecoilAmount = 10f,
 		};
 	}
 
@@ -101,6 +106,8 @@ public class WeaponHolder : Spatial {
 			FullAuto = false,
 			HeadDamage = 40,
 			BodyDamage = 20,
+			RecoilTime = 0.35f,
+			RecoilAmount = 6f,
 		};
 	}
 
@@ -147,15 +154,15 @@ public class WeaponHolder : Spatial {
 
 
 	public void RunFireEffects() {
-		float RecoilDampen = (1 - CalcAdsDisplay()) + ParentPlayer.CrouchPercent;
 		if(CurrentWeapon.Kind == WeaponKind.PISTOL) {
 			Sfx.PlaySfx(SfxCatagory.PISTOL_FIRE, 0, GlobalTransform.origin, 0);
-			ParentPlayer.CamAnimations.Add(new WeaponRecoil(0.35f, 4f, RecoilDampen));
 		}
-		if(CurrentWeapon.Kind == WeaponKind.AK) {
+		else if(CurrentWeapon.Kind == WeaponKind.AK) {
 			Sfx.PlaySfx(SfxCatagory.AK_FIRE, 0, GlobalTransform.origin, 0);
-			ParentPlayer.CamAnimations.Add(new WeaponRecoil(0.45f, 6f, RecoilDampen));
 		}
+
+		float RecoilDampen = ((1 - CalcAdsDisplay()) + ParentPlayer.CrouchPercent) / 2f;
+		ParentPlayer.CamAnimations.Add(new WeaponRecoil(CurrentWeapon.RecoilTime, CurrentWeapon.RecoilAmount, RecoilDampen));
 
 		int Index = TinkChooser.Choose();
 		Sfx.PlaySfxSpatially(SfxCatagory.CASING_TINK, Index, GlobalTransform.origin + new Vector3(0, -2, 0), 0);
