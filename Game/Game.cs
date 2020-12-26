@@ -146,6 +146,7 @@ public class Game : Node {
 		if(AdminPanel is AdminControls Panel) {
 			string Message = String.Join(" ", Messages);
 			Panel.CliOutput.Text += Message + "\n";
+			Panel.CliOutput.CursorSetLine(Panel.CliOutput.GetLineCount());
 		}
 	}
 
@@ -155,6 +156,7 @@ public class Game : Node {
 
 		if(AdminPanel is AdminControls Panel) {
 			Panel.LogOutput.Text += Message + "\n\n";
+			Panel.LogOutput.CursorSetLine(Panel.LogOutput.GetLineCount());
 		}
 
 		GD.Print(Message);
