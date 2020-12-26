@@ -48,6 +48,7 @@ public class FirstPersonPlayer : Character {
 
 	ClipChooser ConcreteChooser = new ClipChooser(6);
 	ClipChooser LeavesChooser = new ClipChooser(6);
+	ClipChooser MetalChooser = new ClipChooser(6);
 
 	public float CurrentSens = BaseMouseSens;
 
@@ -140,15 +141,19 @@ public class FirstPersonPlayer : Character {
 				if(FloorCast.GetCollider() is Node Floor) {
 					if(Floor.IsInGroup("concrete")) {
 						Index = ConcreteChooser.Choose();
-						Catagory = SfxCatagory.CONCRETE;
+						Catagory = SfxCatagory.CONCRETE_FOOTSTEPS;
 					}
 					else if(Floor.IsInGroup("leaves")) {
 						Index = LeavesChooser.Choose();
-						Catagory = SfxCatagory.LEAVES;
+						Catagory = SfxCatagory.LEAVES_FOOTSTEPS;
+					}
+					else if(Floor.IsInGroup("metal")) {
+						Index = MetalChooser.Choose();
+						Catagory = SfxCatagory.METAL_FOOTSTEPS;
 					}
 					else {
 						Index = ConcreteChooser.Choose();
-						Catagory = SfxCatagory.CONCRETE;
+						Catagory = SfxCatagory.CONCRETE_FOOTSTEPS;
 					}
 				}
 

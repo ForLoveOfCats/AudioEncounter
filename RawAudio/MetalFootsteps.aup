@@ -1,0 +1,120 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="MetalFootsteps_data" version="1.3.0" audacityversion="2.4.1" sel0="0.0000000000" sel1="0.4676190476" vpos="288" h="0.0000000000" zoom="303.6630506181" rate="44100.0" snapto="off" selectionformat="hh:mm:ss + milliseconds" frequencyformat="Hz" bandwidthformat="octaves">
+	<tags/>
+	<wavetrack name="398937__mypantsfelldown__metal-footsteps" isSelected="0" height="150" minimized="0" channel="2" linked="0" mute="1" solo="0" rate="44100" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="4017553">
+				<waveblock start="0">
+					<simpleblockfile filename="eff1fb33.au" len="262144" min="-0.397522" max="0.338684" rms="0.018277"/>
+				</waveblock>
+				<waveblock start="262144">
+					<simpleblockfile filename="eff1f099.au" len="262144" min="-0.375336" max="0.383423" rms="0.020502"/>
+				</waveblock>
+				<waveblock start="524288">
+					<simpleblockfile filename="eff1f7f4.au" len="262144" min="-0.589661" max="0.496124" rms="0.01909"/>
+				</waveblock>
+				<waveblock start="786432">
+					<simpleblockfile filename="eff1f801.au" len="262144" min="-0.520416" max="0.466583" rms="0.021675"/>
+				</waveblock>
+				<waveblock start="1048576">
+					<simpleblockfile filename="eff1f7dc.au" len="262144" min="-0.319489" max="0.37738" rms="0.018007"/>
+				</waveblock>
+				<waveblock start="1310720">
+					<simpleblockfile filename="eff1f3b1.au" len="262144" min="-0.352631" max="0.380981" rms="0.020334"/>
+				</waveblock>
+				<waveblock start="1572864">
+					<simpleblockfile filename="eff1f443.au" len="262144" min="-0.413696" max="0.313629" rms="0.018919"/>
+				</waveblock>
+				<waveblock start="1835008">
+					<simpleblockfile filename="eff1f015.au" len="262144" min="-0.605042" max="0.433441" rms="0.025229"/>
+				</waveblock>
+				<waveblock start="2097152">
+					<simpleblockfile filename="eff1f1d1.au" len="262144" min="-0.326782" max="0.353699" rms="0.016956"/>
+				</waveblock>
+				<waveblock start="2359296">
+					<simpleblockfile filename="eff1f23e.au" len="262144" min="-0.31665" max="0.276428" rms="0.018504"/>
+				</waveblock>
+				<waveblock start="2621440">
+					<simpleblockfile filename="eff1fd4e.au" len="262144" min="-0.871002" max="0.582825" rms="0.025955"/>
+				</waveblock>
+				<waveblock start="2883584">
+					<simpleblockfile filename="eff1f1f8.au" len="262144" min="-1.0" max="0.832428" rms="0.033313"/>
+				</waveblock>
+				<waveblock start="3145728">
+					<simpleblockfile filename="eff1fbc1.au" len="262144" min="-0.387482" max="0.480255" rms="0.020929"/>
+				</waveblock>
+				<waveblock start="3407872">
+					<simpleblockfile filename="eff1fc69.au" len="262144" min="-0.579285" max="0.666077" rms="0.02699"/>
+				</waveblock>
+				<waveblock start="3670016">
+					<simpleblockfile filename="eff1fa1a.au" len="262144" min="-0.449036" max="0.386108" rms="0.019767"/>
+				</waveblock>
+				<waveblock start="3932160">
+					<simpleblockfile filename="eff1fc81.au" len="85393" min="-0.215698" max="0.316315" rms="0.011969"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="398937__mypantsfelldown__metal-footsteps" isSelected="0" height="150" minimized="0" channel="2" linked="0" mute="1" solo="0" rate="44100" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="21930">
+				<waveblock start="0">
+					<simpleblockfile filename="eff1fbab.au" len="21930" min="-0.249786" max="0.190521" rms="0.017613"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="398937__mypantsfelldown__metal-footsteps" isSelected="0" height="150" minimized="0" channel="2" linked="0" mute="1" solo="0" rate="44100" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="20913">
+				<waveblock start="0">
+					<simpleblockfile filename="eff1f98b.au" len="20913" min="-0.239075" max="0.136536" rms="0.01679"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="398937__mypantsfelldown__metal-footsteps" isSelected="0" height="150" minimized="0" channel="2" linked="0" mute="1" solo="0" rate="44100" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="18444">
+				<waveblock start="0">
+					<simpleblockfile filename="eff1f472.au" len="18444" min="-0.214325" max="0.166809" rms="0.021377"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="398937__mypantsfelldown__metal-footsteps" isSelected="0" height="150" minimized="0" channel="2" linked="0" mute="1" solo="0" rate="44100" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="16121">
+				<waveblock start="0">
+					<simpleblockfile filename="eff1fe7a.au" len="16121" min="-0.272888" max="0.338684" rms="0.032378"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="398937__mypantsfelldown__metal-footsteps" isSelected="0" height="150" minimized="0" channel="2" linked="0" mute="1" solo="0" rate="44100" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="21784">
+				<waveblock start="0">
+					<simpleblockfile filename="eff1f61c.au" len="21784" min="-0.397522" max="0.323883" rms="0.028257"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="398937__mypantsfelldown__metal-footsteps" isSelected="1" height="150" minimized="0" channel="2" linked="0" mute="0" solo="1" rate="44100" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="20622">
+				<waveblock start="0">
+					<simpleblockfile filename="eff1fdd0.au" len="20622" min="-0.25592" max="0.383423" rms="0.039352"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+</project>

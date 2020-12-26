@@ -16,8 +16,9 @@ public enum SfxCatagory {
 	AK_FIRE,
 	CASING_TINK,
 	DRIP,
-	CONCRETE,
-	LEAVES
+	CONCRETE_FOOTSTEPS,
+	LEAVES_FOOTSTEPS,
+	METAL_FOOTSTEPS,
 };
 
 
@@ -94,11 +95,14 @@ public class Sfx : Node {
 		List<AudioStream> Drips = LoadAllStreamsInFolder("res://TrimmedAudio/Drips");
 		Clips.Add(SfxCatagory.DRIP, Drips);
 
-		List<AudioStream> Concrete = LoadAllStreamsInFolder("res://TrimmedAudio/ConcreteFootsteps");
-		Clips.Add(SfxCatagory.CONCRETE, Concrete);
+		List<AudioStream> ConcreteFootsteps = LoadAllStreamsInFolder("res://TrimmedAudio/ConcreteFootsteps");
+		Clips.Add(SfxCatagory.CONCRETE_FOOTSTEPS, ConcreteFootsteps);
 
-		List<AudioStream> Leaves = LoadAllStreamsInFolder("res://TrimmedAudio/LeavesFootsteps");
-		Clips.Add(SfxCatagory.LEAVES, Leaves);
+		List<AudioStream> LeavesFootsteps = LoadAllStreamsInFolder("res://TrimmedAudio/LeavesFootsteps");
+		Clips.Add(SfxCatagory.LEAVES_FOOTSTEPS, LeavesFootsteps);
+
+		List<AudioStream> MetalFootsteps = LoadAllStreamsInFolder("res://TrimmedAudio/MetalFootsteps");
+		Clips.Add(SfxCatagory.METAL_FOOTSTEPS, MetalFootsteps);
 	}
 
 
@@ -170,12 +174,17 @@ public class Sfx : Node {
 				break;
 			}
 
-			case SfxCatagory.CONCRETE: {
+			case SfxCatagory.CONCRETE_FOOTSTEPS: {
 				StreamPlayer.VolumeDb = 4;
 				break;
 			}
 
-			case SfxCatagory.LEAVES: {
+			case SfxCatagory.LEAVES_FOOTSTEPS: {
+				StreamPlayer.VolumeDb = -5;
+				break;
+			}
+
+			case SfxCatagory.METAL_FOOTSTEPS: {
 				StreamPlayer.VolumeDb = -5;
 				break;
 			}
@@ -267,14 +276,21 @@ public class Sfx : Node {
 				break;
 			}
 
-			case SfxCatagory.CONCRETE: {
+			case SfxCatagory.CONCRETE_FOOTSTEPS: {
 				StreamPlayer.UnitDb = 10;
 				StreamPlayer.MaxDb = 10;
 				StreamPlayer.UnitSize = 25;
 				break;
 			}
 
-			case SfxCatagory.LEAVES: {
+			case SfxCatagory.LEAVES_FOOTSTEPS: {
+				StreamPlayer.UnitDb = 4;
+				StreamPlayer.MaxDb = 4;
+				StreamPlayer.UnitSize = 25;
+				break;
+			}
+
+			case SfxCatagory.METAL_FOOTSTEPS: {
 				StreamPlayer.UnitDb = 4;
 				StreamPlayer.MaxDb = 4;
 				StreamPlayer.UnitSize = 25;
