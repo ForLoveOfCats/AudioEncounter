@@ -1,7 +1,10 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 using Godot;
+
+using static Assert;
 
 
 
@@ -92,6 +95,9 @@ public class Game : Node {
 			Log($"Unregistered player {Id} disconnected");
 		}
 
+		Alive.Remove(Id);
+		Nicknames.Remove(Id);
+
 		Node ThirdPerson = RuntimeRoot.GetNodeOrNull(Id.ToString());
 		if(ThirdPerson != null) {
 			ThirdPerson.QueueFree();
@@ -117,6 +123,48 @@ public class Game : Node {
 		string Identifier = $"{ClientNick}#{Multiplayer.GetRpcSenderId()}";
 		Nicknames.Add(Multiplayer.GetRpcSenderId(), Identifier);
 		Log("Registered player ", Identifier);
+	}
+
+
+	public static void ChooseSpawnPointAndDoSpawn(int Id) {
+		ActualAssert(Self.Multiplayer.IsNetworkServer());
+
+		var SpawnPoints = new List<Spatial>();
+		foreach(Node GottenNode in Self.GetTree().GetNodesInGroup("spawn_point")) {
+			SpawnPoints.Add((Spatial)GottenNode);
+		}
+
+		Spatial SpawnPoint = null;
+		if(Alive.Count <= 0) {
+			int Index = Rng.Next(SpawnPoints.Count);
+			SpawnPoint = SpawnPoints[Index];
+		}
+		else {
+			var Distances = new List<float>();
+
+			foreach(Spatial Point in SpawnPoints) {
+				float Distance = 0;
+				foreach(int ExistingId in Alive) {
+					var Plr = (ThirdPersonPlayer)RuntimeRoot.GetNode(ExistingId.ToString());
+					Distance += Point.GlobalTransform.origin.DistanceTo(Plr.GlobalTransform.origin);
+				}
+				Distances.Add(Distance / (float)Alive.Count);
+			}
+
+			int FarthestIndex = 0;
+			float FarthestDistance = Distances[0];
+			foreach((float Distance, int Index) in Distances.Select((item, index) => (item, index))) {
+				if(Distance > FarthestDistance) {
+					FarthestIndex = Index;
+				}
+			}
+			SpawnPoint = SpawnPoints[FarthestIndex];
+		}
+		ActualAssert(SpawnPoint != null);
+
+		Game.Alive.Add(Id);
+		Game.Self.Rpc(nameof(Game.NetSpawn), Id, SpawnPoint.GlobalTransform.origin, SpawnPoint.Rotation);
+		Game.Self.NetSpawn(Id, SpawnPoint.GlobalTransform.origin, SpawnPoint.Rotation);
 	}
 
 

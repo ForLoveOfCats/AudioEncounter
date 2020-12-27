@@ -127,9 +127,7 @@ public class AdminControls : Node {
 
 				case "do_spawn": {
 					foreach(int Id in ToSpawn) {
-						Game.Alive.Add(Id);
-						Game.Self.Rpc(nameof(Game.NetSpawn), Id, new Vector3(0, 2, 0), new Vector3());
-						Game.Self.NetSpawn(Id, new Vector3(0, 2, 0), new Vector3());
+						Game.ChooseSpawnPointAndDoSpawn(Id);
 					}
 					ToSpawn.Clear();
 					break;
