@@ -84,6 +84,13 @@ public class Game : Node {
 		if(Id == ServerId) {
 			RpcId(ServerId, nameof(RegisterNickname), Nickname);
 		}
+
+		if(Multiplayer.IsNetworkServer()) {
+			foreach(int AlivePlayer in Alive) {
+				var Plr = (ThirdPersonPlayer)RuntimeRoot.GetNode(AlivePlayer.ToString());
+				RpcId(Id, nameof(NetSpawn), AlivePlayer, Plr.GlobalTransform.origin, Plr.Rotation);
+			}
+		}
 	}
 
 
