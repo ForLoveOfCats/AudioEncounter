@@ -19,6 +19,7 @@ public enum SfxCatagory {
 	CONCRETE_FOOTSTEPS,
 	LEAVES_FOOTSTEPS,
 	METAL_FOOTSTEPS,
+	MARBLE_FOOTSTEPS,
 };
 
 
@@ -103,6 +104,9 @@ public class Sfx : Node {
 
 		List<AudioStream> MetalFootsteps = LoadAllStreamsInFolder("res://TrimmedAudio/MetalFootsteps");
 		Clips.Add(SfxCatagory.METAL_FOOTSTEPS, MetalFootsteps);
+
+		List<AudioStream> MarbleFootsteps = LoadAllStreamsInFolder("res://TrimmedAudio/MarbleFootsteps");
+		Clips.Add(SfxCatagory.MARBLE_FOOTSTEPS, MarbleFootsteps);
 	}
 
 
@@ -174,8 +178,18 @@ public class Sfx : Node {
 				break;
 			}
 
+			case SfxCatagory.PISTOL_FIRE: {
+				StreamPlayer.VolumeDb = -6;
+				break;
+			}
+
+			case SfxCatagory.AK_FIRE: {
+				StreamPlayer.VolumeDb = -6;
+				break;
+			}
+
 			case SfxCatagory.CONCRETE_FOOTSTEPS: {
-				StreamPlayer.VolumeDb = 4;
+				StreamPlayer.VolumeDb = 6;
 				break;
 			}
 
@@ -189,13 +203,8 @@ public class Sfx : Node {
 				break;
 			}
 
-			case SfxCatagory.PISTOL_FIRE: {
-				StreamPlayer.VolumeDb = -6;
-				break;
-			}
-
-			case SfxCatagory.AK_FIRE: {
-				StreamPlayer.VolumeDb = -6;
+			case SfxCatagory.MARBLE_FOOTSTEPS: {
+				StreamPlayer.VolumeDb = -10;
 				break;
 			}
 		}
@@ -277,8 +286,8 @@ public class Sfx : Node {
 			}
 
 			case SfxCatagory.CONCRETE_FOOTSTEPS: {
-				StreamPlayer.UnitDb = 10;
-				StreamPlayer.MaxDb = 10;
+				StreamPlayer.UnitDb = 11;
+				StreamPlayer.MaxDb = 11;
 				StreamPlayer.UnitSize = 25;
 				break;
 			}
@@ -293,6 +302,13 @@ public class Sfx : Node {
 			case SfxCatagory.METAL_FOOTSTEPS: {
 				StreamPlayer.UnitDb = 4;
 				StreamPlayer.MaxDb = 4;
+				StreamPlayer.UnitSize = 25;
+				break;
+			}
+
+			case SfxCatagory.MARBLE_FOOTSTEPS: {
+				StreamPlayer.UnitDb = -3;
+				StreamPlayer.MaxDb = -3;
 				StreamPlayer.UnitSize = 25;
 				break;
 			}

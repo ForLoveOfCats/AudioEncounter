@@ -1,0 +1,81 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="MarbleFootsteps_data" version="1.3.0" audacityversion="2.4.1" sel0="0.0000000000" sel1="0.0000000000" vpos="288" h="0.0000000000" zoom="1627.2941176464" rate="44100.0" snapto="off" selectionformat="hh:mm:ss + milliseconds" frequencyformat="Hz" bandwidthformat="octaves">
+	<tags/>
+	<wavetrack name="19292__martian__footstep-on-wood-foley" isSelected="0" height="150" minimized="0" channel="2" linked="0" mute="1" solo="0" rate="44100" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="749700">
+				<waveblock start="0">
+					<simpleblockfile filename="eff1f4ab.au" len="262144" min="-0.440073" max="0.472272" rms="0.025704"/>
+				</waveblock>
+				<waveblock start="262144">
+					<simpleblockfile filename="eff1fd1e.au" len="262144" min="-0.486427" max="0.506958" rms="0.031044"/>
+				</waveblock>
+				<waveblock start="524288">
+					<simpleblockfile filename="eff1faa9.au" len="225412" min="-0.395505" max="0.404304" rms="0.030803"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="19292__martian__footstep-on-wood-foley" isSelected="0" height="150" minimized="0" channel="2" linked="0" mute="1" solo="0" rate="44100" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="19349">
+				<waveblock start="0">
+					<simpleblockfile filename="eff1fc2c.au" len="19349" min="-0.155448" max="0.162461" rms="0.017156"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="19292__martian__footstep-on-wood-foley" isSelected="0" height="150" minimized="0" channel="2" linked="0" mute="1" solo="0" rate="44100" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="20731">
+				<waveblock start="0">
+					<simpleblockfile filename="eff1f4bb.au" len="20731" min="-0.098127" max="0.096278" rms="0.009186"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="19292__martian__footstep-on-wood-foley" isSelected="0" height="150" minimized="0" channel="2" linked="0" mute="1" solo="0" rate="44100" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="23767">
+				<waveblock start="0">
+					<simpleblockfile filename="eff1ff13.au" len="23767" min="-0.256061" max="0.242161" rms="0.020397"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="19292__martian__footstep-on-wood-foley" isSelected="0" height="150" minimized="0" channel="2" linked="0" mute="1" solo="0" rate="44100" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="25474">
+				<waveblock start="0">
+					<simpleblockfile filename="eff1f9e5.au" len="25474" min="-0.166988" max="0.173045" rms="0.017961"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="19292__martian__footstep-on-wood-foley" isSelected="0" height="150" minimized="0" channel="2" linked="0" mute="1" solo="0" rate="44100" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="22303">
+				<waveblock start="0">
+					<simpleblockfile filename="eff1f3c4.au" len="22303" min="-0.168773" max="0.166988" rms="0.020828"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="19292__martian__footstep-on-wood-foley" isSelected="1" height="150" minimized="0" channel="2" linked="0" mute="1" solo="0" rate="44100" gain="1.0" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="15068">
+				<waveblock start="0">
+					<simpleblockfile filename="eff1ffa2.au" len="15068" min="-0.232406" max="0.22297" rms="0.025137"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+</project>

@@ -32,7 +32,7 @@ public class FirstPersonPlayer : Character {
 	public const float BaseFov = 90f;
 	public const float AdsFov = 70f;
 
-	public const float FootstepBaseTime = 0.7f;
+	public const float FootstepBaseTime = 0.75f;
 	public const float SprintingFootstepAcceleration = 2.35f;
 	public const float CrunchSpeed = -35f;
 	public const float BaseCrunchDmg = 20f;
@@ -49,6 +49,7 @@ public class FirstPersonPlayer : Character {
 	ClipChooser ConcreteChooser = new ClipChooser(6);
 	ClipChooser LeavesChooser = new ClipChooser(6);
 	ClipChooser MetalChooser = new ClipChooser(6);
+	ClipChooser MarbleChooser = new ClipChooser(6);
 
 	public float CurrentSens = BaseMouseSens;
 
@@ -150,6 +151,10 @@ public class FirstPersonPlayer : Character {
 					else if(Floor.IsInGroup("metal")) {
 						Index = MetalChooser.Choose();
 						Catagory = SfxCatagory.METAL_FOOTSTEPS;
+					}
+					else if(Floor.IsInGroup("marble")) {
+						Index = MarbleChooser.Choose();
+						Catagory = SfxCatagory.MARBLE_FOOTSTEPS;
 					}
 					else {
 						Index = ConcreteChooser.Choose();

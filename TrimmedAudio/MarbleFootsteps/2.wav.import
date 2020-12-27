@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/2.wav-6e9d865f0c6ac3600b3ec8f0c259bb24.sample"
+
+[deps]
+
+source_file="res://TrimmedAudio/MarbleFootsteps/2.wav"
+dest_files=[ "res://.import/2.wav-6e9d865f0c6ac3600b3ec8f0c259bb24.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0
