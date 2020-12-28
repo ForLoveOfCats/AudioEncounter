@@ -267,6 +267,8 @@ public class FirstPersonPlayer : Character {
 			Translation.y + (Shape.Height - OriginalHeight),
 			Translation.z
 		);
+
+		CamJoint.Translation = new Vector3(0, 1.75f - CrouchPercent, 0);
 	}
 
 
@@ -299,7 +301,6 @@ public class FirstPersonPlayer : Character {
 		HandleFootsteps(Delta);
 		HandleAdsSprintEffects();
 
-		CamJoint.Translation = InitialCamJointPos;
 		CamJoint.RotationDegrees = new Vector3();
 
 		int Index = 0;
