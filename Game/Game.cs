@@ -78,6 +78,9 @@ public class Game : Node {
 		GetTree().NetworkPeer = Peer;
 
 		RuntimeRoot.AddChild(WorldScene.Instance());
+
+		DeathScreen = (Node)DeathScreenScene.Instance();
+		RuntimeRoot.AddChild(DeathScreen);
 	}
 
 
