@@ -1,0 +1,47 @@
+[gd_scene load_steps=3 format=2]
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Button
+
+
+
+func _on_Button_pressed() -> void:
+	Game.RequestRespawn()
+"
+
+[sub_resource type="StyleBoxEmpty" id=1]
+
+[node name="DeathScreen" type="Node"]
+
+[node name="HBox" type="HBoxContainer" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -20.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button" type="Button" parent="HBox"]
+margin_right = 68.0
+margin_bottom = 20.0
+text = "Respawn"
+script = SubResource( 2 )
+
+[node name="Panel" type="Panel" parent="HBox"]
+margin_left = 72.0
+margin_right = 1020.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Spectating" type="Label" parent="HBox"]
+margin_left = 1024.0
+margin_top = 3.0
+margin_right = 1024.0
+margin_bottom = 17.0
+
+[connection signal="pressed" from="HBox/Button" to="HBox/Button" method="_on_Button_pressed"]

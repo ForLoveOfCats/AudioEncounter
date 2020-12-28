@@ -132,6 +132,12 @@ public class AdminControls : Node {
 					ToSpawn.Clear();
 					break;
 				}
+
+				case "deathmatch": {
+					Game.DeathmatchMode = !Game.DeathmatchMode;
+					Game.Print($"Deathmatch mode is {(Game.DeathmatchMode ? "on" : "off")}");
+					break;
+				}
 			}
 
 			Game.Print();

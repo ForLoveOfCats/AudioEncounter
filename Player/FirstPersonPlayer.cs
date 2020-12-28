@@ -91,7 +91,12 @@ public class FirstPersonPlayer : Character {
 
 	public void CheckDie() {
 		if(Health <= 0) {
+			Input.SetMouseMode(Input.MouseMode.Visible);
 			Rpc(nameof(ThirdPersonPlayer.NetDie));
+
+			Game.DeathScreen = (Node)Game.DeathScreenScene.Instance();
+			Game.RuntimeRoot.AddChild(Game.DeathScreen);
+
 			QueueFree();
 		}
 	}

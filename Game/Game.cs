@@ -15,15 +15,18 @@ public class Game : Node {
 
 
 	public static Random Rng = new Random();
+	public static bool DeathmatchMode = true;
 
 	public static PackedScene WorldScene = GD.Load<PackedScene>("res://Maps/Initial/Initial.tscn");
 	public static PackedScene FirstPersonPlayerScene = GD.Load<PackedScene>("res://Player/FirstPersonPlayer.tscn");
 	public static PackedScene ThirdPersonPlayerScene = GD.Load<PackedScene>("res://Player/ThirdPersonPlayer.tscn");
 	public static PackedScene AdminControlsScene = GD.Load<PackedScene>("res://Game/AdminControls.tscn");
+	public static PackedScene DeathScreenScene = GD.Load<PackedScene>("res://Game/DeathScreen.tscn");
 
 	public static Game Self = null;
 	public static Node RuntimeRoot = null;
 	public static AdminControls AdminPanel = null;
+	public static Node DeathScreen = null;
 
 	public static string Nickname = "BrianD";
 	public static Dictionary<int, string> Nicknames = new Dictionary<int, string>();
@@ -133,8 +136,27 @@ public class Game : Node {
 	}
 
 
+	public void RequestRespawn() {
+		RpcId(ServerId, nameof(NetRequestRespawn));
+	}
+
+
+	[Remote]
+	public void NetRequestRespawn() {
+		if(!Self.Multiplayer.IsNetworkServer()) {
+			return;
+		}
+
+		if(DeathmatchMode) {
+			ChooseSpawnPointAndDoSpawn(Multiplayer.GetRpcSenderId());
+		}
+	}
+
+
 	public static void ChooseSpawnPointAndDoSpawn(int Id) {
-		ActualAssert(Self.Multiplayer.IsNetworkServer());
+		if(!Self.Multiplayer.IsNetworkServer()) {
+			return;
+		}
 
 		var SpawnPoints = new List<Spatial>();
 		foreach(Node GottenNode in Self.GetTree().GetNodesInGroup("spawn_point")) {
@@ -184,6 +206,10 @@ public class Game : Node {
 
 			Player.Translation = Position;
 			Player.Rotation = Rotation;
+
+			if(DeathScreen != null) {
+				DeathScreen.QueueFree();
+			}
 		}
 		else {
 			ThirdPersonPlayer Player = (ThirdPersonPlayer)ThirdPersonPlayerScene.Instance();
