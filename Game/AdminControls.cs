@@ -143,6 +143,14 @@ public class AdminControls : Node {
 					Game.Self.Rpc(nameof(Game.NetClearKillfeed));
 					break;
 				}
+
+				case "killall": {
+					foreach(int AlivePlayer in Game.Alive) {
+						Game.RuntimeRoot.GetNode(AlivePlayer.ToString()).RpcId(AlivePlayer, nameof(FirstPersonPlayer.NetDamage), 10000000);
+						Game.Print($"Killed {Game.Nicknames[AlivePlayer]}");
+					}
+					break;
+				}
 			}
 
 			Game.Print();

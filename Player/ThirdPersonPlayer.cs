@@ -95,6 +95,9 @@ public class ThirdPersonPlayer : Spatial {
 			if(Killer == -1) {
 				Message = $"{Game.Nicknames[Id]} fell to their death";
 			}
+			else if(Killer == Game.ServerId) {
+				Message = $"{Game.Nicknames[Id]} was killed by the server";
+			}
 			else {
 				Message = $"{Game.Nicknames[Killer]} ended the life of {Game.Nicknames[Id]}";
 			}
