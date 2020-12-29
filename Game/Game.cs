@@ -29,10 +29,11 @@ public class Game : Node {
 	public static Node DeathScreen = null;
 
 	public ThirdPersonPlayer Spectating = null;
+	public static int SpectatingIndex = 0;
 
 	public static string Nickname = "BrianD";
 	public static Dictionary<int, string> Nicknames = new Dictionary<int, string>();
-	public static HashSet<int> Alive = new HashSet<int>();
+	public static List<int> Alive = new List<int>();
 
 
 	public override void _Ready() {
@@ -209,11 +210,11 @@ public class Game : Node {
 
 	[Remote]
 	public void NetSpawn(int Id, string Nickname, Vector3 Position, Vector3 Rotation) {
-		GD.Print($"NetSpawn {Id}");
 		if(Id == Multiplayer.GetNetworkUniqueId()) {
+			Self.Spectating = null;
+
 			Spatial Player = (Spatial)FirstPersonPlayerScene.Instance();
 			Player.Name = Multiplayer.GetNetworkUniqueId().ToString();
-			GD.Print($"Spawning self, name already exists in node tree: {RuntimeRoot.HasNode(Player.Name)}");
 			RuntimeRoot.AddChild(Player);
 
 			Player.Translation = Position;
@@ -227,12 +228,25 @@ public class Game : Node {
 			ThirdPersonPlayer Player = (ThirdPersonPlayer)ThirdPersonPlayerScene.Instance();
 			Player.Id = Id;
 			Player.Name = Id.ToString();
+			Player.Nickname = Nickname;
 			RuntimeRoot.AddChild(Player);
 
 			Player.Translation = Position;
 			Player.Rotation = Rotation;
 
 			Game.Alive.Add(Id);
+		}
+	}
+
+
+	public static void SpectateNextPlayer() {
+		SpectatingIndex += 1;
+		if(SpectatingIndex >= Game.Alive.Count) {
+			SpectatingIndex = 0;
+		}
+
+		if(Game.Alive.Count > 0) {
+			Game.RuntimeRoot.GetNode<ThirdPersonPlayer>(Game.Alive[SpectatingIndex].ToString()).Spectate();
 		}
 	}
 

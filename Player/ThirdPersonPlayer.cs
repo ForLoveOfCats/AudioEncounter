@@ -54,6 +54,7 @@ public class ThirdPersonPlayer : Spatial {
 
 	[Remote]
 	public void NetSetSpectateWeapon(WeaponKind Kind) {
+		GD.Print($"Set spectate weapon {Id}, {Kind}");
 		if(Kind == WeaponKind.PISTOL) {
 			Holder.EquipPistol();
 		}
@@ -74,6 +75,16 @@ public class ThirdPersonPlayer : Spatial {
 	[Remote]
 	public void NetDie() {
 		Game.Alive.Remove(Id);
+
+		if(Game.Self.Spectating == this) {
+			if(Game.Alive.Count > 0) {
+				Game.SpectateNextPlayer();
+			}
+			else {
+				Game.Self.Spectating = null;
+			}
+		}
+
 		QueueFree();
 	}
 
@@ -85,9 +96,7 @@ public class ThirdPersonPlayer : Spatial {
 
 
 	public override void _Process(float Delta) {
-		if(Game.Self.Spectating == this) {
-			Joint.Visible = false;
-		}
+		Joint.Visible = Game.Self.Spectating != this;
 
 		if(ValidTargetTransform) {
 			Transform = Transform.InterpolateWith(TargetTransform, Delta / 0.02f);

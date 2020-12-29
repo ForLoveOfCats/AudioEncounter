@@ -98,7 +98,7 @@ public class FirstPersonPlayer : Character {
 			Game.RuntimeRoot.AddChild(Game.DeathScreen);
 
 			if(Game.Alive.Count > 0) {
-				Game.RuntimeRoot.GetNode<ThirdPersonPlayer>(Game.Alive.First().ToString()).Spectate();
+				Game.RuntimeRoot.GetNode<ThirdPersonPlayer>(Game.Alive[0].ToString()).Spectate();
 			}
 
 			QueueFree();
