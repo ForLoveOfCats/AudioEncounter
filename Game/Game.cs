@@ -251,6 +251,7 @@ public class Game : Node {
 	public void NetNotifyKillfeed(string Message) {
 		var Entry = new Label();
 		Entry.Text = Message;
+		Entry.Autowrap = true;
 
 		KillFeedVBox.AddChild(Entry);
 	}
