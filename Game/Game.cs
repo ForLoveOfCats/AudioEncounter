@@ -103,6 +103,7 @@ public class Game : Node {
 				var Plr = (ThirdPersonPlayer)RuntimeRoot.GetNode(AlivePlayer.ToString());
 				string Nickname = Nicknames[AlivePlayer];
 				RpcId(Id, nameof(NetSpawn), AlivePlayer, Nickname, Plr.GlobalTransform.origin, Plr.Rotation);
+				Plr.RpcId(Id, nameof(ThirdPersonPlayer.NetSetSpectateWeapon), Plr.Holder.CurrentWeapon.Kind);
 			}
 		}
 	}
