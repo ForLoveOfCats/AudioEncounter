@@ -124,10 +124,17 @@ public class Sfx : Node {
 
 		string FileName = Dir.GetNext();
 		while(FileName.Length > 0) {
-			if(!Dir.CurrentIsDir() && !FileName.EndsWith(".import")) {
-				var Stream = GD.Load<AudioStream>($"{Path}/{FileName}");
-				ActualAssert(Stream != null);
-				Output.Add(Stream);
+			if(!Dir.CurrentIsDir()) {
+				if(!OS.IsDebugBuild() && FileName.EndsWith(".import")) {
+					var Stream = GD.Load<AudioStream>($"{Path}/{FileName.Replace(".import", "")}");
+					ActualAssert(Stream != null);
+					Output.Add(Stream);
+				}
+				else if(OS.IsDebugBuild() && !FileName.EndsWith(".import")) {
+					var Stream = GD.Load<AudioStream>($"{Path}/{FileName}");
+					ActualAssert(Stream != null);
+					Output.Add(Stream);
+				}
 			}
 
 			FileName = Dir.GetNext();
