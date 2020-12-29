@@ -326,6 +326,7 @@ public class FirstPersonPlayer : Character {
 
 		Rpc(nameof(ThirdPersonPlayer.NetUpdateTransform), Transform, CrouchPercent);
 		Rpc(nameof(ThirdPersonPlayer.NetUpdateSpecateCam), CamJoint.Rotation.x, Cam.Rotation.x, Cam.Fov);
+		Rpc(nameof(ThirdPersonPlayer.NetUpdateWeaponHolder), Holder.Momentum, Holder.ReloadHidePercent, Holder.SprintTime, Holder.AdsTime);
 
 		base._PhysicsProcess(Delta);
 	}

@@ -1,6 +1,8 @@
 using Godot;
 using static Godot.Mathf;
 
+using static Assert;
+
 
 
 public enum WeaponKind {
@@ -43,10 +45,11 @@ public class WeaponHolder : Spatial {
 	public Vector3 OgTranslation = new Vector3();
 
 	public Vector2 Momentum = new Vector2();
-	public bool Reloading = false;
 	public float ReloadHidePercent = 0f;
 	public float SprintTime = 0f;
 	public float AdsTime = 0f;
+
+	public bool Reloading = false;
 
 	FirstPersonPlayer ParentPlayer = null;
 	ClipChooser TinkChooser = new ClipChooser(4);
@@ -60,13 +63,21 @@ public class WeaponHolder : Spatial {
 		PistolMesh = MeshJoint.GetNode<MeshInstance>("PistolMesh");
 
 		OgTranslation = Translation;
-		ParentPlayer = (FirstPersonPlayer)GetParent().GetParent().GetParent();
+		if(GetParent().GetParent().GetParent() is FirstPersonPlayer Parent) {
+			ParentPlayer = Parent;
 
-		int Choice = Game.Rng.Next(2);
-		if(Choice == 0) {
-			EquipAk();
+			int Choice = Game.Rng.Next(2);
+			if(Choice == 0) {
+				EquipAk();
+				ParentPlayer.Rpc(nameof(ThirdPersonPlayer.NetSetSpectateWeapon), WeaponKind.AK);
+			}
+			else if(Choice == 1) {
+				EquipPistol();
+				ParentPlayer.Rpc(nameof(ThirdPersonPlayer.NetSetSpectateWeapon), WeaponKind.PISTOL);
+			}
 		}
-		else if(Choice == 1) {
+		else {
+			//Just in case
 			EquipPistol();
 		}
 
@@ -118,6 +129,8 @@ public class WeaponHolder : Spatial {
 
 
 	public void PerformHitscan() {
+		ActualAssert(ParentPlayer != null);
+
 		float VerticalDeviation = 0;
 		float HorizontalDeviation = 0;
 
@@ -154,6 +167,8 @@ public class WeaponHolder : Spatial {
 
 
 	public void RunFireEffects() {
+		ActualAssert(ParentPlayer != null);
+
 		if(CurrentWeapon.Kind == WeaponKind.PISTOL) {
 			Sfx.PlaySfx(SfxCatagory.PISTOL_FIRE, 0, GlobalTransform.origin, 0);
 		}
@@ -199,69 +214,73 @@ public class WeaponHolder : Spatial {
 
 
 	public override void _Process(float Delta) {
-		TickFireTime(CurrentWeapon, Delta);
+		if(ParentPlayer != null) {
+			TickFireTime(CurrentWeapon, Delta);
 
-		float PlayerSpeed = Round(ParentPlayer.Momentum.Flattened().Length());
-		if(((!CurrentWeapon.FullAuto && Input.IsActionJustPressed("Fire"))
-				|| (CurrentWeapon.FullAuto && Input.IsActionPressed("Fire")))
-			&& CurrentWeapon.FireTimer <= 0
-			&& PlayerSpeed <= FirstPersonPlayer.BaseSpeed
-			&& SprintTime <= 0
-			&& Reloading == false) {
-			CurrentWeapon.FireTimer = CurrentWeapon.MaxFireTime;
+			float PlayerSpeed = Round(ParentPlayer.Momentum.Flattened().Length());
+			if(((!CurrentWeapon.FullAuto && Input.IsActionJustPressed("Fire"))
+					|| (CurrentWeapon.FullAuto && Input.IsActionPressed("Fire")))
+				&& CurrentWeapon.FireTimer <= 0
+				&& PlayerSpeed <= FirstPersonPlayer.BaseSpeed
+				&& SprintTime <= 0
+				&& Reloading == false) {
+				CurrentWeapon.FireTimer = CurrentWeapon.MaxFireTime;
 
-			if(CurrentWeapon.CurrentAmmo > 0) {
-				CurrentWeapon.CurrentAmmo -= 1;
-				PerformHitscan();
-				RunFireEffects();
+				if(CurrentWeapon.CurrentAmmo > 0) {
+					CurrentWeapon.CurrentAmmo -= 1;
+					PerformHitscan();
+					RunFireEffects();
+				}
+				else {
+					Sfx.PlaySfx(SfxCatagory.EMPTY_CHAMBER_FIRE_CLICK, 0, GlobalTransform.origin, 0);
+				}
+			}
+
+			if(Input.IsActionJustPressed("Reload")
+				&& CurrentWeapon.ReloadTimer <= 0
+				&& CurrentWeapon.CurrentAmmo < CurrentWeapon.MaxAmmo) {
+				CurrentWeapon.ReloadTimer = CurrentWeapon.MaxReloadTime;
+				Reloading = true;
+				Sfx.PlaySfx(SfxCatagory.RELOAD, 0, GlobalTransform.origin, 0);
+			}
+			else if(Reloading && CurrentWeapon.ReloadTimer > 0) {
+				CurrentWeapon.ReloadTimer = Clamp(CurrentWeapon.ReloadTimer - Delta, 0, CurrentWeapon.MaxReloadTime);
+				if(CurrentWeapon.ReloadTimer <= 0) {
+					CurrentWeapon.CurrentAmmo = CurrentWeapon.MaxAmmo;
+					Sfx.PlaySfx(SfxCatagory.RELOAD, 1, GlobalTransform.origin, 0);
+				}
 			}
 			else {
-				Sfx.PlaySfx(SfxCatagory.EMPTY_CHAMBER_FIRE_CLICK, 0, GlobalTransform.origin, 0);
+				Reloading = false;
+			}
+
+			float OneTenth = CurrentWeapon.MaxReloadTime / 10;
+			if(CurrentWeapon.ReloadTimer >= OneTenth * 9f) {
+				ReloadHidePercent = 1 - (CurrentWeapon.ReloadTimer - OneTenth * 9f) / OneTenth;
+			}
+			else if(CurrentWeapon.ReloadTimer <= OneTenth) {
+				ReloadHidePercent = CurrentWeapon.ReloadTimer / OneTenth;
+			}
+
+			if(ParentPlayer.Mode == MovementMode.SPRINTING) {
+				SprintTime = Clamp(SprintTime + Delta, 0, SprintChangeStateTime);
+			}
+			else {
+				SprintTime = Clamp(SprintTime - Delta, 0, SprintChangeStateTime);
 			}
 		}
 
-		if(Input.IsActionJustPressed("Reload")
-			&& CurrentWeapon.ReloadTimer <= 0
-			&& CurrentWeapon.CurrentAmmo < CurrentWeapon.MaxAmmo) {
-			CurrentWeapon.ReloadTimer = CurrentWeapon.MaxReloadTime;
-			Reloading = true;
-			Sfx.PlaySfx(SfxCatagory.RELOAD, 0, GlobalTransform.origin, 0);
-		}
-		else if(Reloading && CurrentWeapon.ReloadTimer > 0) {
-			CurrentWeapon.ReloadTimer = Clamp(CurrentWeapon.ReloadTimer - Delta, 0, CurrentWeapon.MaxReloadTime);
-			if(CurrentWeapon.ReloadTimer <= 0) {
-				CurrentWeapon.CurrentAmmo = CurrentWeapon.MaxAmmo;
-				Sfx.PlaySfx(SfxCatagory.RELOAD, 1, GlobalTransform.origin, 0);
-			}
-		}
-		else {
-			Reloading = false;
-		}
-
-		float OneTenth = CurrentWeapon.MaxReloadTime / 10;
-		if(CurrentWeapon.ReloadTimer >= OneTenth * 9f) {
-			ReloadHidePercent = 1 - (CurrentWeapon.ReloadTimer - OneTenth * 9f) / OneTenth;
-		}
-		else if(CurrentWeapon.ReloadTimer <= OneTenth) {
-			ReloadHidePercent = CurrentWeapon.ReloadTimer / OneTenth;
-		}
 		float ReloadDisplay = Sin((ReloadHidePercent / 2f) * Pi);
-
-		if(ParentPlayer.Mode == MovementMode.SPRINTING) {
-			SprintTime = Clamp(SprintTime + Delta, 0, SprintChangeStateTime);
-		}
-		else {
-			SprintTime = Clamp(SprintTime - Delta, 0, SprintChangeStateTime);
-		}
-
 		float SprintDisplay = CalcSprintDisplay();
 		RotationDegrees = new Vector3(-140 * ReloadDisplay, 75f * SprintDisplay, 0);
 
-		if(ParentPlayer.Mode != MovementMode.SPRINTING && Input.IsActionPressed("ADS") && !Reloading) {
-			AdsTime = Clamp(AdsTime + Delta, 0, AdsChangeStateTime);
-		}
-		else {
-			AdsTime = Clamp(AdsTime - Delta, 0, AdsChangeStateTime);
+		if(ParentPlayer != null) {
+			if(ParentPlayer.Mode != MovementMode.SPRINTING && Input.IsActionPressed("ADS") && !Reloading) {
+				AdsTime = Clamp(AdsTime + Delta, 0, AdsChangeStateTime);
+			}
+			else {
+				AdsTime = Clamp(AdsTime - Delta, 0, AdsChangeStateTime);
+			}
 		}
 
 		float AdsDisplay = CalcAdsDisplay();
