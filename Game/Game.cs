@@ -28,6 +28,8 @@ public class Game : Node {
 	public static AdminControls AdminPanel = null;
 	public static Node DeathScreen = null;
 
+	public ThirdPersonPlayer Spectating = null;
+
 	public static string Nickname = "BrianD";
 	public static Dictionary<int, string> Nicknames = new Dictionary<int, string>();
 	public static HashSet<int> Alive = new HashSet<int>();
@@ -93,8 +95,13 @@ public class Game : Node {
 
 		if(Multiplayer.IsNetworkServer()) {
 			foreach(int AlivePlayer in Alive) {
+				if(AlivePlayer == Id) {
+					continue;
+				}
+
 				var Plr = (ThirdPersonPlayer)RuntimeRoot.GetNode(AlivePlayer.ToString());
-				RpcId(Id, nameof(NetSpawn), AlivePlayer, Plr.GlobalTransform.origin, Plr.Rotation);
+				string Nickname = Nicknames[AlivePlayer];
+				RpcId(Id, nameof(NetSpawn), AlivePlayer, Nickname, Plr.GlobalTransform.origin, Plr.Rotation);
 			}
 		}
 	}
@@ -194,17 +201,19 @@ public class Game : Node {
 		}
 		ActualAssert(SpawnPoint != null);
 
-		Game.Alive.Add(Id);
-		Game.Self.Rpc(nameof(Game.NetSpawn), Id, SpawnPoint.GlobalTransform.origin, SpawnPoint.Rotation);
-		Game.Self.NetSpawn(Id, SpawnPoint.GlobalTransform.origin, SpawnPoint.Rotation);
+		string Nickname = Nicknames[Id];
+		Game.Self.Rpc(nameof(Game.NetSpawn), Id, Nickname, SpawnPoint.GlobalTransform.origin, SpawnPoint.Rotation);
+		Game.Self.NetSpawn(Id, Nickname, SpawnPoint.GlobalTransform.origin, SpawnPoint.Rotation);
 	}
 
 
 	[Remote]
-	public void NetSpawn(int Id, Vector3 Position, Vector3 Rotation) {
+	public void NetSpawn(int Id, string Nickname, Vector3 Position, Vector3 Rotation) {
+		GD.Print($"NetSpawn {Id}");
 		if(Id == Multiplayer.GetNetworkUniqueId()) {
 			Spatial Player = (Spatial)FirstPersonPlayerScene.Instance();
 			Player.Name = Multiplayer.GetNetworkUniqueId().ToString();
+			GD.Print($"Spawning self, name already exists in node tree: {RuntimeRoot.HasNode(Player.Name)}");
 			RuntimeRoot.AddChild(Player);
 
 			Player.Translation = Position;
@@ -222,6 +231,8 @@ public class Game : Node {
 
 			Player.Translation = Position;
 			Player.Rotation = Rotation;
+
+			Game.Alive.Add(Id);
 		}
 	}
 

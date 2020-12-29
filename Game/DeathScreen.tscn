@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=1]
 script/source = "extends Button
 
 
@@ -9,7 +9,7 @@ func _on_Button_pressed() -> void:
 	Game.RequestRespawn()
 "
 
-[sub_resource type="StyleBoxEmpty" id=1]
+[sub_resource type="StyleBoxEmpty" id=2]
 
 [node name="DeathScreen" type="Node"]
 
@@ -26,14 +26,30 @@ __meta__ = {
 margin_right = 68.0
 margin_bottom = 20.0
 text = "Respawn"
-script = SubResource( 2 )
+script = SubResource( 1 )
 
 [node name="Panel" type="Panel" parent="HBox"]
 margin_left = 72.0
+margin_right = 499.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button2" type="Button" parent="HBox"]
+margin_left = 503.0
+margin_right = 588.0
+margin_bottom = 20.0
+text = "Next Player"
+
+[node name="Panel2" type="Panel" parent="HBox"]
+margin_left = 592.0
 margin_right = 1020.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
-custom_styles/panel = SubResource( 1 )
+custom_styles/panel = SubResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

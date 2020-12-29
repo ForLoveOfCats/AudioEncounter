@@ -4,6 +4,7 @@ using Godot;
 
 public class ThirdPersonPlayer : Spatial {
 	public int Id = -1;
+	public string Nickname = "";
 
 	public bool ValidTargetTransform = false;
 	public Transform TargetTransform = new Transform();
@@ -14,12 +15,20 @@ public class ThirdPersonPlayer : Spatial {
 	public Hitbox Head;
 	public Hitbox Feet;
 
+	public Spatial CamJoint;
+	public Camera Cam;
+
 
 	public override void _Ready() {
 		Joint = GetNode<Spatial>("EverythingJoint");
 		Mesh = Joint.GetNode<MeshInstance>("Mesh");
 		Head = Joint.GetNode<Hitbox>("HeadHitbox");
 		Feet = Joint.GetNode<Hitbox>("FeetHitbox");
+
+		CamJoint = GetNode<Spatial>("CamJoint");
+		Cam = CamJoint.GetNode<Camera>("Cam");
+
+		Cam.Current = false;
 
 		base._Ready();
 	}
@@ -35,11 +44,14 @@ public class ThirdPersonPlayer : Spatial {
 
 	[Remote]
 	public void NetDie() {
-		if(Multiplayer.IsNetworkServer()) {
-			Game.Alive.Remove(Id);
-		}
-
+		Game.Alive.Remove(Id);
 		QueueFree();
+	}
+
+
+	public void Spectate() {
+		Game.Self.Spectating = this;
+		Cam.MakeCurrent();
 	}
 
 

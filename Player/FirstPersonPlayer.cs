@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Collections.Generic;
 
 using Godot;
@@ -39,7 +40,6 @@ public class FirstPersonPlayer : Character {
 
 	public Spatial CamJoint;
 	public Camera Cam;
-	public Vector3 InitialCamJointPos;
 	public WeaponHolder Holder;
 
 	public RayCast FloorCast;
@@ -71,7 +71,6 @@ public class FirstPersonPlayer : Character {
 
 		CamJoint = GetNode<Spatial>("CamJoint");
 		Cam = CamJoint.GetNode<Camera>("Cam");
-		InitialCamJointPos = CamJoint.Translation;
 		Holder = Cam.GetNode<WeaponHolder>("WeaponHolder");
 
 		FloorCast = GetNode<RayCast>("FloorCast");
@@ -79,6 +78,7 @@ public class FirstPersonPlayer : Character {
 		Hull = GetNode<CollisionShape>("Hull");
 
 		Input.SetMouseMode(Input.MouseMode.Captured);
+		Cam.MakeCurrent();
 	}
 
 
@@ -96,6 +96,10 @@ public class FirstPersonPlayer : Character {
 
 			Game.DeathScreen = (Node)Game.DeathScreenScene.Instance();
 			Game.RuntimeRoot.AddChild(Game.DeathScreen);
+
+			if(Game.Alive.Count > 0) {
+				Game.RuntimeRoot.GetNode<ThirdPersonPlayer>(Game.Alive.First().ToString()).Spectate();
+			}
 
 			QueueFree();
 		}
