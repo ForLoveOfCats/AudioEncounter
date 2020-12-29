@@ -298,9 +298,14 @@ public class Game : Node {
 	}
 
 
-	public override void _PhysicsProcess(float Delta) {
+	public override void _Process(float Delta) {
+		if(Input.IsActionJustPressed("ToggleFullscreen")) {
+			OS.WindowFullscreen = !OS.WindowFullscreen;
+		}
+
 		KillFeedScroll.ScrollVertical = (int)Ceil((float)KillFeedScroll.GetVScrollbar().MaxValue);
-		base._PhysicsProcess(Delta);
+
+		base._Process(Delta);
 	}
 }
 

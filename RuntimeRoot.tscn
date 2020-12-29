@@ -114,5 +114,16 @@ margin_bottom = 24.0
 text = "Connect"
 script = SubResource( 3 )
 
+[node name="Label" type="Label" parent="Menu"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -209.0
+margin_top = 20.0
+margin_bottom = 14.0
+text = "Press F11 to toggle fullscreen"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [connection signal="pressed" from="Menu/CenterContainer/VBoxContainer/HostButton" to="Menu/CenterContainer/VBoxContainer/HostButton" method="_on_HostButton_pressed"]
 [connection signal="pressed" from="Menu/CenterContainer/VBoxContainer/HBoxContainer/ConnectButton" to="Menu/CenterContainer/VBoxContainer/HBoxContainer/ConnectButton" method="_on_ConnectButton_pressed"]
