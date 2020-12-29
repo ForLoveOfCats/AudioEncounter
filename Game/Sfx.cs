@@ -14,6 +14,7 @@ public enum SfxCatagory {
 	FLESH_HIT,
 	PISTOL_FIRE,
 	AK_FIRE,
+	SHOTGUN_FIRE,
 	CASING_TINK,
 	DRIP,
 	CONCRETE_FOOTSTEPS,
@@ -88,6 +89,9 @@ public class Sfx : Node {
 		});
 		Clips.Add(SfxCatagory.AK_FIRE, new List<AudioStream> {
 			GD.Load<AudioStream>("res://TrimmedAudio/AkFire.wav")
+		});
+		Clips.Add(SfxCatagory.SHOTGUN_FIRE, new List<AudioStream> {
+			GD.Load<AudioStream>("res://TrimmedAudio/ShotgunFire.wav")
 		});
 
 		List<AudioStream> CasingTinks = LoadAllStreamsInFolder("res://TrimmedAudio/CasingTinks");
@@ -188,6 +192,11 @@ public class Sfx : Node {
 				break;
 			}
 
+			case SfxCatagory.SHOTGUN_FIRE: {
+				StreamPlayer.VolumeDb = 0;
+				break;
+			}
+
 			case SfxCatagory.CONCRETE_FOOTSTEPS: {
 				StreamPlayer.VolumeDb = 6;
 				break;
@@ -244,9 +253,9 @@ public class Sfx : Node {
 			}
 
 			case SfxCatagory.BULLET_HIT: {
-				StreamPlayer.UnitDb = -1;
-				StreamPlayer.UnitSize = 50;
-				StreamPlayer.MaxDb = -1;
+				StreamPlayer.UnitDb = -5;
+				StreamPlayer.UnitSize = 28;
+				StreamPlayer.MaxDb = -5;
 				break;
 			}
 
@@ -269,6 +278,13 @@ public class Sfx : Node {
 				StreamPlayer.UnitDb = 1;
 				StreamPlayer.UnitSize = 60;
 				StreamPlayer.MaxDb = 1;
+				break;
+			}
+
+			case SfxCatagory.SHOTGUN_FIRE: {
+				StreamPlayer.UnitDb = 4;
+				StreamPlayer.UnitSize = 60;
+				StreamPlayer.MaxDb = 4;
 				break;
 			}
 

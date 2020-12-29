@@ -61,6 +61,9 @@ public class ThirdPersonPlayer : Spatial {
 		else if(Kind == WeaponKind.AK) {
 			Holder.EquipAk();
 		}
+		else if(Kind == WeaponKind.SHOTGUN) {
+			Holder.EquipShotgun();
+		}
 	}
 
 	[Remote]

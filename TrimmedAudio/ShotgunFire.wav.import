@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/ShotgunFire.wav-ff7d4625ea83de589af6420caf6022d2.sample"
+
+[deps]
+
+source_file="res://TrimmedAudio/ShotgunFire.wav"
+dest_files=[ "res://.import/ShotgunFire.wav-ff7d4625ea83de589af6420caf6022d2.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

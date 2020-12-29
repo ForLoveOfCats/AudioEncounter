@@ -2,12 +2,14 @@ using Godot;
 using static Godot.Mathf;
 
 using static Assert;
+using static SteelMath;
 
 
 
 public enum WeaponKind {
 	AK,
 	PISTOL,
+	SHOTGUN,
 }
 
 
@@ -18,6 +20,8 @@ public class WeaponStats {
 	public float MaxFireTime = 0f;
 	public float MaxReloadTime = 0f;
 	public bool FullAuto = false;
+
+	public int PelletCount = 1;
 
 	public float RecoilAmount = 0f;
 	public float RecoilTime = 0f;
@@ -41,6 +45,7 @@ public class WeaponHolder : Spatial {
 	public Spatial MeshJoint;
 	public MeshInstance AkMesh;
 	public MeshInstance PistolMesh;
+	public MeshInstance ShotgunMesh;
 
 	public Vector3 OgTranslation = new Vector3();
 
@@ -61,12 +66,13 @@ public class WeaponHolder : Spatial {
 		MeshJoint = GetNode<Spatial>("MeshJoint");
 		AkMesh = MeshJoint.GetNode<MeshInstance>("AkMesh");
 		PistolMesh = MeshJoint.GetNode<MeshInstance>("PistolMesh");
+		ShotgunMesh = MeshJoint.GetNode<MeshInstance>("ShotgunMesh");
 
 		OgTranslation = Translation;
 		if(GetParent().GetParent().GetParent() is FirstPersonPlayer Parent) {
 			ParentPlayer = Parent;
 
-			int Choice = Game.Rng.Next(2);
+			int Choice = Game.Rng.Next(3);
 			if(Choice == 0) {
 				EquipAk();
 				ParentPlayer.Rpc(nameof(ThirdPersonPlayer.NetSetSpectateWeapon), WeaponKind.AK);
@@ -74,6 +80,10 @@ public class WeaponHolder : Spatial {
 			else if(Choice == 1) {
 				EquipPistol();
 				ParentPlayer.Rpc(nameof(ThirdPersonPlayer.NetSetSpectateWeapon), WeaponKind.PISTOL);
+			}
+			else if(Choice == 2) {
+				EquipShotgun();
+				ParentPlayer.Rpc(nameof(ThirdPersonPlayer.NetSetSpectateWeapon), WeaponKind.SHOTGUN);
 			}
 		}
 		else {
@@ -85,9 +95,30 @@ public class WeaponHolder : Spatial {
 	}
 
 
+	public void EquipPistol() {
+		AkMesh.Visible = false;
+		PistolMesh.Visible = true;
+		ShotgunMesh.Visible = false;
+
+		CurrentWeapon = new WeaponStats() {
+			Kind = WeaponKind.PISTOL,
+			MaxAmmo = 8,
+			CurrentAmmo = 8,
+			MaxFireTime = 0.1f,
+			MaxReloadTime = 1.25f,
+			FullAuto = false,
+			HeadDamage = 40,
+			BodyDamage = 20,
+			RecoilTime = 0.35f,
+			RecoilAmount = 6f,
+		};
+	}
+
+
 	public void EquipAk() {
 		AkMesh.Visible = true;
 		PistolMesh.Visible = false;
+		ShotgunMesh.Visible = false;
 
 		CurrentWeapon = new WeaponStats() {
 			Kind = WeaponKind.AK,
@@ -104,21 +135,23 @@ public class WeaponHolder : Spatial {
 	}
 
 
-	public void EquipPistol() {
+	public void EquipShotgun() {
 		AkMesh.Visible = false;
-		PistolMesh.Visible = true;
+		PistolMesh.Visible = false;
+		ShotgunMesh.Visible = true;
 
 		CurrentWeapon = new WeaponStats() {
-			Kind = WeaponKind.PISTOL,
-			MaxAmmo = 8,
-			CurrentAmmo = 8,
-			MaxFireTime = 0.1f,
+			Kind = WeaponKind.SHOTGUN,
+			MaxAmmo = 2,
+			CurrentAmmo = 2,
+			PelletCount = 8,
+			MaxFireTime = 0.3f,
 			MaxReloadTime = 2f,
 			FullAuto = false,
-			HeadDamage = 40,
-			BodyDamage = 20,
-			RecoilTime = 0.35f,
-			RecoilAmount = 6f,
+			HeadDamage = 14,
+			BodyDamage = 10,
+			RecoilTime = 0.45f,
+			RecoilAmount = 14f,
 		};
 	}
 
@@ -131,37 +164,50 @@ public class WeaponHolder : Spatial {
 	public void PerformHitscan() {
 		ActualAssert(ParentPlayer != null);
 
-		float VerticalDeviation = 0;
-		float HorizontalDeviation = 0;
-
 		Vector3 Origin = ParentPlayer.Cam.GlobalTransform.origin;
 		Vector3 Endpoint = Origin + new Vector3(0, 0, -Range)
-			.Rotated(new Vector3(1, 0, 0), Deg2Rad(ParentPlayer.CamJoint.RotationDegrees.x + ParentPlayer.Cam.RotationDegrees.x + VerticalDeviation))
-			.Rotated(new Vector3(0, 1, 0), Deg2Rad(ParentPlayer.RotationDegrees.y + HorizontalDeviation));
+			.Rotated(new Vector3(1, 0, 0), Deg2Rad(ParentPlayer.CamJoint.RotationDegrees.x + ParentPlayer.Cam.RotationDegrees.x))
+			.Rotated(new Vector3(0, 1, 0), Deg2Rad(ParentPlayer.RotationDegrees.y));
+		Vector3 BaseEndpoint = Endpoint;
 
-		var Exclude = new Godot.Collections.Array() { ParentPlayer };
-		PhysicsDirectSpaceState State = GetWorld().DirectSpaceState;
-		Godot.Collections.Dictionary Results = State.IntersectRay(Origin, Endpoint, Exclude, 1 | 2);
+		int PelletsLeft = CurrentWeapon.PelletCount;
 
-		if(Results.Count > 0) {
-			var Position = (Vector3)Results["position"];
-			var Normal = (Vector3)Results["normal"];
+		while(PelletsLeft > 0) {
+			if(CurrentWeapon.Kind == WeaponKind.SHOTGUN) {
+				const int DeviationDistance = 18;
+				Endpoint = BaseEndpoint + new Vector3(
+					Game.Rng.Next(DeviationDistance) * RandomSign(),
+					Game.Rng.Next(DeviationDistance) * RandomSign(),
+					Game.Rng.Next(DeviationDistance) * RandomSign()
+				);
+			}
 
-			if(Results["collider"] is Hitbox Box) {
-				int Damage = CurrentWeapon.BodyDamage;
-				if(Box.Kind == HitboxKind.HEAD) {
-					Damage = CurrentWeapon.HeadDamage;
+			var Exclude = new Godot.Collections.Array() { ParentPlayer };
+			PhysicsDirectSpaceState State = GetWorld().DirectSpaceState;
+			Godot.Collections.Dictionary Results = State.IntersectRay(Origin, Endpoint, Exclude, 1 | 2);
+
+			if(Results.Count > 0) {
+				var Position = (Vector3)Results["position"];
+				var Normal = (Vector3)Results["normal"];
+
+				if(Results["collider"] is Hitbox Box) {
+					int Damage = CurrentWeapon.BodyDamage;
+					if(Box.Kind == HitboxKind.HEAD) {
+						Damage = CurrentWeapon.HeadDamage;
+					}
+
+					Box.Damage(Damage);
+
+					Sfx.PlaySfxSpatially(SfxCatagory.FLESH_HIT, 0, Position, 0);
+				}
+				else {
+					Sfx.PlaySfxSpatially(SfxCatagory.BULLET_HIT, 0, Position, 0);
 				}
 
-				Box.Damage(Damage);
-
-				Sfx.PlaySfxSpatially(SfxCatagory.FLESH_HIT, 0, Position, 0);
-			}
-			else {
-				Sfx.PlaySfxSpatially(SfxCatagory.BULLET_HIT, 0, Position, 0);
+				Particles.Spawn(Particle.PISTOL_IMPACT, Position, Normal);
 			}
 
-			Particles.Spawn(Particle.PISTOL_IMPACT, Position, Normal);
+			PelletsLeft -= 1;
 		}
 	}
 
@@ -174,6 +220,9 @@ public class WeaponHolder : Spatial {
 		}
 		else if(CurrentWeapon.Kind == WeaponKind.AK) {
 			Sfx.PlaySfx(SfxCatagory.AK_FIRE, 0, GlobalTransform.origin, 0);
+		}
+		else if(CurrentWeapon.Kind == WeaponKind.SHOTGUN) {
+			Sfx.PlaySfx(SfxCatagory.SHOTGUN_FIRE, 0, GlobalTransform.origin, 0);
 		}
 
 		float RecoilDampen = ((1 - CalcAdsDisplay()) + ParentPlayer.CrouchPercent) / 2f;
