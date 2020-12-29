@@ -289,6 +289,8 @@ public class FirstPersonPlayer : Character {
 		float OldMomentumY = Momentum.y;
 		Momentum = Move(Momentum, Delta, 5, 40, 0.42f);
 		if(!WasOnFloor && OnFloor && OldMomentumY < CrunchSpeed) {
+			CamAnimations.Add(new CrunchCamDip());
+
 			bool TakeFallDamage = true;
 			if(FloorCast.GetCollider() is Node Floor && Floor.IsInGroup("leaves")) {
 				TakeFallDamage = false;
@@ -296,7 +298,6 @@ public class FirstPersonPlayer : Character {
 
 			if(TakeFallDamage) {
 				Sfx.PlaySfx(SfxCatagory.FALL_CRUNCH, 0, GlobalTransform.origin, 0);
-				CamAnimations.Add(new CrunchCamDip());
 
 				float Overkill = -(OldMomentumY - CrunchSpeed);
 				float Percent = Overkill / (MaxFallSpeed + CrunchSpeed);
@@ -304,6 +305,9 @@ public class FirstPersonPlayer : Character {
 				Health -= (int)Damage;
 				GD.Print("Overkill: ", Overkill, " Percent: ", Percent, " Damage: ", Damage);
 				CheckDie();
+			}
+			else {
+				Sfx.PlaySfx(SfxCatagory.LEAVES_FOOTSTEPS, LeavesChooser.Choose(), GlobalTransform.origin, -30);
 			}
 		}
 
