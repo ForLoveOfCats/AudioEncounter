@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [sub_resource type="StyleBoxEmpty" id=1]
 
@@ -22,6 +22,17 @@ func _on_ConnectButton_pressed() -> void:
 	var nick_string = get_parent().get_node(\"NickEdit\").text
 	Game.Connect(ip_string, nick_string)
 	Game.RuntimeRoot.get_node(\"Menu\").queue_free()
+"
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends Label
+
+
+
+func _process(_delta: float) -> void:
+	var cap: int = get_parent().get_node(\"FpsCapSlider\").value
+	self.text = \"FPS Cap: \" + str(cap)
+	Engine.target_fps = cap
 "
 
 [node name="RuntimeRoot" type="Node"]
@@ -125,6 +136,36 @@ margin_left = -209.0
 margin_top = 20.0
 margin_bottom = 14.0
 text = "Press F11 to toggle fullscreen"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FpsCap" type="Label" parent="Menu"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -423.66
+margin_top = -32.948
+margin_right = -279.66
+margin_bottom = -18.948
+text = "FPS Cap"
+script = SubResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FpsCapSlider" type="HSlider" parent="Menu"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -426.0
+margin_top = -18.0
+min_value = 20.0
+max_value = 300.0
+step = 10.0
+value = 100.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
