@@ -325,6 +325,7 @@ public class FirstPersonPlayer : Character {
 		}
 
 		Rpc(nameof(ThirdPersonPlayer.NetUpdateTransform), Transform, CrouchPercent);
+		Rpc(nameof(ThirdPersonPlayer.NetUpdateSpecateCam), CamJoint.Rotation.x, Cam.Rotation.x, Cam.Fov);
 
 		base._PhysicsProcess(Delta);
 	}

@@ -43,6 +43,14 @@ public class ThirdPersonPlayer : Spatial {
 
 
 	[Remote]
+	public void NetUpdateSpecateCam(float CamJointRotation, float CamRotation, float CamFov) {
+		CamJoint.Rotation = new Vector3(CamJointRotation, 0, 0);
+		Cam.Rotation = new Vector3(CamRotation, 0, 0);
+		Cam.Fov = CamFov;
+	}
+
+
+	[Remote]
 	public void NetDie() {
 		Game.Alive.Remove(Id);
 		QueueFree();
@@ -56,8 +64,12 @@ public class ThirdPersonPlayer : Spatial {
 
 
 	public override void _Process(float Delta) {
+		if(Game.Self.Spectating == this) {
+			Joint.Visible = false;
+		}
+
 		if(ValidTargetTransform) {
-			Transform = Transform.InterpolateWith(TargetTransform, Delta / 0.1f);
+			Transform = Transform.InterpolateWith(TargetTransform, Delta / 0.02f);
 		}
 
 		Joint.RotationDegrees = new Vector3(
