@@ -1,5 +1,7 @@
 using Godot;
 
+using static Assert;
+
 
 
 public class ThirdPersonPlayer : Spatial {
@@ -76,7 +78,7 @@ public class ThirdPersonPlayer : Spatial {
 
 
 	[Remote]
-	public void NetDie() {
+	public void NetDie(int Killer) {
 		Game.Alive.Remove(Id);
 
 		if(Game.Self.Spectating == this) {
@@ -86,6 +88,18 @@ public class ThirdPersonPlayer : Spatial {
 			else {
 				Game.Self.Spectating = null;
 			}
+		}
+
+		if(Multiplayer.IsNetworkServer()) {
+			string Message = "";
+			if(Killer == -1) {
+				Message = $"{Game.Nicknames[Id]} fell to their death";
+			}
+			else {
+				Message = $"{Game.Nicknames[Killer]} ended the life of {Game.Nicknames[Id]}";
+			}
+
+			Game.Self.Rpc(nameof(Game.NetNotifyKillfeed), Message);
 		}
 
 		QueueFree();

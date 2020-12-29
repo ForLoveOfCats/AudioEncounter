@@ -1,6 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
-[sub_resource type="GDScript" id=1]
+[sub_resource type="StyleBoxEmpty" id=1]
+
+[sub_resource type="GDScript" id=2]
 script/source = "extends Button
 
 
@@ -10,7 +12,7 @@ func _on_HostButton_pressed() -> void:
 	Game.RuntimeRoot.get_node(\"Menu\").queue_free()
 "
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=3]
 script/source = "extends Button
 
 
@@ -23,6 +25,45 @@ func _on_ConnectButton_pressed() -> void:
 "
 
 [node name="RuntimeRoot" type="Node"]
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="HBoxContainer"]
+margin_right = 816.0
+margin_bottom = 600.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 1 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+margin_left = 820.0
+margin_right = 1024.0
+margin_bottom = 600.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/VBoxContainer"]
+margin_right = 204.0
+margin_bottom = 198.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+scroll_horizontal_enabled = false
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer/ScrollContainer"]
+
+[node name="Panel2" type="Panel" parent="HBoxContainer/VBoxContainer"]
+margin_top = 202.0
+margin_right = 204.0
+margin_bottom = 600.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 1 )
 
 [node name="Menu" type="Node" parent="."]
 
@@ -46,7 +87,7 @@ __meta__ = {
 margin_right = 672.0
 margin_bottom = 20.0
 text = "Host"
-script = SubResource( 1 )
+script = SubResource( 2 )
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Menu/CenterContainer/VBoxContainer"]
 margin_top = 24.0
@@ -71,7 +112,7 @@ margin_left = 608.0
 margin_right = 672.0
 margin_bottom = 24.0
 text = "Connect"
-script = SubResource( 2 )
+script = SubResource( 3 )
 
 [connection signal="pressed" from="Menu/CenterContainer/VBoxContainer/HostButton" to="Menu/CenterContainer/VBoxContainer/HostButton" method="_on_HostButton_pressed"]
 [connection signal="pressed" from="Menu/CenterContainer/VBoxContainer/HBoxContainer/ConnectButton" to="Menu/CenterContainer/VBoxContainer/HBoxContainer/ConnectButton" method="_on_ConnectButton_pressed"]

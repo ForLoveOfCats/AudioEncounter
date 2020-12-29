@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Godot;
+using static Godot.Mathf;
 
 using static Assert;
 
@@ -28,6 +29,9 @@ public class Game : Node {
 	public static AdminControls AdminPanel = null;
 	public static Node DeathScreen = null;
 
+	public static ScrollContainer KillFeedScroll = null;
+	public static VBoxContainer KillFeedVBox = null;
+
 	public ThirdPersonPlayer Spectating = null;
 	public static int SpectatingIndex = 0;
 
@@ -43,6 +47,9 @@ public class Game : Node {
 
 		Self = this;
 		RuntimeRoot = GetTree().Root.GetNode("RuntimeRoot");
+
+		KillFeedScroll = RuntimeRoot.GetNode<ScrollContainer>("HBoxContainer/VBoxContainer/ScrollContainer");
+		KillFeedVBox = KillFeedScroll.GetNode<VBoxContainer>("VBoxContainer");
 
 		GetTree().Connect("network_peer_connected", this, nameof(PlayerConnected));
 		GetTree().Connect("network_peer_disconnected", this, nameof(PlayerDisconnected));
@@ -240,6 +247,15 @@ public class Game : Node {
 	}
 
 
+	[Remote]
+	public void NetNotifyKillfeed(string Message) {
+		var Entry = new Label();
+		Entry.Text = Message;
+
+		KillFeedVBox.AddChild(Entry);
+	}
+
+
 	public static void SpectateNextPlayer() {
 		SpectatingIndex += 1;
 		if(SpectatingIndex >= Game.Alive.Count) {
@@ -270,6 +286,12 @@ public class Game : Node {
 		}
 
 		GD.Print(Message);
+	}
+
+
+	public override void _PhysicsProcess(float Delta) {
+		KillFeedScroll.ScrollVertical = (int)Ceil((float)KillFeedScroll.GetVScrollbar().MaxValue);
+		base._PhysicsProcess(Delta);
 	}
 }
 

@@ -85,14 +85,14 @@ public class FirstPersonPlayer : Character {
 	[Remote]
 	public void NetDamage(int Damage) {
 		Health -= Damage;
-		CheckDie();
+		CheckDie(Multiplayer.GetRpcSenderId());
 	}
 
 
-	public void CheckDie() {
+	public void CheckDie(int Killer) {
 		if(Health <= 0) {
 			Input.SetMouseMode(Input.MouseMode.Visible);
-			Rpc(nameof(ThirdPersonPlayer.NetDie));
+			Rpc(nameof(ThirdPersonPlayer.NetDie), Killer);
 
 			Game.DeathScreen = (Node)Game.DeathScreenScene.Instance();
 			Game.RuntimeRoot.AddChild(Game.DeathScreen);
@@ -304,7 +304,7 @@ public class FirstPersonPlayer : Character {
 				float Damage = BaseCrunchDmg + (100f * Percent);
 				Health -= (int)Damage;
 				GD.Print("Overkill: ", Overkill, " Percent: ", Percent, " Damage: ", Damage);
-				CheckDie();
+				CheckDie(-1);
 			}
 			else {
 				Sfx.PlaySfx(SfxCatagory.LEAVES_FOOTSTEPS, LeavesChooser.Choose(), GlobalTransform.origin, -30);
