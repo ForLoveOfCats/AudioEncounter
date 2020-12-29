@@ -256,6 +256,15 @@ public class Game : Node {
 	}
 
 
+	[Remote]
+	public void NetClearKillfeed() {
+		var Children = KillFeedVBox.GetChildren();
+		foreach(Node Child in Children) {
+			KillFeedVBox.RemoveChild(Child);
+		}
+	}
+
+
 	public static void SpectateNextPlayer() {
 		SpectatingIndex += 1;
 		if(SpectatingIndex >= Game.Alive.Count) {

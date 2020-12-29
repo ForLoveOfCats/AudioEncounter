@@ -138,6 +138,11 @@ public class AdminControls : Node {
 					Game.Print($"Deathmatch mode is {(Game.DeathmatchMode ? "on" : "off")}");
 					break;
 				}
+
+				case "clear_killfeed": {
+					Game.Self.Rpc(nameof(Game.NetClearKillfeed));
+					break;
+				}
 			}
 
 			Game.Print();
