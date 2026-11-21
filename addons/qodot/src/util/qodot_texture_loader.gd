@@ -31,12 +31,12 @@ const PBR_SUFFIX_PATTERNS := {
 }
 
 const PBR_SUFFIX_TEXTURES := {
-	PBRSuffix.NORMAL: SpatialMaterial.TEXTURE_NORMAL,
-	PBRSuffix.METALLIC: SpatialMaterial.TEXTURE_METALLIC,
-	PBRSuffix.ROUGHNESS: SpatialMaterial.TEXTURE_ROUGHNESS,
-	PBRSuffix.EMISSION: SpatialMaterial.TEXTURE_EMISSION,
-	PBRSuffix.AO: SpatialMaterial.TEXTURE_AMBIENT_OCCLUSION,
-	PBRSuffix.DEPTH: SpatialMaterial.TEXTURE_DEPTH,
+	PBRSuffix.NORMAL: StandardMaterial3D.TEXTURE_NORMAL,
+	PBRSuffix.METALLIC: StandardMaterial3D.TEXTURE_METALLIC,
+	PBRSuffix.ROUGHNESS: StandardMaterial3D.TEXTURE_ROUGHNESS,
+	PBRSuffix.EMISSION: StandardMaterial3D.TEXTURE_EMISSION,
+	PBRSuffix.AO: StandardMaterial3D.TEXTURE_AMBIENT_OCCLUSION,
+	PBRSuffix.DEPTH: StandardMaterial3D.TEXTURE_DEPTH,
 }
 
 const PBR_SUFFIX_PROPERTIES := {
@@ -52,7 +52,7 @@ var texture_extension: String
 var texture_wads: Array
 
 # Instances
-var directory := Directory.new()
+var directory := DirAccess.new()
 var texture_wad_resources : Array = []
 
 # Getters
@@ -93,7 +93,7 @@ func load_textures(texture_list: Array) -> Dictionary:
 
 	return texture_dict
 
-func load_texture(texture_name: String) -> Texture:
+func load_texture(texture_name: String) -> Texture2D:
 	if(texture_name == TEXTURE_EMPTY):
 		return null
 
@@ -101,7 +101,7 @@ func load_texture(texture_name: String) -> Texture:
 	var texture_path := "%s/%s.%s" % [base_texture_path, texture_name, texture_extension]
 
 	if(directory.file_exists(texture_path)):
-		return load(texture_path) as Texture
+		return load(texture_path) as Texture2D
 
 	var texture_name_lower : String = texture_name.to_lower()
 	for texture_wad in texture_wad_resources:
@@ -123,8 +123,8 @@ func create_materials(texture_list: Array, material_extension: String, default_m
 func create_material(
 	texture_name: String,
 	material_extension: String,
-	default_material: SpatialMaterial
-	) -> SpatialMaterial:
+	default_material: StandardMaterial3D
+	) -> StandardMaterial3D:
 	# Autoload material if it exists
 	var material_dict := {}
 
@@ -138,18 +138,18 @@ func create_material(
 	if material_path in material_dict:
 		return material_dict[material_path]
 
-	var material : SpatialMaterial = null
+	var material : StandardMaterial3D = null
 
 	if default_material:
 		material = default_material.duplicate()
 	else:
-		material = SpatialMaterial.new()
+		material = StandardMaterial3D.new()
 
-	var texture : Texture = load_texture(texture_name)
+	var texture : Texture2D = load_texture(texture_name)
 	if not texture:
 		return material
 
-	material.set_texture(SpatialMaterial.TEXTURE_ALBEDO, texture)
+	material.set_texture(StandardMaterial3D.TEXTURE_ALBEDO, texture)
 
 	var pbr_textures : Dictionary = get_pbr_textures(texture_name)
 	for pbr_suffix in PBRSuffix:
@@ -175,15 +175,15 @@ func get_pbr_textures(texture_name: String) -> Dictionary:
 
 	return pbr_textures
 
-func get_pbr_texture(texture: String, suffix: int) -> Texture:
-	var texture_comps : PoolStringArray = texture.split('/')
+func get_pbr_texture(texture: String, suffix: int) -> Texture2D:
+	var texture_comps : PackedStringArray = texture.split('/')
 
 	if texture_comps.size() == 0:
 		return null
 
 	var path := "%s/%s/%s" % [
 		base_texture_path,
-		texture_comps.join('/'),
+		'/'.join(texture_comps),
 		get_pbr_suffix_pattern(suffix) % [
 			texture_comps[-1],
 			texture_extension
@@ -191,6 +191,6 @@ func get_pbr_texture(texture: String, suffix: int) -> Texture:
 	]
 
 	if(directory.file_exists(path)):
-		return load(path) as Texture
+		return load(path) as Texture2D
 
 	return null

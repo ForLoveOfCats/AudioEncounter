@@ -1,13 +1,14 @@
 [remap]
 
 importer="wav"
-type="AudioStreamSample"
-path="res://.import/EmptyChamberFireClick.wav-4a920592ac40bd162336e57ae53cc488.sample"
+type="AudioStreamWAV"
+uid="uid://d22t45df47uyh"
+path="res://.godot/imported/EmptyChamberFireClick.wav-4a920592ac40bd162336e57ae53cc488.sample"
 
 [deps]
 
 source_file="res://TrimmedAudio/EmptyChamberFireClick.wav"
-dest_files=[ "res://.import/EmptyChamberFireClick.wav-4a920592ac40bd162336e57ae53cc488.sample" ]
+dest_files=["res://.godot/imported/EmptyChamberFireClick.wav-4a920592ac40bd162336e57ae53cc488.sample"]
 
 [params]
 
@@ -17,5 +18,7 @@ force/max_rate=false
 force/max_rate_hz=44100
 edit/trim=false
 edit/normalize=false
-edit/loop=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
 compress/mode=0

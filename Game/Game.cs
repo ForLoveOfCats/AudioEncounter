@@ -9,7 +9,7 @@ using static Assert;
 
 
 
-public class Game : Node {
+public partial class Game : Node {
 	public const int ServerId = 1;
 	public const int Port = 27015;
 	public const int MaxPlayers = 32;
@@ -24,8 +24,10 @@ public class Game : Node {
 	public static PackedScene AdminControlsScene = GD.Load<PackedScene>("res://Game/AdminControls.tscn");
 	public static PackedScene DeathScreenScene = GD.Load<PackedScene>("res://Game/DeathScreen.tscn");
 
+	public static bool IsFullscreen = false;
+
 	public static Game Self = null;
-	public static Node RuntimeRoot = null;
+	public Node RuntimeRoot = null;
 	public static AdminControls AdminPanel = null;
 	public static Node DeathScreen = null;
 
@@ -36,12 +38,12 @@ public class Game : Node {
 	public static int SpectatingIndex = 0;
 
 	public static string Nickname = "BrianD";
-	public static Dictionary<int, string> Nicknames = new Dictionary<int, string>();
-	public static List<int> Alive = new List<int>();
+	public static Dictionary<long, string> Nicknames = new Dictionary<long, string>();
+	public static List<long> Alive = new List<long>();
 
 
 	public override void _Ready() {
-		if(Engine.EditorHint) {
+		if(Engine.IsEditorHint()) {
 			return;
 		}
 
@@ -51,22 +53,26 @@ public class Game : Node {
 		KillFeedScroll = RuntimeRoot.GetNode<ScrollContainer>("HBoxContainer/VBoxContainer/ScrollContainer");
 		KillFeedVBox = KillFeedScroll.GetNode<VBoxContainer>("VBoxContainer");
 
-		GetTree().Connect("network_peer_connected", this, nameof(PlayerConnected));
-		GetTree().Connect("network_peer_disconnected", this, nameof(PlayerDisconnected));
-		GetTree().Connect("server_disconnected", this, nameof(ServerDisconnected), flags: (uint)ConnectFlags.Deferred);
+		Multiplayer.PeerConnected += PlayerConnected;
+		Multiplayer.PeerDisconnected += PlayerDisconnected;
+		Multiplayer.ServerDisconnected += ServerDisconnected;
+		// GetTree().Connect("network_peer_connected", new Callable(this, nameof(PlayerConnected)));
+		// GetTree().Connect("network_peer_disconnected", new Callable(this, nameof(PlayerDisconnected)));
+		// GetTree().Connect("server_disconnected", new Callable(this, nameof(ServerDisconnected)), flags: (uint)ConnectFlags.Deferred);
 
 		base._Ready();
 	}
 
 
 	public void Host() {
-		var Peer = new NetworkedMultiplayerENet();
+		GD.Print("Hello from C# host");
+		var Peer = new ENetMultiplayerPeer();
 		Peer.CreateServer(Port, MaxPlayers);
-		GetTree().NetworkPeer = Peer;
+		Multiplayer.MultiplayerPeer = Peer;
 
-		RuntimeRoot.AddChild(WorldScene.Instance());
+		RuntimeRoot.AddChild(WorldScene.Instantiate());
 
-		AdminPanel = (AdminControls)AdminControlsScene.Instance();
+		AdminPanel = AdminControlsScene.Instantiate<AdminControls>();
 		RuntimeRoot.AddChild(AdminPanel);
 	}
 
@@ -83,41 +89,41 @@ public class Game : Node {
 			Nickname = NickString;
 		}
 
-		var Peer = new NetworkedMultiplayerENet();
+		var Peer = new ENetMultiplayerPeer();
 		Peer.CreateClient(IpString, Port);
-		GetTree().NetworkPeer = Peer;
+		Multiplayer.MultiplayerPeer = Peer;
 
-		RuntimeRoot.AddChild(WorldScene.Instance());
+		RuntimeRoot.AddChild(WorldScene.Instantiate());
 
-		DeathScreen = (Node)DeathScreenScene.Instance();
+		DeathScreen = DeathScreenScene.Instantiate();
 		RuntimeRoot.AddChild(DeathScreen);
 	}
 
 
-	public void PlayerConnected(int Id) {
+	public void PlayerConnected(long Id) {
 		Log($"New player {Id} connected");
 
 		if(Id == ServerId) {
 			RpcId(ServerId, nameof(RegisterNickname), Nickname);
 		}
 
-		if(Multiplayer.IsNetworkServer()) {
-			foreach(int AlivePlayer in Alive) {
+		if(Multiplayer.IsServer()) {
+			foreach(long AlivePlayer in Alive) {
 				if(AlivePlayer == Id) {
 					continue;
 				}
 
 				var Plr = (ThirdPersonPlayer)RuntimeRoot.GetNode(AlivePlayer.ToString());
 				string Nickname = Nicknames[AlivePlayer];
-				RpcId(Id, nameof(NetSpawn), AlivePlayer, Nickname, Plr.GlobalTransform.origin, Plr.Rotation);
-				Plr.RpcId(Id, nameof(ThirdPersonPlayer.NetSetSpectateWeapon), Plr.Holder.CurrentWeapon.Kind);
+				RpcId(Id, nameof(NetSpawn), AlivePlayer, Nickname, Plr.GlobalTransform.Origin, Plr.Rotation);
+				Plr.RpcId(Id, nameof(ThirdPersonPlayer.NetSetSpectateWeapon), (int)Plr.Holder.CurrentWeapon.Kind);
 			}
 		}
 	}
 
 
-	public void PlayerDisconnected(int Id) {
-		if(Multiplayer.IsNetworkServer() && Nicknames.GetOrNull(Id) is String Identifier) {
+	public void PlayerDisconnected(long Id) {
+		if(Multiplayer.IsServer() && Nicknames.GetOrNull(Id) is String Identifier) {
 			Log($"Registered player {Identifier} disconnected");
 		}
 		else {
@@ -139,18 +145,18 @@ public class Game : Node {
 	}
 
 
-	[Remote]
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
 	public void RegisterNickname(string ClientNick) {
 		char[] NickArray = ClientNick.ToCharArray();
 		NickArray = Array.FindAll(NickArray, car => char.IsLetter(car) || car == '_');
 		ClientNick = new string(NickArray);
 
 		if(ClientNick.Length == 0) {
-			((NetworkedMultiplayerENet)Multiplayer.NetworkPeer).DisconnectPeer(Multiplayer.GetRpcSenderId());
+			((ENetMultiplayerPeer)Multiplayer.MultiplayerPeer).DisconnectPeer(Multiplayer.GetRemoteSenderId());
 		}
 
-		string Identifier = $"{ClientNick}#{Multiplayer.GetRpcSenderId()}";
-		Nicknames.Add(Multiplayer.GetRpcSenderId(), Identifier);
+		string Identifier = $"{ClientNick}#{Multiplayer.GetRemoteSenderId()}";
+		Nicknames.Add(Multiplayer.GetRemoteSenderId(), Identifier);
 		Log("Registered player ", Identifier);
 	}
 
@@ -160,29 +166,29 @@ public class Game : Node {
 	}
 
 
-	[Remote]
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
 	public void NetRequestRespawn() {
-		if(!Self.Multiplayer.IsNetworkServer()) {
+		if(!Self.Multiplayer.IsServer()) {
 			return;
 		}
 
 		if(DeathmatchMode) {
-			ChooseSpawnPointAndDoSpawn(Multiplayer.GetRpcSenderId());
+			ChooseSpawnPointAndDoSpawn(Multiplayer.GetRemoteSenderId());
 		}
 	}
 
 
-	public static void ChooseSpawnPointAndDoSpawn(int Id) {
-		if(!Self.Multiplayer.IsNetworkServer()) {
+	public static void ChooseSpawnPointAndDoSpawn(long Id) {
+		if(!Self.Multiplayer.IsServer()) {
 			return;
 		}
 
-		var SpawnPoints = new List<Spatial>();
+		var SpawnPoints = new List<Node3D>();
 		foreach(Node GottenNode in Self.GetTree().GetNodesInGroup("spawn_point")) {
-			SpawnPoints.Add((Spatial)GottenNode);
+			SpawnPoints.Add((Node3D)GottenNode);
 		}
 
-		Spatial SpawnPoint = null;
+		Node3D SpawnPoint = null;
 		if(Alive.Count <= 0) {
 			int Index = Rng.Next(SpawnPoints.Count);
 			SpawnPoint = SpawnPoints[Index];
@@ -190,11 +196,11 @@ public class Game : Node {
 		else {
 			var Distances = new List<float>();
 
-			foreach(Spatial Point in SpawnPoints) {
+			foreach(Node3D Point in SpawnPoints) {
 				float Distance = 0;
-				foreach(int ExistingId in Alive) {
-					var Plr = (ThirdPersonPlayer)RuntimeRoot.GetNode(ExistingId.ToString());
-					Distance += Point.GlobalTransform.origin.DistanceTo(Plr.GlobalTransform.origin);
+				foreach(long ExistingId in Alive) {
+					var Plr = (ThirdPersonPlayer)Self.RuntimeRoot.GetNode(ExistingId.ToString());
+					Distance += Point.GlobalTransform.Origin.DistanceTo(Plr.GlobalTransform.Origin);
 				}
 				Distances.Add(Distance / (float)Alive.Count);
 			}
@@ -211,21 +217,21 @@ public class Game : Node {
 		ActualAssert(SpawnPoint != null);
 
 		string Nickname = Nicknames[Id];
-		Game.Self.Rpc(nameof(Game.NetSpawn), Id, Nickname, SpawnPoint.GlobalTransform.origin, SpawnPoint.Rotation);
-		Game.Self.NetSpawn(Id, Nickname, SpawnPoint.GlobalTransform.origin, SpawnPoint.Rotation);
+		Game.Self.Rpc(nameof(Game.NetSpawn), Id, Nickname, SpawnPoint.GlobalTransform.Origin, SpawnPoint.Rotation);
+		Game.Self.NetSpawn(Id, Nickname, SpawnPoint.GlobalTransform.Origin, SpawnPoint.Rotation);
 	}
 
 
-	[Remote]
-	public void NetSpawn(int Id, string Nickname, Vector3 Position, Vector3 Rotation) {
-		if(Id == Multiplayer.GetNetworkUniqueId()) {
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
+	public void NetSpawn(long Id, string Nickname, Vector3 Position, Vector3 Rotation) {
+		if(Id == Multiplayer.GetUniqueId()) {
 			Self.Spectating = null;
 
-			Spatial Player = (Spatial)FirstPersonPlayerScene.Instance();
-			Player.Name = Multiplayer.GetNetworkUniqueId().ToString();
+			Node3D Player = FirstPersonPlayerScene.Instantiate<Node3D>();
+			Player.Name = Multiplayer.GetUniqueId().ToString();
 			RuntimeRoot.AddChild(Player);
 
-			Player.Translation = Position;
+			Player.Position = Position;
 			Player.Rotation = Rotation;
 
 			if(DeathScreen != null) {
@@ -233,13 +239,13 @@ public class Game : Node {
 			}
 		}
 		else {
-			ThirdPersonPlayer Player = (ThirdPersonPlayer)ThirdPersonPlayerScene.Instance();
+			ThirdPersonPlayer Player = ThirdPersonPlayerScene.Instantiate<ThirdPersonPlayer>();
 			Player.Id = Id;
 			Player.Name = Id.ToString();
 			Player.Nickname = Nickname;
 			RuntimeRoot.AddChild(Player);
 
-			Player.Translation = Position;
+			Player.Position = Position;
 			Player.Rotation = Rotation;
 
 			Game.Alive.Add(Id);
@@ -247,17 +253,17 @@ public class Game : Node {
 	}
 
 
-	[Remote]
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
 	public void NetNotifyKillfeed(string Message) {
 		var Entry = new Label();
 		Entry.Text = Message;
-		Entry.Autowrap = true;
+		Entry.AutowrapMode = TextServer.AutowrapMode.Word;
 
 		KillFeedVBox.AddChild(Entry);
 	}
 
 
-	[Remote]
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
 	public void NetClearKillfeed() {
 		var Children = KillFeedVBox.GetChildren();
 		foreach(Node Child in Children) {
@@ -273,7 +279,7 @@ public class Game : Node {
 		}
 
 		if(Game.Alive.Count > 0) {
-			Game.RuntimeRoot.GetNode<ThirdPersonPlayer>(Game.Alive[SpectatingIndex].ToString()).Spectate();
+			Game.Self.RuntimeRoot.GetNode<ThirdPersonPlayer>(Game.Alive[SpectatingIndex].ToString()).Spectate();
 		}
 	}
 
@@ -282,7 +288,7 @@ public class Game : Node {
 		if(AdminPanel is AdminControls Panel) {
 			string Message = String.Join(" ", Messages);
 			Panel.CliOutput.Text += Message + "\n";
-			Panel.CliOutput.CursorSetLine(Panel.CliOutput.GetLineCount());
+			Panel.CliOutput.SetCaretLine(Panel.CliOutput.GetLineCount());
 		}
 	}
 
@@ -292,19 +298,19 @@ public class Game : Node {
 
 		if(AdminPanel is AdminControls Panel) {
 			Panel.LogOutput.Text += Message + "\n\n";
-			Panel.LogOutput.CursorSetLine(Panel.LogOutput.GetLineCount());
+			Panel.LogOutput.SetCaretLine(Panel.LogOutput.GetLineCount());
 		}
 
 		GD.Print(Message);
 	}
 
-
-	public override void _Process(float Delta) {
+	public override void _Process(double Delta) {
 		if(Input.IsActionJustPressed("ToggleFullscreen")) {
-			OS.WindowFullscreen = !OS.WindowFullscreen;
+			IsFullscreen = !IsFullscreen;
+			GetWindow().Mode = IsFullscreen ? Window.ModeEnum.Fullscreen : Window.ModeEnum.Windowed;
 		}
 
-		KillFeedScroll.ScrollVertical = (int)Ceil((float)KillFeedScroll.GetVScrollbar().MaxValue);
+		KillFeedScroll.ScrollVertical = (int)Ceil((float)KillFeedScroll.GetVScrollBar().MaxValue);
 
 		base._Process(Delta);
 	}

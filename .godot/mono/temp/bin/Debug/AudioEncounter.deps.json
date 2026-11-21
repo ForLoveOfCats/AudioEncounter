@@ -1,0 +1,60 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "AudioEncounter/1.0.0": {
+        "dependencies": {
+          "GodotSharp": "4.7.2",
+          "GodotSharpEditor": "4.7.2"
+        },
+        "runtime": {
+          "AudioEncounter.dll": {}
+        }
+      },
+      "GodotSharp/4.7.2": {
+        "runtime": {
+          "lib/net8.0/GodotSharp.dll": {
+            "assemblyVersion": "4.7.2.0",
+            "fileVersion": "4.7.2.0"
+          }
+        }
+      },
+      "GodotSharpEditor/4.7.2": {
+        "dependencies": {
+          "GodotSharp": "4.7.2"
+        },
+        "runtime": {
+          "lib/net8.0/GodotSharpEditor.dll": {
+            "assemblyVersion": "4.7.2.0",
+            "fileVersion": "4.7.2.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "AudioEncounter/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "GodotSharp/4.7.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-EPvfayB7b7MrBNdASvy86jRS5AbM9dprkVivcRD80g+ngn2M8KAIrBQH4NhyQL+pwxni0xVnuqhD9AFpZeNQpw==",
+      "path": "godotsharp/4.7.2",
+      "hashPath": "godotsharp.4.7.2.nupkg.sha512"
+    },
+    "GodotSharpEditor/4.7.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Fuf2rNvajla9N8Z+ksxsSIt326wsjpB2F2uZCtxkdfWIsApabCHy5fsE2EKxOlQ4NaINGdgMIv62D0n583qe1A==",
+      "path": "godotsharpeditor/4.7.2",
+      "hashPath": "godotsharpeditor.4.7.2.nupkg.sha512"
+    }
+  }
+}

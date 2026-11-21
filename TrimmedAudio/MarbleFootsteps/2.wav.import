@@ -1,13 +1,14 @@
 [remap]
 
 importer="wav"
-type="AudioStreamSample"
-path="res://.import/2.wav-6e9d865f0c6ac3600b3ec8f0c259bb24.sample"
+type="AudioStreamWAV"
+uid="uid://dkixf62cw8g61"
+path="res://.godot/imported/2.wav-6e9d865f0c6ac3600b3ec8f0c259bb24.sample"
 
 [deps]
 
 source_file="res://TrimmedAudio/MarbleFootsteps/2.wav"
-dest_files=[ "res://.import/2.wav-6e9d865f0c6ac3600b3ec8f0c259bb24.sample" ]
+dest_files=["res://.godot/imported/2.wav-6e9d865f0c6ac3600b3ec8f0c259bb24.sample"]
 
 [params]
 
@@ -17,5 +18,7 @@ force/max_rate=false
 force/max_rate_hz=44100
 edit/trim=false
 edit/normalize=false
-edit/loop=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
 compress/mode=0

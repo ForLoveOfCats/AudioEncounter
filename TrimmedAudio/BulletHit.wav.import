@@ -1,13 +1,14 @@
 [remap]
 
 importer="wav"
-type="AudioStreamSample"
-path="res://.import/BulletHit.wav-fcc7d5ba7919eacdc739fbae6716a622.sample"
+type="AudioStreamWAV"
+uid="uid://btvihshd4hq2k"
+path="res://.godot/imported/BulletHit.wav-fcc7d5ba7919eacdc739fbae6716a622.sample"
 
 [deps]
 
 source_file="res://TrimmedAudio/BulletHit.wav"
-dest_files=[ "res://.import/BulletHit.wav-fcc7d5ba7919eacdc739fbae6716a622.sample" ]
+dest_files=["res://.godot/imported/BulletHit.wav-fcc7d5ba7919eacdc739fbae6716a622.sample"]
 
 [params]
 
@@ -17,5 +18,7 @@ force/max_rate=false
 force/max_rate_hz=44100
 edit/trim=false
 edit/normalize=false
-edit/loop=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
 compress/mode=0

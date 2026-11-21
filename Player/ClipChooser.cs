@@ -1,4 +1,4 @@
-public class ClipChooser {
+public partial class ClipChooser {
 	int LastIndex = -1;
 	int Count = -1;
 

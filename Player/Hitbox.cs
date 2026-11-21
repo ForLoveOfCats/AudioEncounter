@@ -6,7 +6,7 @@ public enum HitboxKind { HEAD, BODY }
 
 
 
-public class Hitbox : StaticBody {
+public partial class Hitbox : StaticBody3D {
 	[Export]
 	public HitboxKind Kind = HitboxKind.BODY;
 

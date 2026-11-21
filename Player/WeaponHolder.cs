@@ -13,7 +13,7 @@ public enum WeaponKind {
 }
 
 
-public class WeaponStats {
+public partial class WeaponStats {
 	public WeaponKind Kind = WeaponKind.AK;
 
 	public int MaxAmmo = 0;
@@ -35,17 +35,17 @@ public class WeaponStats {
 }
 
 
-public class WeaponHolder : Spatial {
+public partial class WeaponHolder : Node3D {
 	public const float Range = 500f;
 	public const float MomentumFriction = 3f;
 	public const float MaxRotation = 8f;
 	public const float SprintChangeStateTime = 0.2f;
 	public const float AdsChangeStateTime = FirstPersonPlayer.SprintSpeed / FirstPersonPlayer.BaseSpeed * FirstPersonPlayer.AccelerationTime;
 
-	public Spatial MeshJoint;
-	public MeshInstance AkMesh;
-	public MeshInstance PistolMesh;
-	public MeshInstance ShotgunMesh;
+	public Node3D MeshJoint;
+	public MeshInstance3D AkMesh;
+	public MeshInstance3D PistolMesh;
+	public MeshInstance3D ShotgunMesh;
 
 	public Vector3 OgTranslation = new Vector3();
 
@@ -63,27 +63,27 @@ public class WeaponHolder : Spatial {
 
 
 	public override void _Ready() {
-		MeshJoint = GetNode<Spatial>("MeshJoint");
-		AkMesh = MeshJoint.GetNode<MeshInstance>("AkMesh");
-		PistolMesh = MeshJoint.GetNode<MeshInstance>("PistolMesh");
-		ShotgunMesh = MeshJoint.GetNode<MeshInstance>("ShotgunMesh");
+		MeshJoint = GetNode<Node3D>("MeshJoint");
+		AkMesh = MeshJoint.GetNode<MeshInstance3D>("AkMesh");
+		PistolMesh = MeshJoint.GetNode<MeshInstance3D>("PistolMesh");
+		ShotgunMesh = MeshJoint.GetNode<MeshInstance3D>("ShotgunMesh");
 
-		OgTranslation = Translation;
+		OgTranslation = Position;
 		if(GetParent().GetParent().GetParent() is FirstPersonPlayer Parent) {
 			ParentPlayer = Parent;
 
 			int Choice = Game.Rng.Next(3);
 			if(Choice == 0) {
 				EquipAk();
-				ParentPlayer.Rpc(nameof(ThirdPersonPlayer.NetSetSpectateWeapon), WeaponKind.AK);
+				ParentPlayer.Rpc(nameof(ThirdPersonPlayer.NetSetSpectateWeapon), (int)WeaponKind.AK);
 			}
 			else if(Choice == 1) {
 				EquipPistol();
-				ParentPlayer.Rpc(nameof(ThirdPersonPlayer.NetSetSpectateWeapon), WeaponKind.PISTOL);
+				ParentPlayer.Rpc(nameof(ThirdPersonPlayer.NetSetSpectateWeapon), (int)WeaponKind.PISTOL);
 			}
 			else if(Choice == 2) {
 				EquipShotgun();
-				ParentPlayer.Rpc(nameof(ThirdPersonPlayer.NetSetSpectateWeapon), WeaponKind.SHOTGUN);
+				ParentPlayer.Rpc(nameof(ThirdPersonPlayer.NetSetSpectateWeapon), (int)WeaponKind.SHOTGUN);
 			}
 		}
 		else {
@@ -164,10 +164,10 @@ public class WeaponHolder : Spatial {
 	public void PerformHitscan() {
 		ActualAssert(ParentPlayer != null);
 
-		Vector3 Origin = ParentPlayer.Cam.GlobalTransform.origin;
+		Vector3 Origin = ParentPlayer.Cam.GlobalTransform.Origin;
 		Vector3 Endpoint = Origin + new Vector3(0, 0, -Range)
-			.Rotated(new Vector3(1, 0, 0), Deg2Rad(ParentPlayer.CamJoint.RotationDegrees.x + ParentPlayer.Cam.RotationDegrees.x))
-			.Rotated(new Vector3(0, 1, 0), Deg2Rad(ParentPlayer.RotationDegrees.y));
+			.Rotated(new Vector3(1, 0, 0), DegToRad(ParentPlayer.CamJoint.RotationDegrees.X + ParentPlayer.Cam.RotationDegrees.X))
+			.Rotated(new Vector3(0, 1, 0), DegToRad(ParentPlayer.RotationDegrees.Y));
 		Vector3 BaseEndpoint = Endpoint;
 
 		int PelletsLeft = CurrentWeapon.PelletCount;
@@ -182,15 +182,20 @@ public class WeaponHolder : Spatial {
 				);
 			}
 
-			var Exclude = new Godot.Collections.Array() { ParentPlayer };
-			PhysicsDirectSpaceState State = GetWorld().DirectSpaceState;
-			Godot.Collections.Dictionary Results = State.IntersectRay(Origin, Endpoint, Exclude, 1 | 2);
+			var Exclude = new Godot.Collections.Array<Rid>() { ParentPlayer.GetRid() };
+			PhysicsDirectSpaceState3D State = GetWorld3D().DirectSpaceState;
+			Godot.Collections.Dictionary Results = State.IntersectRay(new PhysicsRayQueryParameters3D {
+				From = Origin,
+				To = Endpoint,
+				Exclude = Exclude,
+				CollisionMask = 1 | 2,
+			});
 
 			if(Results.Count > 0) {
 				var Position = (Vector3)Results["position"];
 				var Normal = (Vector3)Results["normal"];
 
-				if(Results["collider"] is Hitbox Box) {
+				if(Results["collider"].As<GodotObject>() is Hitbox Box) {
 					int Damage = CurrentWeapon.BodyDamage;
 					if(Box.Kind == HitboxKind.HEAD) {
 						Damage = CurrentWeapon.HeadDamage;
@@ -216,20 +221,20 @@ public class WeaponHolder : Spatial {
 		ActualAssert(ParentPlayer != null);
 
 		if(CurrentWeapon.Kind == WeaponKind.PISTOL) {
-			Sfx.PlaySfx(SfxCatagory.PISTOL_FIRE, 0, GlobalTransform.origin, 0);
+			Sfx.PlaySfx(SfxCatagory.PISTOL_FIRE, 0, GlobalTransform.Origin, 0);
 		}
 		else if(CurrentWeapon.Kind == WeaponKind.AK) {
-			Sfx.PlaySfx(SfxCatagory.AK_FIRE, 0, GlobalTransform.origin, 0);
+			Sfx.PlaySfx(SfxCatagory.AK_FIRE, 0, GlobalTransform.Origin, 0);
 		}
 		else if(CurrentWeapon.Kind == WeaponKind.SHOTGUN) {
-			Sfx.PlaySfx(SfxCatagory.SHOTGUN_FIRE, 0, GlobalTransform.origin, 0);
+			Sfx.PlaySfx(SfxCatagory.SHOTGUN_FIRE, 0, GlobalTransform.Origin, 0);
 		}
 
 		float RecoilDampen = ((1 - CalcAdsDisplay()) + ParentPlayer.CrouchPercent) / 2f;
 		ParentPlayer.CamAnimations.Add(new WeaponRecoil(CurrentWeapon.RecoilTime, CurrentWeapon.RecoilAmount, RecoilDampen));
 
 		int Index = TinkChooser.Choose();
-		Sfx.PlaySfxSpatially(SfxCatagory.CASING_TINK, Index, GlobalTransform.origin + new Vector3(0, -2, 0), 0);
+		Sfx.PlaySfxSpatially(SfxCatagory.CASING_TINK, Index, GlobalTransform.Origin + new Vector3(0, -2, 0), 0);
 	}
 
 
@@ -255,14 +260,15 @@ public class WeaponHolder : Spatial {
 		float SprintPercent = 1 - CalcSprintDisplay();
 
 		MeshJoint.RotationDegrees = new Vector3(
-			Momentum.y * MaxRotation * AdsPercent * SprintPercent,
-			Momentum.x * MaxRotation * AdsPercent * SprintPercent,
+			Momentum.Y * MaxRotation * AdsPercent * SprintPercent,
+			Momentum.X * MaxRotation * AdsPercent * SprintPercent,
 			0
 		);
 	}
 
 
-	public override void _Process(float Delta) {
+	public override void _Process(double dDelta) {
+		float Delta = (float)dDelta;
 		if(ParentPlayer != null) {
 			TickFireTime(CurrentWeapon, Delta);
 
@@ -281,7 +287,7 @@ public class WeaponHolder : Spatial {
 					RunFireEffects();
 				}
 				else {
-					Sfx.PlaySfx(SfxCatagory.EMPTY_CHAMBER_FIRE_CLICK, 0, GlobalTransform.origin, 0);
+					Sfx.PlaySfx(SfxCatagory.EMPTY_CHAMBER_FIRE_CLICK, 0, GlobalTransform.Origin, 0);
 				}
 			}
 
@@ -290,13 +296,13 @@ public class WeaponHolder : Spatial {
 				&& CurrentWeapon.CurrentAmmo < CurrentWeapon.MaxAmmo) {
 				CurrentWeapon.ReloadTimer = CurrentWeapon.MaxReloadTime;
 				Reloading = true;
-				Sfx.PlaySfx(SfxCatagory.RELOAD, 0, GlobalTransform.origin, 0);
+				Sfx.PlaySfx(SfxCatagory.RELOAD, 0, GlobalTransform.Origin, 0);
 			}
 			else if(Reloading && CurrentWeapon.ReloadTimer > 0) {
 				CurrentWeapon.ReloadTimer = Clamp(CurrentWeapon.ReloadTimer - Delta, 0, CurrentWeapon.MaxReloadTime);
 				if(CurrentWeapon.ReloadTimer <= 0) {
 					CurrentWeapon.CurrentAmmo = CurrentWeapon.MaxAmmo;
-					Sfx.PlaySfx(SfxCatagory.RELOAD, 1, GlobalTransform.origin, 0);
+					Sfx.PlaySfx(SfxCatagory.RELOAD, 1, GlobalTransform.Origin, 0);
 				}
 			}
 			else {
@@ -334,10 +340,10 @@ public class WeaponHolder : Spatial {
 
 		float AdsDisplay = CalcAdsDisplay();
 
-		Translation = new Vector3(
-			OgTranslation.x * AdsDisplay,
-			OgTranslation.y * AdsDisplay,
-			OgTranslation.z
+		Position = new Vector3(
+			OgTranslation.X * AdsDisplay,
+			OgTranslation.Y * AdsDisplay,
+			OgTranslation.Z
 		);
 
 		TickMomentum(Delta);

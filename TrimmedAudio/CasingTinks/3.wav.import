@@ -1,13 +1,14 @@
 [remap]
 
 importer="wav"
-type="AudioStreamSample"
-path="res://.import/3.wav-0946b0dbc810c8fa867c42c96e8fa165.sample"
+type="AudioStreamWAV"
+uid="uid://3kw1vkbxikvv"
+path="res://.godot/imported/3.wav-0946b0dbc810c8fa867c42c96e8fa165.sample"
 
 [deps]
 
 source_file="res://TrimmedAudio/CasingTinks/3.wav"
-dest_files=[ "res://.import/3.wav-0946b0dbc810c8fa867c42c96e8fa165.sample" ]
+dest_files=["res://.godot/imported/3.wav-0946b0dbc810c8fa867c42c96e8fa165.sample"]
 
 [params]
 
@@ -17,5 +18,7 @@ force/max_rate=false
 force/max_rate_hz=44100
 edit/trim=false
 edit/normalize=false
-edit/loop=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
 compress/mode=0

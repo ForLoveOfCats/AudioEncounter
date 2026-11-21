@@ -1,0 +1,13 @@
+/home/julia/Stuff/AudioEncounter/.godot/mono/temp/obj/Debug/AudioEncounter.csproj.AssemblyReference.cache
+/home/julia/Stuff/AudioEncounter/.godot/mono/temp/obj/Debug/AudioEncounter.GeneratedMSBuildEditorConfig.editorconfig
+/home/julia/Stuff/AudioEncounter/.godot/mono/temp/obj/Debug/AudioEncounter.AssemblyInfoInputs.cache
+/home/julia/Stuff/AudioEncounter/.godot/mono/temp/obj/Debug/AudioEncounter.AssemblyInfo.cs
+/home/julia/Stuff/AudioEncounter/.godot/mono/temp/obj/Debug/AudioEncounter.csproj.CoreCompileInputs.cache
+/home/julia/Stuff/AudioEncounter/.godot/mono/temp/obj/Debug/AudioEncounter.sourcelink.json
+/home/julia/Stuff/AudioEncounter/.godot/mono/temp/bin/Debug/AudioEncounter.deps.json
+/home/julia/Stuff/AudioEncounter/.godot/mono/temp/bin/Debug/AudioEncounter.dll
+/home/julia/Stuff/AudioEncounter/.godot/mono/temp/bin/Debug/AudioEncounter.pdb
+/home/julia/Stuff/AudioEncounter/.godot/mono/temp/obj/Debug/AudioEncounter.dll
+/home/julia/Stuff/AudioEncounter/.godot/mono/temp/obj/Debug/refint/AudioEncounter.dll
+/home/julia/Stuff/AudioEncounter/.godot/mono/temp/obj/Debug/AudioEncounter.pdb
+/home/julia/Stuff/AudioEncounter/.godot/mono/temp/obj/Debug/ref/AudioEncounter.dll

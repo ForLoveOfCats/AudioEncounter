@@ -3,7 +3,7 @@ using System;
 
 
 public static class Assert {
-	public class AssertException : Exception {
+	public partial class AssertException : Exception {
 		public AssertException() { }
 
 		public AssertException(string Message) : base(Message) { }
@@ -17,7 +17,7 @@ public static class Assert {
 	}
 
 
-	public class UnreachableException : Exception {
+	public partial class UnreachableException : Exception {
 		public UnreachableException() { }
 
 		public UnreachableException(string Message) : base(Message) { }

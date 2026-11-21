@@ -1,13 +1,14 @@
 [remap]
 
 importer="wav"
-type="AudioStreamSample"
-path="res://.import/2.wav-e2b791429997a3047be079485976c7de.sample"
+type="AudioStreamWAV"
+uid="uid://cughj6hi7bcgl"
+path="res://.godot/imported/2.wav-e2b791429997a3047be079485976c7de.sample"
 
 [deps]
 
 source_file="res://TrimmedAudio/MetalFootsteps/2.wav"
-dest_files=[ "res://.import/2.wav-e2b791429997a3047be079485976c7de.sample" ]
+dest_files=["res://.godot/imported/2.wav-e2b791429997a3047be079485976c7de.sample"]
 
 [params]
 
@@ -17,5 +18,7 @@ force/max_rate=false
 force/max_rate_hz=44100
 edit/trim=false
 edit/normalize=false
-edit/loop=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
 compress/mode=0

@@ -4,32 +4,32 @@ using static Assert;
 
 
 
-public class ThirdPersonPlayer : Spatial {
-	public int Id = -1;
+public partial class ThirdPersonPlayer : Node3D {
+	public long Id = -1;
 	public string Nickname = "";
 
 	public bool ValidTargetTransform = false;
-	public Transform TargetTransform = new Transform();
+	public Transform3D TargetTransform = new Transform3D();
 	public float CrouchPercent = 0f;
 
-	public Spatial Joint;
-	public MeshInstance Mesh;
+	public Node3D Joint3D;
+	public MeshInstance3D Mesh;
 	public Hitbox Head;
 	public Hitbox Feet;
 
-	public Spatial CamJoint;
-	public Camera Cam;
+	public Node3D CamJoint;
+	public Camera3D Cam;
 	public WeaponHolder Holder;
 
 
 	public override void _Ready() {
-		Joint = GetNode<Spatial>("EverythingJoint");
-		Mesh = Joint.GetNode<MeshInstance>("Mesh");
-		Head = Joint.GetNode<Hitbox>("HeadHitbox");
-		Feet = Joint.GetNode<Hitbox>("FeetHitbox");
+		Joint3D = GetNode<Node3D>("EverythingJoint");
+		Mesh = Joint3D.GetNode<MeshInstance3D>("Mesh");
+		Head = Joint3D.GetNode<Hitbox>("HeadHitbox");
+		Feet = Joint3D.GetNode<Hitbox>("FeetHitbox");
 
-		CamJoint = GetNode<Spatial>("CamJoint");
-		Cam = CamJoint.GetNode<Camera>("Cam");
+		CamJoint = GetNode<Node3D>("CamJoint");
+		Cam = CamJoint.GetNode<Camera3D>("Cam");
 		Holder = Cam.GetNode<WeaponHolder>("WeaponHolder");
 
 		Cam.Current = false;
@@ -38,15 +38,15 @@ public class ThirdPersonPlayer : Spatial {
 	}
 
 
-	[Remote]
-	public void NetUpdateTransform(Transform NewTransform, float NewCrouchPercent) {
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
+	public void NetUpdateTransform(Transform3D NewTransform, float NewCrouchPercent) {
 		TargetTransform = NewTransform;
 		ValidTargetTransform = true;
 		CrouchPercent = NewCrouchPercent;
 	}
 
 
-	[Remote]
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
 	public void NetUpdateSpecateCam(float CamJointRotation, float CamRotation, float CamFov) {
 		CamJoint.Rotation = new Vector3(CamJointRotation, 0, 0);
 		Cam.Rotation = new Vector3(CamRotation, 0, 0);
@@ -54,7 +54,7 @@ public class ThirdPersonPlayer : Spatial {
 	}
 
 
-	[Remote]
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
 	public void NetSetSpectateWeapon(WeaponKind Kind) {
 		GD.Print($"Set spectate weapon {Id}, {Kind}");
 		if(Kind == WeaponKind.PISTOL) {
@@ -68,7 +68,7 @@ public class ThirdPersonPlayer : Spatial {
 		}
 	}
 
-	[Remote]
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
 	public void NetUpdateWeaponHolder(Vector2 Momentum, float ReloadHidePercent, float SprintTime, float AdsTime) {
 		Holder.Momentum = Momentum;
 		Holder.ReloadHidePercent = ReloadHidePercent;
@@ -77,8 +77,8 @@ public class ThirdPersonPlayer : Spatial {
 	}
 
 
-	[Remote]
-	public void NetDie(int Killer) {
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
+	public void NetDie(long Killer) {
 		Game.Alive.Remove(Id);
 
 		if(Game.Self.Spectating == this) {
@@ -90,7 +90,7 @@ public class ThirdPersonPlayer : Spatial {
 			}
 		}
 
-		if(Multiplayer.IsNetworkServer()) {
+		if(Multiplayer.IsServer()) {
 			string Message = "";
 			if(Killer == -1) {
 				Message = $"{Game.Nicknames[Id]} fell to their death";
@@ -115,26 +115,26 @@ public class ThirdPersonPlayer : Spatial {
 	}
 
 
-	public override void _Process(float Delta) {
-		Joint.Visible = Game.Self.Spectating != this;
+	public override void _Process(double Delta) {
+		Joint3D.Visible = Game.Self.Spectating != this;
 
 		if(ValidTargetTransform) {
-			Transform = Transform.InterpolateWith(TargetTransform, Delta / 0.02f);
+			Transform = Transform.InterpolateWith(TargetTransform, (float)Delta / 0.02f);
 		}
 
-		Joint.RotationDegrees = new Vector3(
+		Joint3D.RotationDegrees = new Vector3(
 			-45 * CrouchPercent,
 			0,
 			0
 		);
 
 		float Percent = 1 - (CrouchPercent / 2f);
-		Head.Translation = new Vector3(0, 1.3f * Percent, 0);
-		Feet.Translation = new Vector3(0, -1.3f * Percent, 0);
-		Joint.Translation = new Vector3(0, CrouchPercent / 2f, 0);
+		Head.Position = new Vector3(0, 1.3f * Percent, 0);
+		Feet.Position = new Vector3(0, -1.3f * Percent, 0);
+		Joint3D.Position = new Vector3(0, CrouchPercent / 2f, 0);
 
-		((CapsuleMesh)Mesh.Mesh).MidHeight = 2 - CrouchPercent;
-		CamJoint.Translation = new Vector3(0, 1.75f - CrouchPercent, 0);
+		((CapsuleMesh)Mesh.Mesh).Height = 2 - CrouchPercent;
+		CamJoint.Position = new Vector3(0, 1.75f - CrouchPercent, 0);
 
 		base._Process(Delta);
 	}

@@ -4,7 +4,7 @@ using Godot;
 
 
 
-public class SaneParticle : MeshInstance {
+public partial class SaneParticle : MeshInstance3D {
 	public Random Rng;
 	public float Life;
 
@@ -20,12 +20,12 @@ public class SaneParticle : MeshInstance {
 	}
 
 
-	public sealed override void _Process(float Delta) {
-		Life -= Delta;
+	public sealed override void _Process(double Delta) {
+		Life -= (float)Delta;
 		if(Life <= 0) {
 			QueueFree();
 		}
 
-		TickParticle(Delta);
+		TickParticle((float)Delta);
 	}
 }

@@ -1,13 +1,14 @@
 [remap]
 
 importer="wav"
-type="AudioStreamSample"
-path="res://.import/149177__deathnsorrow__shot-and-reload.wav-c906b6c6fe6779d7ca509444eb16dccc.sample"
+type="AudioStreamWAV"
+uid="uid://bd0mbwplgqje3"
+path="res://.godot/imported/149177__deathnsorrow__shot-and-reload.wav-c906b6c6fe6779d7ca509444eb16dccc.sample"
 
 [deps]
 
 source_file="res://RawAudio/149177__deathnsorrow__shot-and-reload.wav"
-dest_files=[ "res://.import/149177__deathnsorrow__shot-and-reload.wav-c906b6c6fe6779d7ca509444eb16dccc.sample" ]
+dest_files=["res://.godot/imported/149177__deathnsorrow__shot-and-reload.wav-c906b6c6fe6779d7ca509444eb16dccc.sample"]
 
 [params]
 
@@ -17,5 +18,7 @@ force/max_rate=false
 force/max_rate_hz=44100
 edit/trim=false
 edit/normalize=false
-edit/loop=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
 compress/mode=0

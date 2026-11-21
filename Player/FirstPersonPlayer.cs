@@ -12,7 +12,7 @@ using static SteelMath;
 public enum MovementMode { WALKING, SNEAKING, SPRINTING };
 
 
-public class FirstPersonPlayer : Character {
+public partial class FirstPersonPlayer : Character {
 	public const float BaseMouseSens = 0.2f;
 	public const float AdsMouseSens = 0.1f;
 
@@ -38,13 +38,13 @@ public class FirstPersonPlayer : Character {
 	public const float CrunchSpeed = -35f;
 	public const float BaseCrunchDmg = 20f;
 
-	public Spatial CamJoint;
-	public Camera Cam;
+	public Node3D CamJoint;
+	public Camera3D Cam;
 	public WeaponHolder Holder;
 
-	public RayCast FloorCast;
-	public RayCast CeilingCast;
-	public CollisionShape Hull;
+	public RayCast3D FloorCast;
+	public RayCast3D CeilingCast;
+	public CollisionShape3D Hull;
 
 	ClipChooser ConcreteChooser = new ClipChooser(6);
 	ClipChooser LeavesChooser = new ClipChooser(6);
@@ -69,36 +69,36 @@ public class FirstPersonPlayer : Character {
 	public override void _Ready() {
 		base._Ready();
 
-		CamJoint = GetNode<Spatial>("CamJoint");
-		Cam = CamJoint.GetNode<Camera>("Cam");
+		CamJoint = GetNode<Node3D>("CamJoint");
+		Cam = CamJoint.GetNode<Camera3D>("Cam");
 		Holder = Cam.GetNode<WeaponHolder>("WeaponHolder");
 
-		FloorCast = GetNode<RayCast>("FloorCast");
-		CeilingCast = GetNode<RayCast>("CeilingCast");
-		Hull = GetNode<CollisionShape>("Hull");
+		FloorCast = GetNode<RayCast3D>("FloorCast");
+		CeilingCast = GetNode<RayCast3D>("CeilingCast");
+		Hull = GetNode<CollisionShape3D>("Hull");
 
-		Input.SetMouseMode(Input.MouseMode.Captured);
+		Input.SetMouseMode(Input.MouseModeEnum.Captured);
 		Cam.MakeCurrent();
 	}
 
 
-	[Remote]
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
 	public void NetDamage(int Damage) {
 		Health -= Damage;
-		CheckDie(Multiplayer.GetRpcSenderId());
+		CheckDie(Multiplayer.GetRemoteSenderId());
 	}
 
 
 	public void CheckDie(int Killer) {
 		if(Health <= 0) {
-			Input.SetMouseMode(Input.MouseMode.Visible);
+			Input.SetMouseMode(Input.MouseModeEnum.Visible);
 			Rpc(nameof(ThirdPersonPlayer.NetDie), Killer);
 
-			Game.DeathScreen = (Node)Game.DeathScreenScene.Instance();
-			Game.RuntimeRoot.AddChild(Game.DeathScreen);
+			Game.DeathScreen = Game.DeathScreenScene.Instantiate();
+			Game.Self.RuntimeRoot.AddChild(Game.DeathScreen);
 
 			if(Game.Alive.Count > 0) {
-				Game.RuntimeRoot.GetNode<ThirdPersonPlayer>(Game.Alive[0].ToString()).Spectate();
+				Game.Self.RuntimeRoot.GetNode<ThirdPersonPlayer>(Game.Alive[0].ToString()).Spectate();
 			}
 
 			QueueFree();
@@ -112,19 +112,19 @@ public class FirstPersonPlayer : Character {
 			float AdsAdjustment = (BaseMouseSens - AdsMouseSens) * AdsPercent;
 			float Sens = CurrentSens - AdsAdjustment;
 
-			RotateY(Deg2Rad(-Motion.Relative.x * Sens));
+			RotateY(DegToRad(-Motion.Relative.X * Sens));
 			Cam.RotationDegrees = new Vector3(
-				Clamp(Cam.RotationDegrees.x - (Motion.Relative.y * Sens), -90, 90),
-				Cam.RotationDegrees.y,
-				Cam.RotationDegrees.z
+				Clamp(Cam.RotationDegrees.X - (Motion.Relative.Y * Sens), -90, 90),
+				Cam.RotationDegrees.Y,
+				Cam.RotationDegrees.Z
 			);
 
 			float AdsMultiplyer = Holder.CalcAdsDisplay();
 			float SensMultiplyer = Sens * 0.035f;
 
 			Holder.Momentum = new Vector2(
-				Clamp(Holder.Momentum.x + Motion.Relative.x * SensMultiplyer * AdsMultiplyer, -1, 1),
-				Clamp(Holder.Momentum.y + Motion.Relative.y * SensMultiplyer * AdsMultiplyer, -1, 1)
+				Clamp(Holder.Momentum.X + Motion.Relative.X * SensMultiplyer * AdsMultiplyer, -1, 1),
+				Clamp(Holder.Momentum.Y + Motion.Relative.Y * SensMultiplyer * AdsMultiplyer, -1, 1)
 			);
 		}
 
@@ -173,7 +173,7 @@ public class FirstPersonPlayer : Character {
 
 				if(Index != -1) {
 					ActualAssert(Catagory != (SfxCatagory)(-1));
-					Sfx.PlaySfx(Catagory, Index, GlobalTransform.origin, Muffle);
+					Sfx.PlaySfx(Catagory, Index, GlobalTransform.Origin, Muffle);
 				}
 			}
 		}
@@ -240,17 +240,17 @@ public class FirstPersonPlayer : Character {
 		}
 
 		if(OnFloor) {
-			Momentum.y = 0;
+			Momentum.Y = 0;
 		}
 		else {
-			Momentum.y = Clamp(Momentum.y - Gravity * Delta, -MaxFallSpeed, MaxFallSpeed);
+			Momentum.Y = Clamp(Momentum.Y - Gravity * Delta, -MaxFallSpeed, MaxFallSpeed);
 		}
 
 		var Push = new Vector3(
 			RightLeftDirection * Acceleration * Delta,
 			0,
 			BackwardForwardDirection * Acceleration * Delta
-		).Rotated(new Vector3(0, 1, 0), Rotation.y);
+		).Rotated(new Vector3(0, 1, 0), Rotation.Y);
 		Momentum = Momentum.Inflated(ClampVec3(Momentum.Flattened() + Push, 0, MaxSpeed));
 	}
 
@@ -266,27 +266,28 @@ public class FirstPersonPlayer : Character {
 		}
 
 		float Shrink = (HullHeight - CrouchedHullHeight) * CrouchPercent;
-		var Shape = ((CapsuleShape)Hull.Shape);
-		float OriginalHeight = Shape.Height;
-		Shape.Height = HullHeight - Shrink;
-		Hull.Translation = new Vector3(0, 0 + (Shrink / 2f), 0);
+		var Shape3D = ((CapsuleShape3D)Hull.Shape);
+		float OriginalHeight = Shape3D.Height;
+		Shape3D.Height = HullHeight - Shrink;
+		Hull.Position = new Vector3(0, 0 + (Shrink / 2f), 0);
 
-		Translation = new Vector3(
-			Translation.x,
-			Translation.y + (Shape.Height - OriginalHeight),
-			Translation.z
+		Position = new Vector3(
+			Position.X,
+			Position.Y + (Shape3D.Height - OriginalHeight),
+			Position.Z
 		);
 
-		CamJoint.Translation = new Vector3(0, 1.75f - CrouchPercent, 0);
+		CamJoint.Position = new Vector3(0, 1.75f - CrouchPercent, 0);
 	}
 
 
-	public override void _PhysicsProcess(float Delta) {
+	public override void _PhysicsProcess(double dDelta) {
+		float Delta = (float)dDelta;
 		HandleMovementInput(Delta);
 		HandleCrouchInput(Delta);
 
 		bool WasOnFloor = OnFloor;
-		float OldMomentumY = Momentum.y;
+		float OldMomentumY = Momentum.Y;
 		Momentum = Move(Momentum, Delta, 5, 40, 0.42f);
 		if(!WasOnFloor && OnFloor && OldMomentumY < CrunchSpeed) {
 			CamAnimations.Add(new CrunchCamDip());
@@ -297,7 +298,7 @@ public class FirstPersonPlayer : Character {
 			}
 
 			if(TakeFallDamage) {
-				Sfx.PlaySfx(SfxCatagory.FALL_CRUNCH, 0, GlobalTransform.origin, 0);
+				Sfx.PlaySfx(SfxCatagory.FALL_CRUNCH, 0, GlobalTransform.Origin, 0);
 
 				float Overkill = -(OldMomentumY - CrunchSpeed);
 				float Percent = Overkill / (MaxFallSpeed + CrunchSpeed);
@@ -307,7 +308,7 @@ public class FirstPersonPlayer : Character {
 				CheckDie(-1);
 			}
 			else {
-				Sfx.PlaySfx(SfxCatagory.LEAVES_FOOTSTEPS, LeavesChooser.Choose(), GlobalTransform.origin, -30);
+				Sfx.PlaySfx(SfxCatagory.LEAVES_FOOTSTEPS, LeavesChooser.Choose(), GlobalTransform.Origin, -30);
 			}
 		}
 
@@ -329,7 +330,7 @@ public class FirstPersonPlayer : Character {
 		}
 
 		Rpc(nameof(ThirdPersonPlayer.NetUpdateTransform), Transform, CrouchPercent);
-		Rpc(nameof(ThirdPersonPlayer.NetUpdateSpecateCam), CamJoint.Rotation.x, Cam.Rotation.x, Cam.Fov);
+		Rpc(nameof(ThirdPersonPlayer.NetUpdateSpecateCam), CamJoint.Rotation.X, Cam.Rotation.Y, Cam.Fov);
 		Rpc(nameof(ThirdPersonPlayer.NetUpdateWeaponHolder), Holder.Momentum, Holder.ReloadHidePercent, Holder.SprintTime, Holder.AdsTime);
 
 		base._PhysicsProcess(Delta);

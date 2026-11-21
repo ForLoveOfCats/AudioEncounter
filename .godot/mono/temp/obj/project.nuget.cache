@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "U9xXkytNaKg=",
+  "success": true,
+  "projectFilePath": "/home/julia/Stuff/AudioEncounter/AudioEncounter.csproj",
+  "expectedPackageFiles": [
+    "/home/julia/.nuget/packages/godot.sourcegenerators/4.7.2/godot.sourcegenerators.4.7.2.nupkg.sha512",
+    "/home/julia/.nuget/packages/godotsharp/4.7.2/godotsharp.4.7.2.nupkg.sha512",
+    "/home/julia/.nuget/packages/godotsharpeditor/4.7.2/godotsharpeditor.4.7.2.nupkg.sha512",
+    "/home/julia/.nuget/packages/microsoft.netcore.app.ref/8.0.32/microsoft.netcore.app.ref.8.0.32.nupkg.sha512",
+    "/home/julia/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.32/microsoft.aspnetcore.app.ref.8.0.32.nupkg.sha512"
+  ],
+  "logs": []
+}

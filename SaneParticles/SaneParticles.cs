@@ -5,7 +5,7 @@ using static Godot.Mathf;
 
 
 
-public class SaneParticles : Spatial {
+public partial class SaneParticles : Node3D {
 	[Export]
 	private Mesh MeshField;
 	[Export]
@@ -36,7 +36,7 @@ public class SaneParticles : Spatial {
 		var Particle = new SaneParticle();
 		ulong Id = Particle.GetInstanceId();
 		Particle.SetScript(ScriptField);
-		Particle = GD.InstanceFromId(Id) as SaneParticle;
+		Particle = InstanceFromId(Id) as SaneParticle;
 
 		Particle.Rng = Rng;
 		Particle.Life = BaseLife;
@@ -64,8 +64,8 @@ public class SaneParticles : Spatial {
 	}
 
 
-	public override void _Process(float Delta) {
-		SpawnCooldown = Clamp(SpawnCooldown - Delta, 0, float.MaxValue);
+	public override void _Process(double Delta) {
+		SpawnCooldown = Clamp(SpawnCooldown - (float)Delta, 0, float.MaxValue);
 
 		if(OneShot && OneShotAutoplay && !Looping) {
 			if(SpawnCooldown <= 0) {

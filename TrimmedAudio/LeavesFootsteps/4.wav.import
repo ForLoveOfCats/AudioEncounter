@@ -1,13 +1,14 @@
 [remap]
 
 importer="wav"
-type="AudioStreamSample"
-path="res://.import/4.wav-cde2365dd648dd17eafb0d2e4d5bf8a9.sample"
+type="AudioStreamWAV"
+uid="uid://cjw11hnnbajwn"
+path="res://.godot/imported/4.wav-cde2365dd648dd17eafb0d2e4d5bf8a9.sample"
 
 [deps]
 
 source_file="res://TrimmedAudio/LeavesFootsteps/4.wav"
-dest_files=[ "res://.import/4.wav-cde2365dd648dd17eafb0d2e4d5bf8a9.sample" ]
+dest_files=["res://.godot/imported/4.wav-cde2365dd648dd17eafb0d2e4d5bf8a9.sample"]
 
 [params]
 
@@ -17,5 +18,7 @@ force/max_rate=false
 force/max_rate_hz=44100
 edit/trim=false
 edit/normalize=false
-edit/loop=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
 compress/mode=0

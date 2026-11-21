@@ -4,32 +4,32 @@ using static Godot.Mathf;
 
 
 
-public class Character : KinematicBody {
+public partial class Character : CharacterBody3D {
 	public bool OnFloor { get; private set; } = false;
 
 
 	public Vector3 Move(Vector3 Momentum, float Delta, int MaxSlideCount, float MaxAngle, float Snap) {
 		Vector3 Movement = Momentum * Delta;
 
-		if(Momentum.y <= 0) {
-			Vector3 OriginalTranslation = Translation;
+		if(Momentum.Y <= 0) {
+			Vector3 OriginalTranslation = Position;
 			var SnapVec = new Vector3(0, -Snap, 0);
-			KinematicCollision SnapCollision = MoveAndCollide(SnapVec);
+			KinematicCollision3D SnapCollision = MoveAndCollide(SnapVec);
 
-			if(SnapCollision != null && Acos(SnapCollision.Normal.Dot(new Vector3(0, 1, 0))) <= Deg2Rad(MaxAngle)) {
+			if(SnapCollision != null && Acos(SnapCollision.GetNormal().Dot(new Vector3(0, 1, 0))) <= DegToRad(MaxAngle)) {
 				OnFloor = true;
 
 				float TargetHLength = Movement.Flattened().Length();
-				Movement = Movement.Slide(SnapCollision.Normal);
+				Movement = Movement.Slide(SnapCollision.GetNormal());
 				float NewHLength = Movement.Flattened().Length();
 				if(TargetHLength != 0 && NewHLength != 0) //Protect against division by zero
 					Movement *= TargetHLength / Movement.Flattened().Length();
 
-				Translation = OriginalTranslation;
-				Momentum.y = 0; //On floor so "zero" out vertical momentum
+				Position = OriginalTranslation;
+				Momentum.Y = 0; //On floor so "zero" out vertical momentum
 			}
 			else {
-				Translation = OriginalTranslation;
+				Position = OriginalTranslation;
 				OnFloor = false;
 			}
 		}
@@ -40,34 +40,35 @@ public class Character : KinematicBody {
 		float Traveled = 0f;
 		while(SlideCount <= MaxSlideCount) {
 			Movement = Movement.Normalized() * (Movement.Length() - Traveled);
-			KinematicCollision Collision = MoveAndCollide(Movement);
+			KinematicCollision3D Collision = MoveAndCollide(Movement);
 			if(Collision == null) {
 				break; //No collision, reached destination
 			}
 
-			Traveled += Collision.Travel.Length();
+			Traveled += Collision.GetTravel().Length();
 			if(Traveled >= Movement.Length())
 				break; //Reached destination
 			SlideCount += 1;
 
 			//Dirty hack to prevent horizontal nudging when landing
 			bool SlideByNormal = true;
-			float NormalAverageHorizontal = (Abs(Collision.Normal.x) + Abs(Collision.Normal.z)) / 2f;
-			if(Collision.Normal.y >= NormalAverageHorizontal)
+			float NormalAverageHorizontal = (Abs(Collision.GetNormal().X) + Abs(Collision.GetNormal().Z)) / 2f;
+			if(Collision.GetNormal().Y >= NormalAverageHorizontal)
 				SlideByNormal = false;
 
-			if(SlideByNormal && Acos(Collision.Normal.Dot(new Vector3(0, 1, 0))) <= Deg2Rad(MaxAngle))
-				Movement = Movement.Slide(Collision.Normal);
+			if(SlideByNormal && Acos(Collision.GetNormal().Dot(new Vector3(0, 1, 0))) <= DegToRad(MaxAngle))
+				Movement = Movement.Slide(Collision.GetNormal());
 
-			if(Acos(Collision.Normal.Dot(new Vector3(0, 1, 0))) <= Deg2Rad(MaxAngle))
+			if(Acos(Collision.GetNormal().Dot(new Vector3(0, 1, 0))) <= DegToRad(MaxAngle))
 				OnFloor = true;
 			else if(SlideByNormal)
-				Momentum = Momentum.Slide(Collision.Normal);
+				Momentum = Momentum.Slide(Collision.GetNormal());
 		}
 
 		if(OnFloor)
-			Momentum.y = 0f; //On floor so "zero" out vertical momentum
-		MoveAndSlide(new Vector3());
+			Momentum.Y = 0f; //On floor so "zero" out vertical momentum
+		Velocity = new Vector3();
+		MoveAndSlide();
 		return Momentum;
 	}
 

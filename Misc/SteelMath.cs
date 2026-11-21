@@ -41,17 +41,17 @@ public static class SteelMath {
 
 
 	public static Vector3 RoundVec3(Vector3 Vec) {
-		return new Vector3(Round(Vec.x), Round(Vec.y), Round(Vec.z));
+		return new Vector3(Round(Vec.X), Round(Vec.Y), Round(Vec.Z));
 	}
 
 
 	public static Vector3 Flattened(this Vector3 Self) {
-		return new Vector3(Self.x, 0, Self.z);
+		return new Vector3(Self.X, 0, Self.Z);
 	}
 
 
 	public static Vector3 Inflated(this Vector3 Self, Vector3 Source) {
-		return new Vector3(Source.x, Self.y, Source.z);
+		return new Vector3(Source.X, Self.Y, Source.Z);
 	}
 
 
@@ -62,10 +62,10 @@ public static class SteelMath {
 
 	public static Color LerpColor(Color A, Color B, float T) {
 		Color Out = new Color();
-		Out.r = Lerp(A.r, B.r, T);
-		Out.g = Lerp(A.g, B.g, T);
-		Out.b = Lerp(A.b, B.b, T);
-		Out.a = Lerp(A.a, B.a, T);
+		Out.R = Lerp(A.R, B.R, T);
+		Out.G = Lerp(A.G, B.G, T);
+		Out.B = Lerp(A.B, B.B, T);
+		Out.A = Lerp(A.A, B.A, T);
 		return Out;
 	}
 

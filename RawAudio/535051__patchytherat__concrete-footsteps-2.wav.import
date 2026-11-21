@@ -1,13 +1,14 @@
 [remap]
 
 importer="wav"
-type="AudioStreamSample"
-path="res://.import/535051__patchytherat__concrete-footsteps-2.wav-e1c92428e1c2f9d87274d7bc5f3a506d.sample"
+type="AudioStreamWAV"
+uid="uid://ct80ar06rwpxb"
+path="res://.godot/imported/535051__patchytherat__concrete-footsteps-2.wav-e1c92428e1c2f9d87274d7bc5f3a506d.sample"
 
 [deps]
 
 source_file="res://RawAudio/535051__patchytherat__concrete-footsteps-2.wav"
-dest_files=[ "res://.import/535051__patchytherat__concrete-footsteps-2.wav-e1c92428e1c2f9d87274d7bc5f3a506d.sample" ]
+dest_files=["res://.godot/imported/535051__patchytherat__concrete-footsteps-2.wav-e1c92428e1c2f9d87274d7bc5f3a506d.sample"]
 
 [params]
 
@@ -17,5 +18,7 @@ force/max_rate=false
 force/max_rate_hz=44100
 edit/trim=false
 edit/normalize=false
-edit/loop=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
 compress/mode=0

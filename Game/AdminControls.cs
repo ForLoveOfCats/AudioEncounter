@@ -4,7 +4,7 @@ using Godot;
 
 
 
-public class CommandTokenizer {
+public partial class CommandTokenizer {
 	public string[] Parts;
 	public int Index = 0;
 
@@ -27,21 +27,21 @@ public class CommandTokenizer {
 
 
 
-public class Result { }
+public partial class Result { }
 
-public class Token : Result {
+public partial class Token : Result {
 	public string Inner;
 }
 
 
 
-public class AdminControls : Node {
+public partial class AdminControls : Node {
 	public TextEdit CliOutput;
 	public TextEdit LogOutput;
 
 	public LineEdit CommandInput;
 
-	public HashSet<int> ToSpawn = new HashSet<int>();
+	public HashSet<long> ToSpawn = new HashSet<long>();
 
 	public override void _Ready() {
 		CliOutput = GetNode<TextEdit>("VBoxContainer/HBoxContainer/CliOutput");
@@ -70,7 +70,7 @@ public class AdminControls : Node {
 				}
 
 				case "list_to_spawn": {
-					foreach(int Id in ToSpawn) {
+					foreach(long Id in ToSpawn) {
 						Game.Print(Game.Nicknames[Id]);
 					}
 					break;
@@ -78,7 +78,7 @@ public class AdminControls : Node {
 
 				case "add_to_spawn": {
 					if(Tokenizer.Next() is Token IdString) {
-						if(int.TryParse(IdString.Inner, out int Id)) {
+						if(long.TryParse(IdString.Inner, out long Id)) {
 							if(Game.Alive.Contains(Id)) {
 								Game.Print($"Player with ID {Id} is already alive");
 							}
@@ -90,7 +90,7 @@ public class AdminControls : Node {
 							}
 						}
 						else {
-							Game.Print($"Cannot parse '{IdString.Inner}' as int");
+							Game.Print($"Cannot parse '{IdString.Inner}' as long");
 						}
 					}
 					break;
@@ -98,20 +98,20 @@ public class AdminControls : Node {
 
 				case "remove_to_spawn": {
 					if(Tokenizer.Next() is Token IdString) {
-						if(int.TryParse(IdString.Inner, out int Id)) {
+						if(long.TryParse(IdString.Inner, out long Id)) {
 							if(!ToSpawn.Remove(Id)) {
 								Game.Print($"Player with ID {Id} was not in spawn list");
 							}
 						}
 						else {
-							Game.Print($"Cannot parse '{IdString.Inner}' as int");
+							Game.Print($"Cannot parse '{IdString.Inner}' as long");
 						}
 					}
 					break;
 				}
 
 				case "add_all_to_spawn": {
-					foreach(int Id in Game.Nicknames.Keys) {
+					foreach(long Id in Game.Nicknames.Keys) {
 						if(!Game.Alive.Contains(Id)) {
 							ToSpawn.Add(Id);
 							Game.Print($"Added player with ID {Id} to spawn list");
@@ -126,7 +126,7 @@ public class AdminControls : Node {
 				}
 
 				case "do_spawn": {
-					foreach(int Id in ToSpawn) {
+					foreach(long Id in ToSpawn) {
 						Game.ChooseSpawnPointAndDoSpawn(Id);
 					}
 					ToSpawn.Clear();
@@ -146,7 +146,7 @@ public class AdminControls : Node {
 
 				case "killall": {
 					foreach(int AlivePlayer in Game.Alive) {
-						Game.RuntimeRoot.GetNode(AlivePlayer.ToString()).RpcId(AlivePlayer, nameof(FirstPersonPlayer.NetDamage), 10000000);
+						Game.Self.RuntimeRoot.GetNode(AlivePlayer.ToString()).RpcId(AlivePlayer, nameof(FirstPersonPlayer.NetDamage), 10000000);
 						Game.Print($"Killed {Game.Nicknames[AlivePlayer]}");
 					}
 					break;

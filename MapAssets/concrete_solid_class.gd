@@ -1,4 +1,4 @@
-extends StaticBody
+extends StaticBody3D
 
 func _init() -> void:
 	add_to_group("concrete")

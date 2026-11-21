@@ -13,13 +13,13 @@ __meta__ = {
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_right = 1024.0
-margin_bottom = 572.0
+offset_right = 1024.0
+offset_bottom = 572.0
 size_flags_vertical = 3
 
 [node name="CliOutput" type="TextEdit" parent="VBoxContainer/HBoxContainer"]
-margin_right = 510.0
-margin_bottom = 572.0
+offset_right = 510.0
+offset_bottom = 572.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 readonly = true
@@ -28,9 +28,9 @@ __meta__ = {
 }
 
 [node name="LogOutput" type="TextEdit" parent="VBoxContainer/HBoxContainer"]
-margin_left = 514.0
-margin_right = 1024.0
-margin_bottom = 572.0
+offset_left = 514.0
+offset_right = 1024.0
+offset_bottom = 572.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 readonly = true
@@ -39,11 +39,11 @@ __meta__ = {
 }
 
 [node name="CommandInput" type="LineEdit" parent="VBoxContainer"]
-margin_top = 576.0
-margin_right = 1024.0
-margin_bottom = 600.0
+offset_top = 576.0
+offset_right = 1024.0
+offset_bottom = 600.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[connection signal="text_entered" from="VBoxContainer/CommandInput" to="." method="_on_CommandInput_text_entered"]
+[connection signal="text_submitted" from="VBoxContainer/CommandInput" to="." method="_on_CommandInput_text_entered"]

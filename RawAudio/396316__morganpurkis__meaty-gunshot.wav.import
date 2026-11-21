@@ -1,13 +1,14 @@
 [remap]
 
 importer="wav"
-type="AudioStreamSample"
-path="res://.import/396316__morganpurkis__meaty-gunshot.wav-cd7f5c490a077f3d395f4b98e9fcc443.sample"
+type="AudioStreamWAV"
+uid="uid://crplq1844t7u3"
+path="res://.godot/imported/396316__morganpurkis__meaty-gunshot.wav-cd7f5c490a077f3d395f4b98e9fcc443.sample"
 
 [deps]
 
 source_file="res://RawAudio/396316__morganpurkis__meaty-gunshot.wav"
-dest_files=[ "res://.import/396316__morganpurkis__meaty-gunshot.wav-cd7f5c490a077f3d395f4b98e9fcc443.sample" ]
+dest_files=["res://.godot/imported/396316__morganpurkis__meaty-gunshot.wav-cd7f5c490a077f3d395f4b98e9fcc443.sample"]
 
 [params]
 
@@ -17,5 +18,7 @@ force/max_rate=false
 force/max_rate_hz=44100
 edit/trim=false
 edit/normalize=false
-edit/loop=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
 compress/mode=0

@@ -1,13 +1,14 @@
 [remap]
 
 importer="wav"
-type="AudioStreamSample"
-path="res://.import/ReloadEnd.wav-3b48bf7f311aada7d338e87c39786143.sample"
+type="AudioStreamWAV"
+uid="uid://c8fqc6v7fn2k0"
+path="res://.godot/imported/ReloadEnd.wav-3b48bf7f311aada7d338e87c39786143.sample"
 
 [deps]
 
 source_file="res://TrimmedAudio/ReloadEnd.wav"
-dest_files=[ "res://.import/ReloadEnd.wav-3b48bf7f311aada7d338e87c39786143.sample" ]
+dest_files=["res://.godot/imported/ReloadEnd.wav-3b48bf7f311aada7d338e87c39786143.sample"]
 
 [params]
 
@@ -17,5 +18,7 @@ force/max_rate=false
 force/max_rate_hz=44100
 edit/trim=false
 edit/normalize=false
-edit/loop=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
 compress/mode=0

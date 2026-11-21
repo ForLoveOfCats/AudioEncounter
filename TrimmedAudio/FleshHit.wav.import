@@ -1,13 +1,14 @@
 [remap]
 
 importer="wav"
-type="AudioStreamSample"
-path="res://.import/FleshHit.wav-023baa6403c3494ea619400f8178148f.sample"
+type="AudioStreamWAV"
+uid="uid://cs55kbhlple31"
+path="res://.godot/imported/FleshHit.wav-023baa6403c3494ea619400f8178148f.sample"
 
 [deps]
 
 source_file="res://TrimmedAudio/FleshHit.wav"
-dest_files=[ "res://.import/FleshHit.wav-023baa6403c3494ea619400f8178148f.sample" ]
+dest_files=["res://.godot/imported/FleshHit.wav-023baa6403c3494ea619400f8178148f.sample"]
 
 [params]
 
@@ -17,5 +18,7 @@ force/max_rate=false
 force/max_rate_hz=44100
 edit/trim=false
 edit/normalize=false
-edit/loop=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
 compress/mode=0

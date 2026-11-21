@@ -25,9 +25,9 @@ public enum SfxCatagory {
 
 
 
-public class Sfx2DCleanup : AudioStreamPlayer {
+public partial class Sfx2DCleanup : AudioStreamPlayer {
 	public override void _Ready() {
-		Connect("finished", this, nameof(OnPlaybackFinished));
+		Connect("finished", new Callable(this, nameof(OnPlaybackFinished)));
 		base._Ready();
 	}
 
@@ -39,9 +39,9 @@ public class Sfx2DCleanup : AudioStreamPlayer {
 
 
 
-public class Sfx3DCleanup : AudioStreamPlayer3D {
+public partial class Sfx3DCleanup : AudioStreamPlayer3D {
 	public override void _Ready() {
-		Connect("finished", this, nameof(OnPlaybackFinished));
+		Connect("finished", new Callable(this, nameof(OnPlaybackFinished)));
 		base._Ready();
 	}
 
@@ -53,7 +53,7 @@ public class Sfx3DCleanup : AudioStreamPlayer3D {
 
 
 
-public class Sfx : Node {
+public partial class Sfx : Node {
 	public const bool PlayLocally = true;
 	public const bool PlayRemote = true;
 
@@ -63,7 +63,7 @@ public class Sfx : Node {
 
 
 	static Sfx() {
-		if(Engine.EditorHint) {
+		if(Engine.IsEditorHint()) {
 			return;
 		}
 
@@ -114,11 +114,11 @@ public class Sfx : Node {
 	}
 
 
-	public static List<AudioStream> LoadAllStreamsInFolder(string Path) {
+	public static List<AudioStream> LoadAllStreamsInFolder(string Path3D) {
 		var Output = new List<AudioStream>();
 
-		var Dir = new Directory();
-		ActualAssert(Dir.Open(Path) == Error.Ok);
+		var Dir = DirAccess.Open(Path3D);
+		ActualAssert(Dir != null);
 
 		Dir.ListDirBegin();
 
@@ -126,12 +126,12 @@ public class Sfx : Node {
 		while(FileName.Length > 0) {
 			if(!Dir.CurrentIsDir()) {
 				if(!OS.IsDebugBuild() && FileName.EndsWith(".import")) {
-					var Stream = GD.Load<AudioStream>($"{Path}/{FileName.Replace(".import", "")}");
+					var Stream = GD.Load<AudioStream>($"{Path3D}/{FileName.Replace(".import", "")}");
 					ActualAssert(Stream != null);
 					Output.Add(Stream);
 				}
 				else if(OS.IsDebugBuild() && !FileName.EndsWith(".import")) {
-					var Stream = GD.Load<AudioStream>($"{Path}/{FileName}");
+					var Stream = GD.Load<AudioStream>($"{Path3D}/{FileName}");
 					ActualAssert(Stream != null);
 					Output.Add(Stream);
 				}
@@ -147,7 +147,7 @@ public class Sfx : Node {
 
 
 	public override void _Ready() {
-		if(Engine.EditorHint) {
+		if(Engine.IsEditorHint()) {
 			return;
 		}
 
@@ -162,7 +162,7 @@ public class Sfx : Node {
 		}
 
 		if(PlayRemote) {
-			Self.Rpc(nameof(PlaySfxAt), Catagory, Index, Pos, Muffle);
+			Self.Rpc(nameof(PlaySfxAt), (int)Catagory, Index, Pos, Muffle);
 		}
 	}
 
@@ -173,7 +173,7 @@ public class Sfx : Node {
 		}
 
 		if(PlayRemote) {
-			Self.Rpc(nameof(PlaySfxAt), Catagory, Index, Pos, Muffle);
+			Self.Rpc(nameof(PlaySfxAt), (int)Catagory, Index, Pos, Muffle);
 		}
 	}
 
@@ -227,12 +227,12 @@ public class Sfx : Node {
 
 		StreamPlayer.VolumeDb -= Muffle / 1.5f;
 
-		Game.RuntimeRoot.AddChild(StreamPlayer);
+		Game.Self.RuntimeRoot.AddChild(StreamPlayer);
 		StreamPlayer.Play();
 	}
 
 
-	[Remote]
+	[Rpc(MultiplayerApi.RpcMode.AnyPeer)]
 	private void PlaySfxAt(SfxCatagory Catagory, int Index, Vector3 Pos, float Muffle) {
 		Sfx3DCleanup StreamPlayer = new Sfx3DCleanup();
 		StreamPlayer.Stream = Clips[Catagory][Index];
@@ -240,34 +240,34 @@ public class Sfx : Node {
 
 		switch(Catagory) {
 			case SfxCatagory.FALL_CRUNCH: {
-				StreamPlayer.UnitDb = 1;
+				StreamPlayer.VolumeDb = 1;
 				StreamPlayer.UnitSize = 18;
 				break;
 			}
 
 			case SfxCatagory.EMPTY_CHAMBER_FIRE_CLICK: {
-				StreamPlayer.UnitDb = -10;
+				StreamPlayer.VolumeDb = -10;
 				StreamPlayer.UnitSize = 28;
 				StreamPlayer.MaxDb = -10;
 				break;
 			}
 
 			case SfxCatagory.RELOAD: {
-				StreamPlayer.UnitDb = -2;
+				StreamPlayer.VolumeDb = -2;
 				StreamPlayer.UnitSize = 40;
 				StreamPlayer.MaxDb = -2;
 				break;
 			}
 
 			case SfxCatagory.BULLET_HIT: {
-				StreamPlayer.UnitDb = -5;
+				StreamPlayer.VolumeDb = -5;
 				StreamPlayer.UnitSize = 28;
 				StreamPlayer.MaxDb = -5;
 				break;
 			}
 
 			case SfxCatagory.FLESH_HIT: {
-				StreamPlayer.UnitDb = 6;
+				StreamPlayer.VolumeDb = 6;
 				StreamPlayer.UnitSize = 30;
 				StreamPlayer.MaxDb = 6;
 				StreamPlayer.Bus = "Master";
@@ -275,73 +275,73 @@ public class Sfx : Node {
 			}
 
 			case SfxCatagory.PISTOL_FIRE: {
-				StreamPlayer.UnitDb = 1;
+				StreamPlayer.VolumeDb = 1;
 				StreamPlayer.UnitSize = 60;
 				StreamPlayer.MaxDb = 1;
 				break;
 			}
 
 			case SfxCatagory.AK_FIRE: {
-				StreamPlayer.UnitDb = 1;
+				StreamPlayer.VolumeDb = 1;
 				StreamPlayer.UnitSize = 60;
 				StreamPlayer.MaxDb = 1;
 				break;
 			}
 
 			case SfxCatagory.SHOTGUN_FIRE: {
-				StreamPlayer.UnitDb = 4;
+				StreamPlayer.VolumeDb = 4;
 				StreamPlayer.UnitSize = 60;
 				StreamPlayer.MaxDb = 4;
 				break;
 			}
 
 			case SfxCatagory.CASING_TINK: {
-				StreamPlayer.UnitDb = -4;
+				StreamPlayer.VolumeDb = -4;
 				StreamPlayer.UnitSize = 20;
 				StreamPlayer.MaxDb = -4;
 				break;
 			}
 
 			case SfxCatagory.DRIP: {
-				StreamPlayer.UnitDb = -15;
+				StreamPlayer.VolumeDb = -15;
 				StreamPlayer.UnitSize = 25;
 				break;
 			}
 
 			case SfxCatagory.CONCRETE_FOOTSTEPS: {
-				StreamPlayer.UnitDb = 11;
+				StreamPlayer.VolumeDb = 11;
 				StreamPlayer.MaxDb = 11;
 				StreamPlayer.UnitSize = 25;
 				break;
 			}
 
 			case SfxCatagory.LEAVES_FOOTSTEPS: {
-				StreamPlayer.UnitDb = 4;
+				StreamPlayer.VolumeDb = 4;
 				StreamPlayer.MaxDb = 4;
 				StreamPlayer.UnitSize = 25;
 				break;
 			}
 
 			case SfxCatagory.METAL_FOOTSTEPS: {
-				StreamPlayer.UnitDb = 4;
+				StreamPlayer.VolumeDb = 4;
 				StreamPlayer.MaxDb = 4;
 				StreamPlayer.UnitSize = 25;
 				break;
 			}
 
 			case SfxCatagory.MARBLE_FOOTSTEPS: {
-				StreamPlayer.UnitDb = -3;
+				StreamPlayer.VolumeDb = -3;
 				StreamPlayer.MaxDb = -3;
 				StreamPlayer.UnitSize = 25;
 				break;
 			}
 		}
 
-		StreamPlayer.UnitDb -= Muffle;
+		StreamPlayer.VolumeDb -= Muffle;
 		StreamPlayer.MaxDb -= Muffle;
 
-		Game.RuntimeRoot.AddChild(StreamPlayer);
-		StreamPlayer.Translation = Pos;
+		Game.Self.RuntimeRoot.AddChild(StreamPlayer);
+		StreamPlayer.Position = Pos;
 		StreamPlayer.Play();
 	}
 }

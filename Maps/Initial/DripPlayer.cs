@@ -2,7 +2,7 @@ using Godot;
 
 
 
-public class DripPlayer : Spatial {
+public partial class DripPlayer : Node3D {
 	public const double MaxDripTime = 3d;
 	public const double MinDripTime = 1.25d;
 
@@ -10,12 +10,12 @@ public class DripPlayer : Spatial {
 	public float CurrentDripTime = 0f;
 
 
-	public override void _Process(float Delta) {
-		if(Multiplayer.IsNetworkServer()) {
-			CurrentDripTime -= Delta;
+	public override void _Process(double Delta) {
+		if(Multiplayer.IsServer()) {
+			CurrentDripTime -= (float)Delta;
 			if(CurrentDripTime <= 0) {
 				CurrentDripTime = (float)(Game.Rng.NextDouble() * (MaxDripTime - MinDripTime) + MinDripTime);
-				Sfx.PlaySfxSpatially(SfxCatagory.DRIP, DripChooser.Choose(), GlobalTransform.origin, 0);
+				Sfx.PlaySfxSpatially(SfxCatagory.DRIP, DripChooser.Choose(), GlobalTransform.Origin, 0);
 			}
 		}
 

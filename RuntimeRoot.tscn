@@ -1,8 +1,8 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene format=3 uid="uid://tjnqvsi32uhl"]
 
-[sub_resource type="StyleBoxEmpty" id=1]
+[sub_resource type="StyleBoxEmpty" id="1"]
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id="2"]
 script/source = "extends Button
 
 
@@ -12,7 +12,7 @@ func _on_HostButton_pressed() -> void:
 	Game.RuntimeRoot.get_node(\"Menu\").queue_free()
 "
 
-[sub_resource type="GDScript" id=3]
+[sub_resource type="GDScript" id="3"]
 script/source = "extends Button
 
 
@@ -24,7 +24,7 @@ func _on_ConnectButton_pressed() -> void:
 	Game.RuntimeRoot.get_node(\"Menu\").queue_free()
 "
 
-[sub_resource type="GDScript" id=4]
+[sub_resource type="GDScript" id="4"]
 script/source = "extends Label
 
 
@@ -32,143 +32,111 @@ script/source = "extends Label
 func _process(_delta: float) -> void:
 	var cap: int = get_parent().get_node(\"FpsCapSlider\").value
 	self.text = \"FPS Cap: \" + str(cap)
-	Engine.target_fps = cap
+	Engine.max_fps = cap
 "
 
-[node name="RuntimeRoot" type="Node"]
+[node name="RuntimeRoot" type="Node" unique_id=1705570658]
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=2005922414]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="Panel" type="Panel" parent="HBoxContainer"]
-margin_right = 816.0
-margin_bottom = 600.0
+[node name="Panel" type="Panel" parent="HBoxContainer" unique_id=1050042527]
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_styles/panel = SubResource( 1 )
+theme_override_styles/panel = SubResource("1")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
-margin_left = 820.0
-margin_right = 1024.0
-margin_bottom = 600.0
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer" unique_id=1341823919]
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.25
 
-[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/VBoxContainer"]
-margin_right = 204.0
-margin_bottom = 198.0
+[node name="ScrollContainer" type="ScrollContainer" parent="HBoxContainer/VBoxContainer" unique_id=1405412202]
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 size_flags_stretch_ratio = 0.5
-scroll_horizontal_enabled = false
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer/ScrollContainer"]
-margin_right = 204.0
-margin_bottom = 198.0
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer/ScrollContainer" unique_id=1270443263]
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Panel2" type="Panel" parent="HBoxContainer/VBoxContainer"]
-margin_top = 202.0
-margin_right = 204.0
-margin_bottom = 600.0
+[node name="Panel2" type="Panel" parent="HBoxContainer/VBoxContainer" unique_id=2035803169]
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_styles/panel = SubResource( 1 )
+theme_override_styles/panel = SubResource("1")
 
-[node name="Menu" type="Node" parent="."]
+[node name="Menu" type="Node" parent="." unique_id=704390139]
 
-[node name="CenterContainer" type="CenterContainer" parent="Menu"]
+[node name="CenterContainer" type="CenterContainer" parent="Menu" unique_id=506387046]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Menu/CenterContainer"]
-margin_left = 176.0
-margin_top = 276.0
-margin_right = 848.0
-margin_bottom = 324.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="VBoxContainer" type="VBoxContainer" parent="Menu/CenterContainer" unique_id=403731375]
+layout_mode = 2
 
-[node name="HostButton" type="Button" parent="Menu/CenterContainer/VBoxContainer"]
-margin_right = 672.0
-margin_bottom = 20.0
+[node name="HostButton" type="Button" parent="Menu/CenterContainer/VBoxContainer" unique_id=614523242]
+layout_mode = 2
 text = "Host"
-script = SubResource( 2 )
+script = SubResource("2")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Menu/CenterContainer/VBoxContainer"]
-margin_top = 24.0
-margin_right = 672.0
-margin_bottom = 48.0
+[node name="HBoxContainer" type="HBoxContainer" parent="Menu/CenterContainer/VBoxContainer" unique_id=1676724752]
+layout_mode = 2
 
-[node name="IpEdit" type="LineEdit" parent="Menu/CenterContainer/VBoxContainer/HBoxContainer"]
-margin_right = 300.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 300, 0 )
+[node name="IpEdit" type="LineEdit" parent="Menu/CenterContainer/VBoxContainer/HBoxContainer" unique_id=1604537330]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
 placeholder_text = "IP Address"
 
-[node name="NickEdit" type="LineEdit" parent="Menu/CenterContainer/VBoxContainer/HBoxContainer"]
-margin_left = 304.0
-margin_right = 604.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 300, 0 )
+[node name="NickEdit" type="LineEdit" parent="Menu/CenterContainer/VBoxContainer/HBoxContainer" unique_id=984314808]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
 placeholder_text = "Nickname"
 
-[node name="ConnectButton" type="Button" parent="Menu/CenterContainer/VBoxContainer/HBoxContainer"]
-margin_left = 608.0
-margin_right = 672.0
-margin_bottom = 24.0
+[node name="ConnectButton" type="Button" parent="Menu/CenterContainer/VBoxContainer/HBoxContainer" unique_id=1234064219]
+layout_mode = 2
 text = "Connect"
-script = SubResource( 3 )
+script = SubResource("3")
 
-[node name="Label" type="Label" parent="Menu"]
+[node name="Label" type="Label" parent="Menu" unique_id=1172013739]
+anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-margin_left = -209.0
-margin_top = 20.0
-margin_bottom = 14.0
+offset_left = -209.0
+offset_top = 20.0
+offset_bottom = 14.0
 text = "Press F11 to toggle fullscreen"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="FpsCap" type="Label" parent="Menu"]
+[node name="FpsCap" type="Label" parent="Menu" unique_id=318181613]
+anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -423.66
-margin_top = -32.948
-margin_right = -279.66
-margin_bottom = -18.948
+offset_left = -423.66
+offset_top = -32.948
+offset_right = -279.66
+offset_bottom = -18.948
 text = "FPS Cap"
-script = SubResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+script = SubResource("4")
 
-[node name="FpsCapSlider" type="HSlider" parent="Menu"]
+[node name="FpsCapSlider" type="HSlider" parent="Menu" unique_id=1782366860]
+anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -426.0
-margin_top = -18.0
+offset_left = -426.0
+offset_top = -18.0
 min_value = 20.0
 max_value = 300.0
 step = 10.0
 value = 100.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [connection signal="pressed" from="Menu/CenterContainer/VBoxContainer/HostButton" to="Menu/CenterContainer/VBoxContainer/HostButton" method="_on_HostButton_pressed"]
 [connection signal="pressed" from="Menu/CenterContainer/VBoxContainer/HBoxContainer/ConnectButton" to="Menu/CenterContainer/VBoxContainer/HBoxContainer/ConnectButton" method="_on_ConnectButton_pressed"]
